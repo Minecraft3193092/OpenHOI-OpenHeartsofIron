@@ -7,7 +7,7 @@ compiler:
 os:
   - linux
 before_install:
-  - fetch-deps
+  - ./fetch-deps
 before_script:
   - mkdir build
   - cd build
