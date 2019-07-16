@@ -1,0 +1,15 @@
+language: cpp
+sudo: required
+dist: bionic
+compiler:
+  - clang
+  - gcc
+os:
+  - linux
+before_install:
+  - fetch-deps
+before_script:
+  - mkdir build
+  - cd build
+  - cmake ..
+script: make && make test
