@@ -82,6 +82,7 @@ find_library(
     PATHS
     $ENV{PROGRAMFILES}/lib
     ${OGRE_ROOT_DIR}/lib
+    ${OGRE_ROOT_DIR}/lib/OGRE
     /usr/lib64
     /usr/lib
     /usr/local/lib64
@@ -161,6 +162,7 @@ else()
         PATHS
         $ENV{PROGRAMFILES}/lib
         ${OGRE_ROOT_DIR}/lib
+        ${OGRE_ROOT_DIR}/lib/OGRE
         /usr/lib64
         /usr/lib
         /usr/local/lib64
