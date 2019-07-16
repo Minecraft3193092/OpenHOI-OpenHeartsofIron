@@ -1,0 +1,10 @@
+# CMake
+build*/
+
+# Visual Studio and VS Code
+.vscode/
+.vs/
+
+# Eclipse
+.project
+.cproject

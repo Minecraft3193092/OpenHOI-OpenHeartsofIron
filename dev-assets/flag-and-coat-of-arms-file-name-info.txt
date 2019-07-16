@@ -1,0 +1,19 @@
+The file name format is the following:
+
+  <country>[-<addition>][-<ideology>].png
+
+Where
+  `country`  is the country code (2 chars) e.g. `de` for Germany ()
+  `addition` is the optional addition (any char length) e.g. `by` for an independent
+             Bavaria but can be anything
+  `ideology` is the optional country's ideology (2 chars) which can be:
+     `cm` for communism and it's sub-ideologies
+     `fm` for fasicsm and it's sub-ideologies
+     `dy` for democracy and it's sub-ideologies
+
+Examples for flags (would be same for coat of arms):
+  German Reich with Black-White-Red flag: de.png
+  Nazi Germany with Swastika flag: de-fm.png
+  FRG with White-Red-Gold flag: de-frg.png
+  GDR with White-Red-Gold with a compass and a hammer encircled with rye: de-gdr.png
+  Communist FRG with hammer and sickle: de-frg-cm.png

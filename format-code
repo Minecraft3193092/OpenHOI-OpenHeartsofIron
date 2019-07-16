@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [ "$#" -eq 0 ]; then
+    DIRS=(client/ server/ hoibase/)
+else
+    FILES=( "$@" )
+fi
+
+FMT=""
+for clangfmt in clang-format{,-{4,3}.{9,8,7,6,5,4,3,2,1,0}}; do
+    if which "$clangfmt" &>/dev/null; then
+        FMT="$clangfmt"
+        break
+    fi
+done
+
+if [ -z "$FMT" ]; then
+    echo "Failed to find clang-format"
+    exit 1
+fi
+
+if [ ${#FILES[@]} -eq 0 ]; then
+    for dir in $DIRS; do
+        pushd "${dir}" &>/dev/null
+        find . \
+             \( -name '*.cpp' \
+             -o -name '*.hpp' \) \
+             -exec "${FMT}" -i '{}' \;
+        popd &>/dev/null
+    done
+else
+    exec "${FMT}" "${FILES[@]}"
+fi

@@ -1,0 +1,158 @@
+#!/bin/bash
+
+##############################################################################
+##                                                                          ##
+## Tool to fetch openhoi dependencies for UN*X                              ##
+## !DO NOT RUN THIS SCRIPT AS ROOT!                                         ##
+##                                                                          ##
+##############################################################################
+
+
+
+
+# Do some preparations...
+if (locale | grep -e 'utf8' -e 'UTF-8') >/dev/null 2>&1; then
+    CHECKMARK="\u2714"
+    CROSSMARK="\u2716"
+    LINEBEG="\u2605"
+else
+    CHECKMARK="[Y]"
+    CROSSMARK="[X]"
+    LINEBEG="::"
+fi
+CHECKMARK="\e[1;32m$CHECKMARK\e[0m"
+CROSSMARK="\e[1;91m$CROSSMARK\e[0m"
+LINEBEG="\e[1;34m$LINEBEG\e[0m"
+CWD=$PWD
+
+
+
+
+# At first, ensure that we are not root as some commands we execute are not recommended
+# to be called with root permissions
+if [[ $(id -u) -eq 0 ]]; then
+    printf " $CROSSMARK Please do not run this script with root permissions.\n"
+    exit;
+fi
+
+
+
+
+# Then, check for the current OS type
+# If we support it, we can also automatically download all required dependencies
+printf "$LINEBEG Checking for operating system type...\n"
+
+INSTALLSYSTEMS=(PACMAN APTGET YUM)
+isa=${#INSTALLSYSTEMS[@]}
+for ((i=0; i < $isa; i++)); do
+    ISE_NAME=${INSTALLSYSTEMS[i]}
+    declare -r ${ISE_NAME}=$i
+done
+
+OGRE_MANUAL_BUILD=false
+
+if [ $OSTYPE == "linux-gnu" ]; then
+    # Linux
+    printf " $CHECKMARK Linux is supported, but we need to check for your install distribution...\n"
+    
+    # Get current Linux distribution
+    if [ -f /etc/arch-release ]; then
+        DISTRO="arch"
+    else
+        DISTRO=$(lsb_release -is)
+    fi
+    DISTRO=${DISTRO,,} # Make distro name lower-case
+    if [[ $DISTRO == "arch" ]]; then
+        printf " $CHECKMARK Arch Linux is supported. Using \e[1mpacman\e[0m install system...\n"
+
+        INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
+        PACKAGES="base-devel git-lfs cmake pkgconf boost cgal openssl openal ogg zlib rapidjson clang"
+	AUR_PACKAGES=("v8", "ogre")
+    elif [ $DISTRO == "ubuntu" ]; then
+        printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
+
+        INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
+        PACKAGES="git-lfs cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libcgal-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev clang-format"
+        OGRE_MANUAL_BUILD=true
+    else
+        printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
+    fi
+: '
+elif [[ $OSTYPE == "darwin"* ]]; then
+    # macOS
+    printf " $CHECKMARK macOS is supported\n"
+    # TODO: Add support
+elif [[ $OSTYPE == "freebsd"* ]]; then
+    # FreeBSD
+    printf " $CHECKMARK FreeBSD is supported\n"
+    # TODO: Add support
+elif [[ $OSTYPE == "openbsd"* ]]; then
+    # OpenBSD
+    printf " $CHECKMARK OpenBSD is supported\n"
+    # TODO: Add support
+elif [[ $OSTYPE == "netbsd"* ]]; then
+    # NetBSD
+    printf " $CHECKMARK NetBSD is supported\n"
+    # TODO: Add support
+'
+else
+    printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\n"
+fi
+
+
+
+
+# Install all required packages...
+if [ $INSTALLSYSTEM ]; then
+    printf "$LINEBEG Installing required packages...\n"
+
+    if [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$PACMAN]} ]; then
+        sudo pacman -Syu --noconfirm
+        sudo pacman -S $PACKAGES --noconfirm --needed
+
+        if [ $AUR_PACKAGES ]; then
+            mkdir --parents build/pacman_aur
+            for i in "${AUR_PACKAGES[@]}"
+            do
+                if [ ! -d "tmp/$i" ]; then
+                    git clone https://aur.archlinux.org/$i.git build/pacman_aur/$i
+                else
+                    git -C build/pacman_aur/$i pull
+                fi
+                pushd build/pacman_aur/$i
+                rm *.pkg.tar.xz
+                makepkg -Acs --noconfirm --needed
+                popd >/dev/null
+                sudo pacman -U $(ls build/pacman_aur/$i/*.pkg.tar.xz | head -1) --noconfirm
+            done
+        fi
+    elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$APTGET]} ]; then
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get -y install $PACKAGES
+    fi
+
+    if [ $OGRE_MANUAL_BUILD = true ]; then
+        printf "$LINEBG Building OGRE...\n"
+        OGRE_BRANCH="v1.12.0"
+        if [ ! -d "thirdparty/manual-build/lib/ogre3d" ]; then
+            git clone https://github.com/OGRECave/ogre --depth 1 --branch $OGRE_BRANCH thirdparty/manual-build/lib/ogre3d
+        else
+            git -C thirdparty/manual-build/lib/ogre3d reset --hard
+            git -C thirdparty/manual-build/lib/ogre3d fetch
+            git -C thirdparty/manual-build/lib/ogre3d checkout $OGRE_BRANCH
+            git -C thirdparty/manual-build/lib/ogre3d pull --depth 1
+        fi
+        cd thirdparty/manual-build/lib/ogre3d
+        if [ -d build ]; then rm -Rf build; fi
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/ogre3d" -DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=OFF -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_STATIC=OFF -DOGRE_COPY_DEPENDENCIES=OFF -DOGRE_INSTALL_DEPENDENCIES=OFF -DOGRE_BUILD_COMPONENT_PYTHON=OFF -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=OFF -DOGRE_STATIC=ON -DCMAKE_BUILD_TYPE=Release ..
+        make
+        make install
+        mv "$CWD/thirdparty/manual-build/precompiled/ogre3d/lib/OGRE/*" "$CWD/thirdparty/manual-build/precompiled/ogre3d/lib"
+        rm -Rf "$CWD/thirdparty/manual-build/precompiled/ogre3d/lib/OGRE"
+    fi
+
+    printf " $CHECKMARK Finished! Please check the above command line output in order to verify that everything was okay.\n"
+fi

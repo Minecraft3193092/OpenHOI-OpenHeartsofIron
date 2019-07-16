@@ -1,0 +1,49 @@
+{
+  "world": {
+    "radius": 6378137,
+    "max_lat": 80,
+    "max_lon":  180
+  },
+  "regions": {
+    "svalbard": [
+      "west_spitsbergen",
+      "nordaustlandet",
+      "bjornoya",
+      "svenskoya",
+      "kongsoya",
+      "abeloya",
+      "kvitoya",
+      "barentsoya",
+      "edgeoya"
+    ],
+    "novaya_zemlya": [
+      "severny_island",
+      "yuzhny_island"
+    ],
+    "balearic_islands": [
+      "mallorca",
+      "menorca",
+      "ibiza"
+    ],
+    "antrim": [
+      "ballymoney",
+      "ballymena",
+      "ballyclare",
+      "belfast"
+    ],
+    "new_york": [
+      "new_york_city",
+      "nassau",
+      "suffolk"
+    ]
+    "antarctica": [
+      "antarctica1",
+      "antarctica2",
+      "antarctica3",
+      "antarctica4",
+      "antarctica5",
+      "antarctica6",
+      "antarctica7"
+    ]
+  }
+}

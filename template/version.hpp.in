@@ -1,0 +1,4 @@
+// This file will be automatically modified and moved by CMake
+#define OPENHOI_VERSION_MAJOR "@OPENHOI_VERSION_MAJOR@"
+#define OPENHOI_VERSION_MINOR "@OPENHOI_VERSION_MINOR@"
+#define OPENHOI_VERSION_PATCH "@OPENHOI_VERSION_PATCH@"
