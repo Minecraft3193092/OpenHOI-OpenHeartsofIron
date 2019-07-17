@@ -9,7 +9,7 @@ matrix:
       dist: bionic
       compiler:
         - clang
-         - gcc
+        - gcc
       before_install:
         - chmod +x fetch-deps
         - ./fetch-deps
