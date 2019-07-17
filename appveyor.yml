@@ -1,0 +1,21 @@
+shallow_clone: true
+image: Visual Studio 2017
+clone_depth: 1
+platform: x64
+install:
+  - mkdir C:\projects\deps
+  - cd C:\projects\deps
+  - appveyor DownloadFile https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip -FileName ninja.zip
+  - 7z x ninja.zip -o C:\projects\deps\ninja > nul
+  - set PATH=C:\projects\deps\ninja;%PATH%
+  - ninja --version
+before_build:
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+  - cd C:\projects\openhoi
+  - fetch-deps
+build_script:
+  - mkdir build
+  - cd build
+  - cmake .. -GNinja
+  - ninja
+  - ninja test
