@@ -4,12 +4,24 @@ git:
   depth: 1
 matrix:
   include:
-    - name: Ubuntu Bionic LTS
+    - name: Ubuntu Bionic LTS GCC
       os: linux
       dist: bionic
-      compiler:
-        - clang
-        - gcc
+      compiler: gcc
+      before_install:
+        - chmod +x fetch-deps
+        - ./fetch-deps
+      before_script:
+        - mkdir build
+        - cd build
+        - cmake ..
+      script:
+        - make
+        - make test
+    - name: Ubuntu Bionic LTS Clang
+      os: linux
+      dist: bionic
+      compiler: clang
       before_install:
         - chmod +x fetch-deps
         - ./fetch-deps
