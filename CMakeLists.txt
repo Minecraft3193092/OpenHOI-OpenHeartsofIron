@@ -50,6 +50,10 @@ if(WIN32)
 endif()
 
 
+# Add a "test" target
+enable_testing()
+
+
 # Add game base library
 add_subdirectory(hoibase)
 

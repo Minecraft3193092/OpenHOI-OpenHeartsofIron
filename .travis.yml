@@ -1,16 +1,24 @@
 language: cpp
 sudo: required
-dist: bionic
-compiler:
-  - clang
-  - gcc
-os:
-  - linux
-before_install:
-  - chmod +x fetch-deps
-  - ./fetch-deps
-before_script:
-  - mkdir build
-  - cd build
-  - cmake ..
-script: make && make test
+git:
+  depth: 1
+matrix:
+  include:
+    - name: Ubuntu Bionic LTS
+      os: linux
+      dist: bionic
+      compiler:
+        - clang
+         - gcc
+      before_install:
+        - chmod +x fetch-deps
+        - ./fetch-deps
+      before_script:
+        - mkdir build
+        - cd build
+        - cmake ..
+      script:
+        - make
+        - make test
+notifications:
+  email: false
