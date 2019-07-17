@@ -197,26 +197,6 @@ cd ..
 robocopy "include" "%CWD%\thirdparty\manual-build\precompiled\openal\include" /mir
 cd %CWD%
 
-echo %LINEBEG% GLEW...
-set GLEW_NAME=glew-vc141-static-x64
-set GLEW_VERSION=2.1.0
-nuget install %GLEW_NAME% -Version %GLEW_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%GLEW_NAME%.%GLEW_VERSION%\build\native\lib\Release" "%CWD%\thirdparty\manual-build\precompiled\glew\lib" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\%GLEW_NAME%.%GLEW_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\glew\include" /mir
-
-echo %LINEBEG% GLFW...
-set GLFW_NAME=glfw
-set GLFW_VERSION=3.2.1.5
-nuget install %GLFW_NAME% -Version %GLFW_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%GLFW_NAME%.%GLFW_VERSION%\build\native\lib\static\v140\x64" "%CWD%\thirdparty\manual-build\precompiled\glfw\lib" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\%GLFW_NAME%.%GLFW_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\glfw\include" /mir
-
-echo %LINEBEG% GLM...
-set GLM_NAME=glm
-set GLM_VERSION=0.9.9.300
-nuget install %GLM_NAME% -Version %GLM_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%GLM_NAME%.%GLM_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\glm\include" /mir
-
 echo %LINEBEG% RapidJSON...
 set RAPIDJSON_NAME=rapidjson.v110
 set RAPIDJSON_VERSION=1.1.0
