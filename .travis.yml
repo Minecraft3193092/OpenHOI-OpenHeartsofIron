@@ -20,5 +20,17 @@ matrix:
       script:
         - make
         - make test
+    - name: Windows Server 1803
+      os: windows
+      before_install:
+        - choco install ninja nuget.commandline
+        - fetch-deps
+      before_script:
+        - mkdir build
+        - cd build
+        - cmake -G Ninja ..
+      script:
+        - ninja
+        - ninja test
 notifications:
   email: false
