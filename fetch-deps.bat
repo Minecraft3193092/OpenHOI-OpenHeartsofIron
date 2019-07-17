@@ -41,13 +41,16 @@ if "%PROGRAMFILES%" == "C:\Program Files" (
 
 
 
-@rem Then, ensure that we are not root as some commands we execute are not recommended
-@rem to be called with root permissions
-net session >nul 2>&1
-if %errorLevel% == 0 (
-    echo %CROSSMARK% Please do not run this script with root permissions.
-    goto end
+@rem In case we are not running in AppVeyor, check for admin permissions..
+if "%APPVEYOR%"=="" (
+    @rem Then, ensure that we are not admin as some commands we execute are not recommended to be called with admin permissions
+    net session >nul 2>&1
+    if %errorLevel% == 0 (
+        echo %CROSSMARK% Please do not run this script with admin permissions.
+        goto end
+    )
 )
+
 
 
 
