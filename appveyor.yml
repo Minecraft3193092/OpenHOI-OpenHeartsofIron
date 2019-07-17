@@ -12,7 +12,7 @@ install:
 before_build:
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
   - cd C:\projects\openhoi
-  - runas /trustlevel:0x20000 "cmd /C fetch-deps"
+  - runas /trustlevel:0x20000 fetch-deps.bat
 build_script:
   - mkdir build
   - cd build
