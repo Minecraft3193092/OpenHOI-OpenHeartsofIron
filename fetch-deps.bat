@@ -213,7 +213,7 @@ robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\nat
 robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
 
 echo %LINEBEG% Eigen...
-set EIGEN_BRANCH=3.3
+set EIGEN_BRANCH=3.3.7
 if not exist thirdparty\manual-build\lib\eigen (
     git clone https://github.com/eigenteam/eigen-git-mirror --depth 1 --branch %EIGEN_BRANCH% thirdparty\manual-build\lib\eigen
 ) else (
