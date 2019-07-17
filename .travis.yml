@@ -8,41 +8,19 @@ matrix:
       os: linux
       dist: bionic
       compiler: gcc
-      before_install:
-        - chmod +x fetch-deps
-        - ./fetch-deps
-      before_script:
-        - mkdir build
-        - cd build
-        - cmake ..
-      script:
-        - make
-        - make test
     - name: Ubuntu Bionic LTS Clang
       os: linux
       dist: bionic
       compiler: clang
-      before_install:
-        - chmod +x fetch-deps
-        - ./fetch-deps
-      before_script:
-        - mkdir build
-        - cd build
-        - cmake ..
-      script:
-        - make
-        - make test
-    - name: Windows Server 1803
-      os: windows
-      before_install:
-        - choco install ninja nuget.commandline
-        - fetch-deps
-      before_script:
-        - mkdir build
-        - cd build
-        - cmake -G Ninja ..
-      script:
-        - ninja
-        - ninja test
+before_install:
+  - chmod +x fetch-deps
+  - ./fetch-deps
+script:
+  - make
+  - make test
+before_script:
+  - mkdir build
+  - cd build
+  - cmake ..
 notifications:
   email: false
