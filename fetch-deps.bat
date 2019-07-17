@@ -109,14 +109,14 @@ mkdir thirdparty\manual-build\precompiled
 
 echo %LINEBEG% Prebuilt dependencies for 64-bit Windows...
 if not exist thirdparty\manual-build\lib\win64-prebuilt-deps (
-    git clone https://github.com/openhoi/win64-prebuilt-deps thirdparty\manual-build\lib\win64-prebuilt-deps
+    git clone https://github.com/openhoi/win64-prebuilt-deps --depth 1 thirdparty\manual-build\lib\win64-prebuilt-deps
     cd thirdparty\manual-build\lib\win64-prebuilt-deps
 ) else (
     git -C thirdparty\manual-build\lib\win64-prebuilt-deps reset --hard
     cd thirdparty\manual-build\lib\win64-prebuilt-deps
 )
 git reset --hard
-git pull
+git pull --depth 1
 robocopy "%CD%\gmp\lib" "%CWD%\thirdparty\manual-build\precompiled\gmp\lib" libgmp-10.lib libmpfr-4.lib
 robocopy "%CD%\gmp\lib" "%CWD%\thirdparty\manual-build\precompiled\gmp\bin" libgmp-10.dll libmpfr-4.dll
 robocopy "%CD%\gmp\include" "%CWD%\thirdparty\manual-build\precompiled\gmp\include" /mir
