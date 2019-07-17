@@ -6,7 +6,7 @@ install:
   - mkdir C:\projects\deps
   - cd C:\projects\deps
   - appveyor DownloadFile https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip -FileName ninja.zip
-  - 7z x ninja.zip -o C:\projects\deps\ninja > nul
+  - 7z x ninja.zip -oC:\projects\deps\ninja > nul
   - set PATH=C:\projects\deps\ninja;%PATH%
   - ninja --version
 before_build:
