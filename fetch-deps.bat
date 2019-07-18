@@ -16,6 +16,7 @@ set CHECKMARK=[32m[Y][0m
 set CROSSMARK=[91m[X][0m
 set LINEBEG=[36m:: [0m
 set CWD=%CD%
+set CI_BUILD="%APPVEYOR%"
 
 
 
@@ -36,19 +37,6 @@ if "%PROGRAMFILES%" == "C:\Program Files" (
     echo %CHECKMARK% 64 bit is supported.
 ) else (
     echo %CROSSMARK% 32 bit is not supported. Aborting. You may have to install all dependencies manually.
-)
-
-
-
-
-@rem In case we are not running in AppVeyor, check for admin permissions..
-if "%APPVEYOR%"=="" (
-    @rem Then, ensure that we are not admin as some commands we execute are not recommended to be called with admin permissions
-    net session >nul 2>&1
-    if %errorLevel% == 0 (
-        echo %CROSSMARK% Please do not run this script with admin permissions.
-        goto end
-    )
 )
 
 
@@ -313,6 +301,6 @@ cd %CWD%
 
 
 @rem Pause when we are not in AppVeyor CI
-if "%APPVEYOR%"=="" (
+if /I "%CI_BUILD%" neq "true" (
     pause
 )
