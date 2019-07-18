@@ -311,4 +311,8 @@ cd %CWD%
 
 :end
 
-pause
+
+@rem Pause when we are not in AppVeyor CI
+if "%APPVEYOR%"=="" (
+    pause
+)
