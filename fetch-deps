@@ -76,6 +76,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
         PACKAGES="git-lfs cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev clang-format"
         if [[ $CODENAME == "bionic" ]]; then
+            PACKAGES="$PACKAGES libeigen3-dev"
             CGAL_MANUAL_BUILD=true
         else
             PACKAGES="$PACKAGES libcgal-dev"
@@ -137,7 +138,6 @@ if [ $INSTALLSYSTEM ]; then
         sudo apt-get update
         sudo apt-get upgrade
         sudo apt-get -y install $PACKAGES
-        sudo apt autoremove
     fi
 
     if [ $CGAL_MANUAL_BUILD = true ]; then
@@ -150,13 +150,6 @@ if [ $INSTALLSYSTEM ]; then
         unzip CGAL-$CGAL_VERSION.zip
         cd CGAL-$CGAL_VERSION
         if [ -d build ]; then rm -Rf build; fi
-        mkdir build
-        cd build
-        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/CGAL-$CGAL_VERSION" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Debug ..
-        make
-        make install
-        cd ..
-        rm -Rf build
         mkdir build
         cd build
         cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/CGAL-$CGAL_VERSION" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Release ..
