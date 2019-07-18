@@ -49,6 +49,7 @@ for ((i=0; i < $isa; i++)); do
     declare -r ${ISE_NAME}=$i
 done
 
+CGAL_MANUAL_BUILD=false
 OGRE_MANUAL_BUILD=false
 
 if [ $OSTYPE == "linux-gnu" ]; then
@@ -67,12 +68,18 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
         PACKAGES="base-devel git-lfs cmake pkgconf boost cgal openssl openal ogg zlib rapidjson clang"
-	AUR_PACKAGES=("v8", "ogre")
+        AUR_PACKAGES=("v8", "ogre")
     elif [ $DISTRO == "ubuntu" ]; then
         printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
 
+        CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="git-lfs cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libcgal-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev clang-format"
+        PACKAGES="git-lfs cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev clang-format"
+        if [[ $CODENAME == "bionic" ]]; then
+            CGAL_MANUAL_BUILD=true
+        else
+            PACKAGES="$PACKAGES libcgal-dev"
+        fi
         OGRE_MANUAL_BUILD=true
     else
         printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
@@ -131,6 +138,23 @@ if [ $INSTALLSYSTEM ]; then
         sudo apt-get upgrade
         sudo apt-get -y install $PACKAGES
         sudo apt autoremove
+    fi
+
+    if [ $CGAL_MANUAL_BUILD = true ]; then
+        printf "$LINEBG Building CGAL...\n"
+        CGAL_VERSION="4.13.1"
+        cd thirdparty/manual-build/lib
+        if [ -f cgal.zip ]; then rm -f cgal.zip; fi
+        if [ -d cgal ]; then rm -Rf cgal; fi
+        wget -P cgal.zip -O "https://github.com/CGAL/cgal/releases/download/releases/CGAL-$CGAL_VERSION/CGAL-$CGAL_VERSION.zip"
+        mkdir cgal
+        unzip cgal.zip -D cgal/
+        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/cgal" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Debug ..
+        make
+        make install
+        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/cgal" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Release ..
+        make
+        make install
     fi
 
     if [ $OGRE_MANUAL_BUILD = true ]; then
