@@ -111,7 +111,7 @@ cd %CWD%
 
 echo %LINEBEG% Boost...
 set BOOST_NAME=boost-vc141
-set BOOST_VERSION=1.70.0
+set BOOST_VERSION=1.69.0
 nuget install %BOOST_NAME% -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
 robocopy "thirdparty\manual-build\lib\boost.%BOOST_VERSION%.0\lib\native\include" "%CWD%\thirdparty\manual-build\precompiled\boost\include" /mir
 set BOOST_PO_NAME=boost_program_options-vc141
