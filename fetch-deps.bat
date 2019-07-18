@@ -223,7 +223,9 @@ echo %LINEBEG% CGAL...
 rem We need to download the source ZIP because the directory structure is different to the GitHub/development version
 rem See https://www.cgal.org/download/windows.html
 set CGAL_VERSION=4.13
+echo Downloading CGAL v%CGAL_VERSION%...
 powershell -Command "Invoke-WebRequest https://github.com/CGAL/cgal/releases/download/releases/CGAL-%CGAL_VERSION%/CGAL-%CGAL_VERSION%.zip -OutFile %CWD%\thirdparty\manual-build\lib\cgal.zip"
+echo Expanding CGAL v%CGAL_VERSION% ZIP archive...
 powershell -Command "Expand-Archive -Force %CWD%\thirdparty\manual-build\lib\cgal.zip %CWD%\thirdparty\manual-build\lib"
 move "%CWD%\thirdparty\manual-build\lib\CGAL-%CGAL_VERSION%" "%CWD%\thirdparty\manual-build\lib\cgal"
 cd %CWD%\thirdparty\manual-build\lib\cgal
@@ -254,46 +256,17 @@ robocopy "%CWD%\thirdparty\manual-build\lib\%V8_NAME%.%V8_VERSION%\include" "%CW
 robocopy "%CWD%\thirdparty\manual-build\lib\%V8_REDIST_NAME%.%V8_VERSION%\lib\Release" "%CWD%\thirdparty\manual-build\precompiled\v8\bin" /mir
 cd %CWD%
 
-echo %LINEBEG% FreeType...
-set FREETYPE_NAME=freetype
-set FREETYPE_VERSION=2.8.0.1
-nuget install %FREETYPE_NAME% -Version %FREETYPE_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%FREETYPE_NAME%.%FREETYPE_VERSION%\build\native\lib\x64\v141\dynamic\Release" "%CWD%\thirdparty\manual-build\precompiled\freetype\lib" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\%FREETYPE_NAME%.redist.%FREETYPE_VERSION%\build\native\bin\x64\v141\dynamic\Release" "%CWD%\thirdparty\manual-build\precompiled\freetype\bin" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\%FREETYPE_NAME%.%FREETYPE_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\freetype\include" /mir
-cd %CWD%
-
-echo %LINEBEG% FreeImage...
-set FREEIMAGE_NAME=native.freeimage
-set FREEIMAGE_VERSION=3.17.0
-nuget install %FREEIMAGE_NAME% -Version %FREEIMAGE_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%FREEIMAGE_NAME%.%FREEIMAGE_VERSION%\build\native\lib\x64\dynamic" "%CWD%\thirdparty\manual-build\precompiled\freeimage\lib" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\%FREEIMAGE_NAME%.redist.%FREEIMAGE_VERSION%\build\native\bin\x64\dynamic" "%CWD%\thirdparty\manual-build\precompiled\freeimage\bin" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\%FREEIMAGE_NAME%.%FREEIMAGE_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\freeimage\include" /mir
-cd %CWD%
-
 echo %LINEBEG% Ogre3D...
-set OGRE_BRANCH=v1.12.0
-if not exist thirdparty\manual-build\lib\ogre3d (
-    git clone https://github.com/OGRECave/ogre --depth 1 --branch %OGRE_BRANCH% thirdparty\manual-build\lib\ogre3d
-) else (
-    git -C thirdparty\manual-build\lib\ogre3d reset --hard
-    git -C thirdparty\manual-build\lib\ogre3d fetch
-    git -C thirdparty\manual-build\lib\ogre3d checkout %OGRE_BRANCH%
-    git -C thirdparty\manual-build\lib\ogre3d pull --depth 1
-)
-cd thirdparty\manual-build\lib\ogre3d
-@rd /s /q build
-mkdir build
-cd build
-rem OGRE 2: cmake -DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES2=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES_SOURCE=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_LEGACY_ANIMATIONS=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=OFF -DOGRE_STATIC=OFF -DOGRE_COPY_DEPENDENCIES=OFF -DOGRE_INSTALL_DEPENDENCIES=OFF -DRapidjson_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\rapidjson\include" -DZLIB_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\zlib\include" -DZLIB_LIBRARY_REL="%CWD%\thirdparty\manual-build\precompiled\zlib\lib\zlib.lib" -DFREETYPE_LIBRARY_REL="%CWD%\thirdparty\manual-build\precompiled\freetype\lib\freetype28.lib" -DFREETYPE_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\freetype\include" -DFREETYPE_FT2BUILD_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\freetype\include" -DFreeImage_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\freeimage\include" -DFreeImage_LIBRARY_REL="%CWD%\thirdparty\manual-build\precompiled\freeimage\lib\FreeImage.lib" -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-cmake -DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES_SOURCE=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=OFF -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_STATIC=OFF -DOGRE_COPY_DEPENDENCIES=OFF -DOGRE_INSTALL_DEPENDENCIES=OFF -DZLIB_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\zlib\include" -DZLIB_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\zlib\lib\zlib.lib" -DFREETYPE_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\freetype\lib\freetype28.lib" -DFREETYPE_INCLUDE_DIR_freetype2="%CWD%\thirdparty\manual-build\precompiled\freetype\include" -DFREETYPE_INCLUDE_DIR_ft2build="%CWD%\thirdparty\manual-build\precompiled\freetype\include"-DFreeImage_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\freeimage\include" -DFreeImage_LIBRARY_REL="%CWD%\thirdparty\manual-build\precompiled\freeimage\lib\FreeImage.lib" -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_RTSHADERSYSTEM=OFF -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=OFF -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=OFF -DOGRE_BUILD_RENDERSYSTEM_D3D9=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-ninja
-ninja install
-robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\include" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\include" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreBites.lib OgreGLSupport.lib OgreHLMS.lib OgreMain.lib OgreMeshLodGenerator.lib OgreOverlay.lib OgreProperty.lib
-robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib\OGRE" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" Codec_STBI.lib RenderSystem_Direct3D11.lib RenderSystem_GL3Plus.lib
-robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI.dll OgreBites.dll OgreHLMS.dll OgreMain.dll OgreMeshLodGenerator.dll OgreOverlay.dll OgreProperty.dll RenderSystem_Direct3D11.dll
+@rd /s /q thirdparty\manual-build\lib\ogre3d
+set OGRE_VERSION=1.12.1
+echo Downloading OGRE v%OGRE_VERSION%...
+powershell -Command "Invoke-WebRequest https://bintray.com/ogrecave/ogre/download_file?file_path=ogre-sdk-%OGRE_VERSION%-vc15-x64.zip -OutFile %CWD%\thirdparty\manual-build\lib\ogre3d.zip"
+echo Expanding OGRE v%OGRE_VERSION% ZIP archive...
+powershell -Command "Expand-Archive -Force %CWD%\thirdparty\manual-build\lib\ogre3d.zip %CWD%\thirdparty\manual-build\lib\ogre3d"
+robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\include" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\include" /mir
+robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreBites.lib OgreHLMS.lib OgreMain.lib OgreMeshLodGenerator.lib OgreOverlay.lib OgreProperty.lib
+robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\lib\OGRE" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" Codec_STBI.lib RenderSystem_Direct3D11.lib
+robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI.dll OgreBites.dll OgreHLMS.dll OgreMain.dll OgreMeshLodGenerator.dll OgreOverlay.dll OgreProperty.dll RenderSystem_Direct3D11.dll
 cd %CWD%
 
 
