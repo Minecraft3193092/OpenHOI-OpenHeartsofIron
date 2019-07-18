@@ -16,7 +16,6 @@ set CHECKMARK=[32m[Y][0m
 set CROSSMARK=[91m[X][0m
 set LINEBEG=[36m:: [0m
 set CWD=%CD%
-set CI_BUILD="%APPVEYOR%"
 
 
 
@@ -271,9 +270,3 @@ cd %CWD%
 
 
 :end
-
-
-@rem Pause when we are not in AppVeyor CI
-if /I "%CI_BUILD%" neq "true" (
-    pause
-)
