@@ -5,15 +5,8 @@ matrix:
     - name: Ubuntu Bionic LTS GCC
       os: linux
       dist: bionic
-      addons:
-        apt:
-          sources:
-             - ubuntu-toolchain-r-test
-          packages:
-            - gcc-8
-            - g++-8
       env:
-        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && gcc-8 -v && g++-8 -v"
+        - MATRIX_EVAL="gcc -v && g++ -v"
     - name: Ubuntu Bionic LTS Clang
       os: linux
       dist: bionic
