@@ -5,21 +5,12 @@ matrix:
     - name: Ubuntu Bionic LTS GCC
       os: linux
       dist: bionic
-      env:
-        - MATRIX_EVAL="gcc -v && g++ -v"
+      compiler: gcc
     - name: Ubuntu Bionic LTS Clang
       os: linux
       dist: bionic
-      addons:
-        apt:
-          sources:
-             - ubuntu-toolchain-r-test
-          packages:
-            - clang-7
-      env:
-        - MATRIX_EVAL="CC=clang-7.0 && CXX=clang-7.0 && clang-7.0 --version"
+      compiler: clang
 before_install:
-  - eval "${MATRIX_EVAL}"
   - chmod +x fetch-deps
   - ./fetch-deps
 script:
