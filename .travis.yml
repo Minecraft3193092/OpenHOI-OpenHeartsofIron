@@ -7,19 +7,24 @@ matrix:
       dist: bionic
       addons:
         apt:
+          sources:
+             - ubuntu-toolchain-r-test
           packages:
+            - gcc-8
             - g++-8
       env:
-        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && gcc-8 -v && g++-8 -v"
     - name: Ubuntu Bionic LTS Clang
       os: linux
       dist: bionic
       addons:
         apt:
+          sources:
+             - ubuntu-toolchain-r-test
           packages:
             - clang-7
       env:
-        - MATRIX_EVAL="CC=clang-7.0 && CXX=clang-7.0"
+        - MATRIX_EVAL="CC=clang-7.0 && CXX=clang-7.0 && clang-7.0 --version"
 before_install:
   - eval "${MATRIX_EVAL}"
   - chmod +x fetch-deps
