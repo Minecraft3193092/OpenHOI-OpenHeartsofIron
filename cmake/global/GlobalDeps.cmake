@@ -4,8 +4,6 @@ find_package(Threads REQUIRED)
 set(Boost_USE_STATIC_LIBS OFF) # Use dynamic linking
 set(Boost_USE_STATIC_RUNTIME OFF) # Use dynamic linking
 set(Boost_USE_MULTITHREADED ON) # Use MT version
-set(Boost_USE_DEBUG_LIBS OFF) # Use release libs
-set(Boost_USE_DEBUG_RUNTIME OFF) # Use release runtime
 if(WIN32)
     set(BOOST_ROOT ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost)
 endif()
