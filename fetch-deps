@@ -130,6 +130,7 @@ if [ $INSTALLSYSTEM ]; then
         sudo apt-get update
         sudo apt-get upgrade
         sudo apt-get -y install $PACKAGES
+        sudo apt autoremove
     fi
 
     if [ $OGRE_MANUAL_BUILD = true ]; then
