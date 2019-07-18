@@ -76,6 +76,13 @@ if %errorLevel% == 0 (
     goto end
 )
 
+where /q clang-format
+if %errorLevel% == 0 (
+    echo %CHECKMARK% Clang-format is installed and found.
+) else (
+    echo %CROSSMARK% Clang-format is not installed or not inside Windows PATH. Aborting. Please install Clang-format from https://llvm.org/builds
+    goto end
+)
 
 
 
