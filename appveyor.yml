@@ -16,7 +16,7 @@ before_build:
 build_script:
   - mkdir build
   - cd build
-  - cmake .. -GNinja
+  - cmake -DCMAKE_BUILD_TYPE=Release -G Ninja ..
   - ninja
   - ninja test
 notifications:
