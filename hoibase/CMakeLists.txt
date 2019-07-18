@@ -205,6 +205,6 @@ endif()
 
 # Set error level
 target_compile_options(hoibase PRIVATE
-    $<$<CXX_COMPILER_ID:Clang>:-Wall, -Wextra -Wc++17-compat-pedantic>
+    $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wc++17-compat-pedantic>
     $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -pedantic>
     $<$<CXX_COMPILER_ID:MSVC>:/W3>)
