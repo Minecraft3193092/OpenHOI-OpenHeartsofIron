@@ -143,10 +143,11 @@ if [ $INSTALLSYSTEM ]; then
     if [ $CGAL_MANUAL_BUILD = true ]; then
         printf "$LINEBG Building CGAL...\n"
         CGAL_VERSION="4.13.1"
+        mkdir -p thirdparty/manual-build/lib
         cd thirdparty/manual-build/lib
         if [ -f cgal.zip ]; then rm -f cgal.zip; fi
         if [ -d cgal ]; then rm -Rf cgal; fi
-        wget -P cgal.zip -O "https://github.com/CGAL/cgal/releases/download/releases/CGAL-$CGAL_VERSION/CGAL-$CGAL_VERSION.zip"
+        wget -P cgal.zip https://github.com/CGAL/cgal/releases/download/releases/CGAL-$CGAL_VERSION/CGAL-$CGAL_VERSION.zip
         mkdir cgal
         unzip cgal.zip -D cgal/
         cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/cgal" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Debug ..
@@ -155,12 +156,13 @@ if [ $INSTALLSYSTEM ]; then
         cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/cgal" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Release ..
         make
         make install
+        cd $CWD
     fi
 
     if [ $OGRE_MANUAL_BUILD = true ]; then
         printf "$LINEBG Building OGRE...\n"
         OGRE_BRANCH="v1.12.1"
-        if [ ! -d "thirdparty/manual-build/lib/ogre3d" ]; then
+        if [ ! -d thirdparty/manual-build/lib/ogre3d ]; then
             git clone https://github.com/OGRECave/ogre --depth 1 --branch $OGRE_BRANCH thirdparty/manual-build/lib/ogre3d
         else
             git -C thirdparty/manual-build/lib/ogre3d reset --hard
@@ -175,7 +177,10 @@ if [ $INSTALLSYSTEM ]; then
         cmake -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/ogre3d" -DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=OFF -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_STATIC=OFF -DOGRE_BUILD_COMPONENT_PYTHON=OFF -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=OFF -DOGRE_STATIC=ON -DCMAKE_BUILD_TYPE=Release ..
         make
         make install
+        cd $CWD
     fi
 
     printf " $CHECKMARK Finished! Please check the above command line output in order to verify that everything was okay.\n"
 fi
+
+cd $CWD
