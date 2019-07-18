@@ -145,15 +145,13 @@ if [ $INSTALLSYSTEM ]; then
         CGAL_VERSION="4.13.1"
         mkdir -p thirdparty/manual-build/lib
         cd thirdparty/manual-build/lib
-        rm -f CGAL-*.zip
-        if [ -d cgal ]; then rm -Rf cgal; fi
+        rm -rf CGAL-*
         wget https://github.com/CGAL/cgal/releases/download/releases/CGAL-$CGAL_VERSION/CGAL-$CGAL_VERSION.zip
-        mkdir cgal
-        unzip CGAL-$CGAL_VERSION.zip -d cgal/
-        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/cgal" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Debug ..
+        unzip CGAL-$CGAL_VERSION.zip
+        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/CGAL-$CGAL_VERSION" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Debug ..
         make
         make install
-        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/cgal" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/CGAL-$CGAL_VERSION" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Release ..
         make
         make install
         cd $CWD
