@@ -148,11 +148,13 @@ if [ $INSTALLSYSTEM ]; then
         rm -rf CGAL-*
         wget https://github.com/CGAL/cgal/releases/download/releases/CGAL-$CGAL_VERSION/CGAL-$CGAL_VERSION.zip
         unzip CGAL-$CGAL_VERSION.zip
-        cd CGAL-$CGAL_VERSION
+        if [ -d cgal ]; then rm -Rf cgal; fi
+        mv CGAL-$CGAL_VERSION cgal
+        cd cgal
         if [ -d build ]; then rm -Rf build; fi
         mkdir build
         cd build
-        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/CGAL-$CGAL_VERSION" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/cgal" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Release ..
         make
         make install
         cd $CWD
