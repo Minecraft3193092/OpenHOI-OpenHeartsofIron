@@ -31,6 +31,6 @@ if(${BUILD_OGRE_STATIC_LIB})
 endif()
 
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if(NOT WIN32)
     set(FILESYSTEM_LIB stdc++fs)
 endif()
