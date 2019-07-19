@@ -60,7 +60,6 @@ if(WIN32 OR EXISTS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/
 		set(CGAL_LIBRARIES_DIR ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/lib)
 	endif()
 else()
-else()
     set(CGAL_VERSION 4.13)
 endif()
 find_package(CGAL ${CGAL_VERSION} REQUIRED)
