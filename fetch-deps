@@ -2,7 +2,7 @@
 
 ##############################################################################
 ##                                                                          ##
-## Tool to fetch openhoi dependencies for UN*X                              ##
+## Tool to fetch openhoi dependencies for *NIX                              ##
 ## !DO NOT RUN THIS SCRIPT AS ROOT!                                         ##
 ##                                                                          ##
 ##############################################################################
@@ -152,7 +152,7 @@ if [ $INSTALLSYSTEM ]; then
         if [ -d build ]; then rm -Rf build; fi
         mkdir build
         cd build
-        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/cgal" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX="$CWD/thirdparty/manual-build/precompiled/cgal" -DWITH_Eigen3=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_CXX_FLAGS="-fPIC" ..
         make
         make install
         cd $CWD
