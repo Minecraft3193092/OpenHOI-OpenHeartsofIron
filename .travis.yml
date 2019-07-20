@@ -2,7 +2,7 @@ language: cpp
 sudo: required
 matrix:
   include:
-    - name: MacOS Xcode 11
+    - name: MacOS Mojave Xcode 11
       os: osx
       osx_image: xcode11
 before_install:
