@@ -90,10 +90,7 @@ elif [[ $OSTYPE == "darwin"* ]]; then
     printf " $CHECKMARK macOS is supported\n"
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
-    PACKAGES="boost cgal v8 zlib"
-    if command -v cmake >/dev/null 2>&1; then
-        PACKAGES="$PACKAGES cmake"
-    fi
+    PACKAGES=(boost cgal v8 zlib cmake)
     OGRE_MANUAL_BUILD=true
 : '
 elif [[ $OSTYPE == "freebsd"* ]]; then
@@ -145,7 +142,10 @@ if [ $INSTALLSYSTEM ]; then
         sudo apt-get upgrade
         sudo apt-get -y install $PACKAGES
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$HOMEBREW]} ]; then
-        brew install $PACKAGES
+        for i in "${PACKAGES[@]}"
+        do
+            brew ls --versions $i && brew upgrade $i || brew install $i
+        done
     fi
 
     if [ $CGAL_MANUAL_BUILD = true ]; then
