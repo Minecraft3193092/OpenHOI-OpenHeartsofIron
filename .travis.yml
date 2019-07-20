@@ -2,14 +2,9 @@ language: cpp
 sudo: required
 matrix:
   include:
-    - name: Ubuntu Bionic LTS GCC
-      os: linux
-      dist: bionic
-      compiler: gcc
-    - name: Ubuntu Bionic LTS Clang
-      os: linux
-      dist: bionic
-      compiler: clang
+    - name: MacOS Xcode 11
+      os: osx
+      osx_image: xcode11
 before_install:
   - chmod +x fetch-deps
   - ./fetch-deps
