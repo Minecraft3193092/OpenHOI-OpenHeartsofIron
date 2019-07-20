@@ -42,7 +42,7 @@ fi
 # If we support it, we can also automatically download all required dependencies
 printf "$LINEBEG Checking for operating system type...\n"
 
-INSTALLSYSTEMS=(PACMAN APTGET YUM)
+INSTALLSYSTEMS=(PACMAN APTGET HOMEBREW)
 isa=${#INSTALLSYSTEMS[@]}
 for ((i=0; i < $isa; i++)); do
     ISE_NAME=${INSTALLSYSTEMS[i]}
@@ -67,14 +67,14 @@ if [ $OSTYPE == "linux-gnu" ]; then
         printf " $CHECKMARK Arch Linux is supported. Using \e[1mpacman\e[0m install system...\n"
 
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
-        PACKAGES="base-devel git-lfs cmake pkgconf boost cgal openssl openal ogg zlib rapidjson clang"
+        PACKAGES="base-devel cmake pkgconf boost cgal openssl openal ogg zlib rapidjson clang"
         AUR_PACKAGES=("v8", "ogre")
     elif [ $DISTRO == "ubuntu" ]; then
         printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
 
         CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="git-lfs cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev clang-format"
+        PACKAGES="cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev clang-format"
         if [[ $CODENAME == "bionic" ]]; then
             PACKAGES="$PACKAGES libgmp-dev libmpfr-dev libeigen3-dev"
             CGAL_MANUAL_BUILD=true
@@ -85,11 +85,17 @@ if [ $OSTYPE == "linux-gnu" ]; then
     else
         printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
     fi
-: '
 elif [[ $OSTYPE == "darwin"* ]]; then
     # macOS
     printf " $CHECKMARK macOS is supported\n"
-    # TODO: Add support
+    
+    INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
+    PACKAGES="boost cgal v8 zlib"
+    if command -v cmake >/dev/null 2>&1; then
+        PACKAGES="$PACKAGES cmake"
+    fi
+    OGRE_MANUAL_BUILD=true
+: '
 elif [[ $OSTYPE == "freebsd"* ]]; then
     # FreeBSD
     printf " $CHECKMARK FreeBSD is supported\n"
@@ -138,6 +144,8 @@ if [ $INSTALLSYSTEM ]; then
         sudo apt-get update
         sudo apt-get upgrade
         sudo apt-get -y install $PACKAGES
+    elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$HOMEBREW]} ]; then
+        brew $PACKAGES
     fi
 
     if [ $CGAL_MANUAL_BUILD = true ]; then
