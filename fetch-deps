@@ -11,14 +11,7 @@
 
 
 # Do some preparations...
-if [[ $TRAVIS_OS_NAME == "osx" ]]; then
-    export LC_CTYPE=en_US.UTF-8
-    set meta-flag on
-    set input-meta on
-    set output-meta on
-    set convert-meta off
-fi
-if (locale | grep -e 'utf8' -e 'UTF-8') >/dev/null 2>&1; then
+if [ "$TRAVIS_OS_NAME" != "osx" ] && (locale | grep -e 'utf8' -e 'UTF-8') >/dev/null 2>&1; then
     CHECKMARK="\u2714"
     CROSSMARK="\u2716"
     LINEBEG="\u2605"
