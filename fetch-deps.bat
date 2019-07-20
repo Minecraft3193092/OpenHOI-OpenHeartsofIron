@@ -241,13 +241,15 @@ cd %CWD%\thirdparty\manual-build\lib\cgal
 mkdir build
 cd build
 set CWD_FS=%CWD:\=/%
-cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=%CWD_FS%/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=%CWD_FS%/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/lib/eigen -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
-ninja
-ninja install
-cd ..
-@rd /s /q build
-mkdir build
-cd build
+if /I "%CI%" neq "true" (
+    cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=%CWD_FS%/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=%CWD_FS%/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/lib/eigen -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
+    ninja
+    ninja install
+    cd ..
+    @rd /s /q build
+    mkdir build
+    cd build
+)
 cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=%CWD_FS%/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=%CWD_FS%/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/lib/eigen -DCMAKE_BUILD_TYPE=Release -G Ninja ..
 ninja
 ninja install
