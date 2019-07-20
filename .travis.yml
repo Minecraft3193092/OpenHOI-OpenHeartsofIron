@@ -2,6 +2,14 @@ language: cpp
 sudo: required
 matrix:
   include:
+    - name: Ubuntu Bionic LTS GCC 7
+      os: linux
+      dist: bionic
+      compiler: gcc
+    - name: Ubuntu Bionic LTS Clang 7
+      os: linux
+      dist: bionic
+      compiler: clang
     - name: MacOS Mojave Xcode 11
       os: osx
       osx_image: xcode11
