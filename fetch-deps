@@ -145,7 +145,7 @@ if [ $INSTALLSYSTEM ]; then
         sudo apt-get upgrade
         sudo apt-get -y install $PACKAGES
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$HOMEBREW]} ]; then
-        brew $PACKAGES
+        brew install $PACKAGES
     fi
 
     if [ $CGAL_MANUAL_BUILD = true ]; then
