@@ -84,7 +84,7 @@ elif [[ $OSTYPE == "darwin"* ]]; then
     printf " $CHECKMARK macOS is supported\n"
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
-    PACKAGES=(cmake boost cgal v8 zlib openal-soft libogg rapidjson clang-format)
+    PACKAGES=(cmake boost cgal v8 zlib openssl openal-soft libogg rapidjson clang-format)
     OGRE_MANUAL_BUILD=true
 : '
 elif [[ $OSTYPE == "freebsd"* ]]; then
