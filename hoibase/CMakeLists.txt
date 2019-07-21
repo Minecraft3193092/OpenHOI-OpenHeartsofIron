@@ -14,7 +14,7 @@ if(WIN32)
 elseif(APPLE AND NOT OPENSSL_ROOT_DIR)
     set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
 endif()
-find_package(OpenSSL 1.1.1 REQUIRED)
+find_package(OpenSSL 1.0.2 REQUIRED)
 
 if(WIN32)
     cmake_policy(SET CMP0074 OLD)
