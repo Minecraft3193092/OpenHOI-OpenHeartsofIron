@@ -11,7 +11,11 @@
 
 
 # Do some preparations...
-if (locale | grep -e 'utf8' -e 'UTF-8') >/dev/null 2>&1; then
+if [[ $OSTYPE == "darwin"* ]]; then
+    CHECKMARK="\xE2\x9C\x94"
+    CROSSMARK="\xE2\x9C\x96"
+    LINEBEG="\xE2\x98\x85"
+elif (locale | grep -e 'utf8' -e 'UTF-8') >/dev/null 2>&1; then
     CHECKMARK="\u2714"
     CROSSMARK="\u2716"
     LINEBEG="\u2605"
