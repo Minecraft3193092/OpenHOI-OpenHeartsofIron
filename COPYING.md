@@ -60,7 +60,7 @@ Font files
  - `dev-assets/squealer.ttf` → [Free for our usage (logo creation)](/legal/typodermic.pdf) *<sub><sup>(taken from [Typodermic Fonts](http://typodermicfonts.com/squealer/))</sup></sub>*
 
 CMake Files
+ - `cmake/cgal/FindCGAL.cmake` → [BSD](/legal/bsd-findcgal)
+ *<sub><sup>(taken from [sidch/CMake](https://github.com/sidch/CMake))</sup></sub>*
  - `cmake/global/FindRapidJSON.cmake` → [BSD](/legal/bsd-findrapidjson)
  *<sub><sup>(taken from [lbaehren/CMakeModules](https://github.com/lbaehren/CMakeModules))</sup></sub>*
- - `cmake/win64/FindCGAL.cmake` → [BSD](/legal/bsd-findcgal)
- *<sub><sup>(taken from [sidch/CMake](https://github.com/sidch/CMake))</sup></sub>*

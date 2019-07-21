@@ -28,9 +28,7 @@ endif()
 
 # Make sure that our custom CMake modules are found
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/global)
-if(WIN32)
-    list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/win64)
-endif()
+
 
 
 # Set output directories for Windows and limit configuration types
