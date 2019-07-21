@@ -140,6 +140,8 @@ if [ $INSTALLSYSTEM ]; then
         sudo apt-get upgrade
         sudo apt-get -y install $PACKAGES
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$HOMEBREW]} ]; then
+        command -v brew >/dev/null 2>&1 || { /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; }
+
         for i in "${PACKAGES[@]}"
         do
             brew ls --versions $i && brew upgrade $i || brew install $i
