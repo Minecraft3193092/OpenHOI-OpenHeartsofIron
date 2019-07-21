@@ -39,6 +39,7 @@ find_library(
     NAMES OgreMain${OGRE_LIB_PREFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
@@ -53,6 +54,7 @@ find_library(
     NAMES OgreHLMS${OGRE_LIB_PREFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
@@ -67,6 +69,7 @@ find_library(
     NAMES OgreBites${OGRE_LIB_PREFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
@@ -81,6 +84,7 @@ find_library(
     NAMES Codec_STBI${OGRE_LIB_PREFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     ${OGRE_ROOT_DIR}/lib/OGRE
     /usr/lib64
@@ -96,6 +100,7 @@ find_library(
     NAMES OgreMeshLodGenerator${OGRE_LIB_PREFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
@@ -110,6 +115,7 @@ find_library(
     NAMES OgreOverlay${OGRE_LIB_PREFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
@@ -124,6 +130,7 @@ find_library(
     NAMES OgreProperty${OGRE_LIB_PREFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
@@ -147,6 +154,7 @@ else()
         NAMES OgreGLSupport${OGRE_LIB_PREFIX}
         PATHS
         $ENV{PROGRAMFILES}/lib
+        ${OGRE_ROOT_DIR}/lib/macosx/Release
         ${OGRE_ROOT_DIR}/lib
         /usr/lib64
         /usr/lib
@@ -161,6 +169,7 @@ else()
         NAMES RenderSystem_GL3Plus${OGRE_LIB_PREFIX}
         PATHS
         $ENV{PROGRAMFILES}/lib
+        ${OGRE_ROOT_DIR}/lib/macosx/Release
         ${OGRE_ROOT_DIR}/lib
         ${OGRE_ROOT_DIR}/lib/OGRE
         /usr/lib64
