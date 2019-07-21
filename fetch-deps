@@ -72,15 +72,9 @@ if [ $OSTYPE == "linux-gnu" ]; then
     elif [ $DISTRO == "ubuntu" ]; then
         printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
 
-        CODENAME=`lsb_release --codename | cut -f2`
+        #CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev clang-format"
-        if [[ $CODENAME == "bionic" ]]; then
-            PACKAGES="$PACKAGES libgmp-dev libmpfr-dev libeigen3-dev"
-            CGAL_MANUAL_BUILD=true
-        else
-            PACKAGES="$PACKAGES libcgal-dev"
-        fi
+        PACKAGES="cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev libcgal-dev clang-format"
         OGRE_MANUAL_BUILD=true
     else
         printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
