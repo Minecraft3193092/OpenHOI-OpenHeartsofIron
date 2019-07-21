@@ -106,7 +106,7 @@ elif [[ $OSTYPE == "netbsd"* ]]; then
     # TODO: Add support
 '
 else
-    printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\n"
+    printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
 fi
 
 
