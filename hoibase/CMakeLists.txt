@@ -88,8 +88,10 @@ else()
     set(CGAL_IMPORTED_TARGET CGAL::CGAL)
 endif()
 
-if(WIN32)
+if(WIN32 AND NOT ENV{V8_HOME})
     set(ENV{V8_HOME} ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8)
+elseif(APPLE AND NOT ENV{V8_HOME})
+    set(ENV{V8_HOME} /usr/local/Cellar/v8/7.5.288.30)
 endif()
 find_package(V8 REQUIRED)
 
