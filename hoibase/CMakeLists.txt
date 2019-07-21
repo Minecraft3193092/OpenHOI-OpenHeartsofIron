@@ -12,7 +12,7 @@ if(WIN32)
     set(OPENSSL_MSVC_STATIC_RT TRUE)
     set(OPENSSL_ROOT_DIR ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl)
 elseif(APPLE AND NOT OPENSSL_ROOT_DIR)
-    set(OPENSSL_ROOT_DIR /usr/local/opt/openssl/lib/)
+    set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
 endif()
 find_package(OpenSSL 1.1.1 REQUIRED)
 
