@@ -10,9 +10,9 @@ matrix:
       os: linux
       dist: bionic
       compiler: clang
-    - name: MacOS Mojave Xcode 11
-      os: osx
-      osx_image: xcode11
+#    - name: MacOS Mojave Xcode 11
+#      os: osx
+#      osx_image: xcode11
 before_install:
   - chmod +x fetch-deps
   - ./fetch-deps
