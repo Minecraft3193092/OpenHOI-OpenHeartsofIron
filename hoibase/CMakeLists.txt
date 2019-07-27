@@ -150,7 +150,7 @@ add_library(hoibase SHARED
 
 target_link_libraries(hoibase
                       ${FILESYSTEM_LIB}
-                      Boost::dynamic_linking Boost::disable_autolinking Boost::log
+                      Boost::dynamic_linking Boost::disable_autolinking
                       OpenSSL::SSL OpenSSL::Crypto
                       ZLIB::ZLIB
                       ${OGRE_LIBRARIES}
@@ -167,6 +167,7 @@ target_include_directories(hoibase
         ${CGAL_INCLUDE_DIRS_HOI}
         ${GMP_INCLUDE_DIR}
         ${MPFR_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
         ${RAPIDJSON_INCLUDES}
         ${V8_INCLUDE_DIR})
 
@@ -181,8 +182,6 @@ if(WIN32)
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_date_time-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_filesystem-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_locale-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_log_setup-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_log-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_program_options-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_regex-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_system-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"

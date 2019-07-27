@@ -10,16 +10,7 @@ Options::Options()
       videoMode("1024 x  768"),
       fullScreenAntiAliasing(8),
       windowMode(WindowMode::WINDOWED),
-      verticalSync(true),
-#if defined(OPENHOI_OS_WINDOWS)
-      renderingSystem(RenderingSystem::DIRECTX11)
-#elif defined(OPENHOI_OS_APPLE)
-      renderingSystem(RenderingSystem::METAL)
-#else
-      renderingSystem(RenderingSystem::OPENGL3PLUS)
-#endif
-{
-}
+      verticalSync(true) {}
 
 // Gets the rendering device name
 std::string const& Options::GetRenderingDevice() const {
@@ -63,16 +54,6 @@ bool const& Options::IsVerticalSync() const { return this->verticalSync; }
 // Sets the vertical sync flag
 void Options::SetVerticalSync(bool const& verticalSync) {
   this->verticalSync = verticalSync;
-}
-
-// Gets the rendering system
-RenderingSystem const& Options::GetRenderingSystem() const {
-  return this->renderingSystem;
-}
-
-// Sets the rendering system
-void Options::SetRenderingSystem(RenderingSystem const& renderingSystem) {
-  this->renderingSystem = renderingSystem;
 }
 
 }  // namespace openhoi

@@ -24,9 +24,6 @@ class OPENHOI_LIB_EXPORT FileAccess final {
   // thrown.
   static std::filesystem::path GetUserGameConfigDirectory();
 
-  // Get the real path to the given asset
-  static std::filesystem::path getAssetPath(const std::string relativePath);
-
   // Opens the given file, reads it and returns the bytes
   static unsigned char* GetBytes(std::filesystem::path filePath,
                                  uintmax_t& size);

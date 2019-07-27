@@ -1,5 +1,7 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
+#include "game_manager.hpp"
+
 #include <hoibase/helper/os.hpp>
 #include <hoibase/openhoi.hpp>
 
@@ -9,6 +11,8 @@
 #ifndef OPENHOI_OS_WINDOWS
 #  include <unistd.h>
 #endif
+
+using namespace openhoi;
 
 // Main entry point of program
 #ifdef OPENHOI_OS_WINDOWS
@@ -31,7 +35,22 @@ int main(int argc, const char* argv[])
 #endif
 
   try {
+    // Initialize game manager
+    GameManager& gameManager = GameManager::GetInstance();
+
+    // Run game
+    gameManager.Run();
+
     exitStatus = EXIT_SUCCESS;
+  } catch (const Ogre::Exception& e) {
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+    MessageBox(NULL, e.getFullDescription().c_str(),
+               "An exception has occured!",
+               MB_OK | MB_ICONERROR | MB_TASKMODAL);
+#else
+    std::cerr << "An exception has occured: " << e.getFullDescription().c_str()
+              << std::endl;
+#endif
   } catch (const std::exception& e) {
 #ifdef OPENHOI_OS_WINDOWS
     MessageBox(NULL, e.what(), "An exception has occured",

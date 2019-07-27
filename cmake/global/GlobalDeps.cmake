@@ -10,7 +10,7 @@ if(WIN32)
     set(Boost_ARCHITECTURE "-x64")
     set(BOOST_ROOT ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost)
 endif()
-find_package(Boost 1.65 REQUIRED COMPONENTS program_options log locale)
+find_package(Boost 1.65 REQUIRED COMPONENTS program_options locale)
 
 
 if(APPLE OR EXISTS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/lib/libOgreMainStatic.a)

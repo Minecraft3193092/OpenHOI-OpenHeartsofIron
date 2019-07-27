@@ -15,9 +15,11 @@ find_package(OpenAL REQUIRED)
 
 
 # Add main code
-list(APPEND CLIENT_INCLUDES include/options.hpp)
+list(APPEND CLIENT_INCLUDES include/game_manager.hpp
+                            include/options.hpp)
 source_group("Header Files" FILES ${RENDERER_INCLUDES})
 list(APPEND CLIENT_SOURCES src/client.cpp
+                           src/game_manager.cpp
                            src/options.cpp)
 source_group("Source Files" FILES ${CLIENT_SOURCES})
 

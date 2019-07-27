@@ -8,16 +8,6 @@
 
 namespace openhoi {
 
-// Rendering System enumeration
-enum RenderingSystem {
-#if defined(OPENHOI_OS_WINDOWS)
-  DIRECTX11,
-#elif defined(OPENHOI_OS_APPLE)
-  METAL,
-#endif
-  OPENGL3PLUS
-};
-
 // Window mode enumeration
 enum WindowMode { WINDOWED, FULLSCREEN, BORDERLESS };
 
@@ -57,19 +47,12 @@ class Options final {
   // Sets the vertical sync flag
   void SetVerticalSync(bool const& verticalSync);
 
-  // Gets the rendering system
-  RenderingSystem const& GetRenderingSystem() const;
-
-  // Sets the rendering system
-  void SetRenderingSystem(RenderingSystem const& renderingSystem);
-
  private:
   std::string renderingDevice;
   std::string videoMode;
   byte fullScreenAntiAliasing;
   WindowMode windowMode;
   bool verticalSync;
-  RenderingSystem renderingSystem;
 };
 
 }  // namespace openhoi
