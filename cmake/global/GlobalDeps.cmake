@@ -1,3 +1,6 @@
+if(NOT WIN32)
+    set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+endif()
 find_package(Threads REQUIRED)
 
 

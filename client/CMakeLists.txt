@@ -78,7 +78,8 @@ target_link_libraries(client hoibase
                              ${FILESYSTEM_LIB}
                              ${OGRE_LIBRARIES}
                              ${OPENAL_LIBRARY}
-                             Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale)
+                             Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
+                             Threads::Threads)
 
 target_include_directories(client
     PUBLIC
