@@ -125,9 +125,6 @@ robocopy "thirdparty\manual-build\lib\%BOOST_NAME%.%BOOST_VERSION%.0\lib\native\
 set BOOST_PO_NAME=boost_program_options-vc141
 robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_PO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_PO_NAME%-mt-x64-1_69.lib
 robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_PO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_PO_NAME%-mt-x64-1_69.dll
-set BOOST_LOG_NAME=boost_log-vc141
-robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LOG_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_LOG_NAME%-mt-x64-1_69.lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LOG_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_LOG_NAME%-mt-x64-1_69.dll
 set BOOST_LS_NAME=boost_log_setup-vc141
 robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_LS_NAME%-mt-x64-1_69.lib
 robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_LS_NAME%-mt-x64-1_69.dll
