@@ -24,13 +24,13 @@
 namespace openhoi {
 
 // Cached game config and asset directories
-std::filesystem::path FileAccess::gameConfigDirectory;
-std::filesystem::path FileAccess::gameAssetRootDirectory;
+filesystem::path FileAccess::gameConfigDirectory;
+filesystem::path FileAccess::gameAssetRootDirectory;
 
 // Get the current user's home directory. If it cannot be found, an exception
 // will be thrown.
-std::filesystem::path FileAccess::GetUserHomeDirectory() {
-  std::filesystem::path homeDirectory;
+filesystem::path FileAccess::GetUserHomeDirectory() {
+  filesystem::path homeDirectory;
 
 #ifdef OPENHOI_OS_WINDOWS
   // Get user's AppData\Local directory
@@ -49,7 +49,7 @@ std::filesystem::path FileAccess::GetUserHomeDirectory() {
   if (home != NULL) homeDirectory = home;
 #endif
 
-  if (!std::filesystem::is_directory(homeDirectory))
+  if (!filesystem::is_directory(homeDirectory))
     throw std::runtime_error("Unable to find user home directory");
 
   return homeDirectory;
@@ -57,29 +57,29 @@ std::filesystem::path FileAccess::GetUserHomeDirectory() {
 
 // Get the game config directory. If it does not exist, this function also tries
 // to create it. In case something bad happens, an exception will be thrown.
-std::filesystem::path FileAccess::GetUserGameConfigDirectory() {
+filesystem::path FileAccess::GetUserGameConfigDirectory() {
   // Check if we have already calculated the game config directory
   if (FileAccess::gameConfigDirectory.empty()) {
     // Yeah, this is not thread-safe..
 
     // Get home directory
-    std::filesystem::path homeDirectory = GetUserHomeDirectory();
+    filesystem::path homeDirectory = GetUserHomeDirectory();
 
     // Get config directory which is placed inside the home directory
-    std::filesystem::path configDirectory =
-        homeDirectory / std::filesystem::path(OPENHOI_CONFIG_DIRECTORY_NAME);
+    filesystem::path configDirectory =
+        homeDirectory / filesystem::path(OPENHOI_CONFIG_DIRECTORY_NAME);
 
     // Create the folder in case it does not exist
-    if (!std::filesystem::is_directory(configDirectory)) {
-      if (std::filesystem::exists(configDirectory)) {
+    if (!filesystem::is_directory(configDirectory)) {
+      if (filesystem::exists(configDirectory)) {
         // Delete the file named like the desired config directory
         // This logic exists just to be sure - this code branch should never be
         // active..
-        std::filesystem::remove(configDirectory);
+        filesystem::remove(configDirectory);
       }
 
       // Create the directory
-      if (!std::filesystem::create_directory(configDirectory))
+      if (!filesystem::create_directory(configDirectory))
         throw std::runtime_error(
             (boost::format(
                  "Unable to find create game config directory \"%s\"") %
@@ -108,7 +108,7 @@ std::filesystem::path FileAccess::GetUserGameConfigDirectory() {
 
 // Get the game asset root directory. If it cannot be found, an exception will
 // be thrown.
-std::filesystem::path FileAccess::GetAssetRootDirectory() {
+filesystem::path FileAccess::GetAssetRootDirectory() {
   // Check if we have already fetched the game asset directory
   if (FileAccess::gameAssetRootDirectory.empty()) {
     // Yeah, this is not thread-safe..
@@ -126,7 +126,7 @@ std::filesystem::path FileAccess::GetAssetRootDirectory() {
     CFRelease(cfStringRef);
 
     FileAccess::gameAssetRootDirectory =
-        std::filesystem::path(path) / std::filesystem::path(assets);
+        filesystem::path(path) / filesystem::path(assets);
 #else
 #  ifdef OPENHOI_OS_WINDOWS
 #    ifdef _DEBUG
@@ -146,18 +146,17 @@ std::filesystem::path FileAccess::GetAssetRootDirectory() {
         "../../../dist"};
 #  endif
 
-    std::filesystem::path possibleDir;
+    filesystem::path possibleDir;
     for (std::string& dir : possibleResourcePaths) {
-      possibleDir = std::filesystem::path(dir);
-      if (std::filesystem::is_directory(possibleDir)) {
-        FileAccess::gameAssetRootDirectory =
-            std::filesystem::canonical(possibleDir);
+      possibleDir = filesystem::path(dir);
+      if (filesystem::is_directory(possibleDir)) {
+        FileAccess::gameAssetRootDirectory = filesystem::canonical(possibleDir);
         break;
       }
     }
 #endif
 
-    if (!std::filesystem::is_directory(FileAccess::gameAssetRootDirectory))
+    if (!filesystem::is_directory(FileAccess::gameAssetRootDirectory))
       throw std::runtime_error("Unable to find game asset root directory");
   }
 

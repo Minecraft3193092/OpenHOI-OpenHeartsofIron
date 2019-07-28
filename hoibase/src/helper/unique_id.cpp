@@ -1,9 +1,9 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "hoibase/helper/unique_id.hpp"
-#include <array>
 #include "hoibase/helper/os.hpp"
 
+#include <array>
 #if defined(OPENHOI_OS_WINDOWS)
 #  include <rpc.h>
 #  pragma comment(lib, "rpcrt4.lib")

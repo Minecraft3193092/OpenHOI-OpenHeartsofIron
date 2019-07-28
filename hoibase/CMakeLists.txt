@@ -110,21 +110,23 @@ source_group("Source Files\\file" FILES ${FILE_SOURCES})
 set(BASE_SOURCES ${BASE_SOURCES} ${FILE_SOURCES})
 
 # Add helper code
-list(APPEND HELPER_INCLUDES include/hoibase/helper/library.hpp
+list(APPEND HELPER_INCLUDES include/hoibase/helper/debug.hpp
+                            include/hoibase/helper/library.hpp
                             include/hoibase/helper/os.hpp
                             include/hoibase/helper/synchronization.hpp
                             include/hoibase/helper/unique_id.hpp)
 source_group("Header Files\\helper" FILES ${HELPER_INCLUDES})
 set(BASE_INCLUDES ${BASE_INCLUDES} ${HELPER_INCLUDES})
 
-list(APPEND HELPER_SOURCES src/helper/unique_id.cpp)
+list(APPEND HELPER_SOURCES src/helper/debug.cpp
+                           src/helper/unique_id.cpp)
 source_group("Source Files\\helper" FILES ${HELPER_SOURCES})
 set(BASE_SOURCES ${BASE_SOURCES} ${HELPER_SOURCES})
 
 # Add map code
 list(APPEND MAP_INCLUDES include/hoibase/map/map_factory.hpp
-                            include/hoibase/map/map.hpp
-                            include/hoibase/map/province.hpp)
+                         include/hoibase/map/map.hpp
+                         include/hoibase/map/province.hpp)
 source_group("Header Files\\map" FILES ${MAP_INCLUDES})
 set(BASE_INCLUDES ${BASE_INCLUDES} ${MAP_INCLUDES})
 
@@ -174,7 +176,7 @@ target_include_directories(hoibase
 
 # Copy hoibase windows dependencies to output directories
 if(WIN32)
-    function(copy_hoibase_dll target)
+    function(copy_hoibase_dll target ogre_suffix)
         add_custom_command(TARGET hoibase POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_atomic-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
@@ -188,14 +190,16 @@ if(WIN32)
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_thread-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libgmp-10.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libmpfr-4.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreBites.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMain.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMeshLodGenerator.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreOverlay.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreProperty.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_Direct3D11.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreBites${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMain${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMeshLodGenerator${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreOverlay${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreProperty${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreRTShaderSystem${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_Direct3D11${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/SDL2.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libcrypto-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libssl-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/icudtl.dat" "${CMAKE_BINARY_DIR}/output/${target}/"
@@ -209,8 +213,8 @@ if(WIN32)
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/zlib/bin/zlib.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            VERBATIM)
     endfunction()
-    copy_hoibase_dll(Debug)
-    copy_hoibase_dll(Release)
+    copy_hoibase_dll(Debug _d.dll)
+    copy_hoibase_dll(RelWithDebInfo .dll)
 endif()
 
 

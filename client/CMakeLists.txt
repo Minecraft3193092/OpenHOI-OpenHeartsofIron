@@ -76,8 +76,8 @@ add_executable(client WIN32 MACOSX_BUNDLE
 
 target_link_libraries(client hoibase
                              ${FILESYSTEM_LIB}
-                             ${OGRE_LIBRARIES}
                              ${OPENAL_LIBRARY}
+                             ${OGRE_LIBRARIES}
                              Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
                              Threads::Threads)
 

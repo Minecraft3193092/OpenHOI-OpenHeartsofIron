@@ -22,6 +22,6 @@ script:
 before_script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Release ..
+  - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 notifications:
   email: false

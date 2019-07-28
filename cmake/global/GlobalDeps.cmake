@@ -31,7 +31,8 @@ add_definitions(-DHAVE_OGRE_BITES)
 
 if(${BUILD_OGRE_STATIC_LIB})
     find_package(Freetype REQUIRED)
-    list(APPEND OGRE_LIBRARIES Freetype::Freetype)
+    list(APPEND OGRE_LIBRARIES_DEBUG Freetype::Freetype)
+    list(APPEND OGRE_LIBRARIES_RELEASE Freetype::Freetype)
 endif()
 
 

@@ -6,9 +6,10 @@
 #include "state/state_manager.hpp"
 
 #include <OgreCamera.h>
-#include <OgreSceneManager.h>
+#include <OgreRenderSystem.h>
 #include <OgreRenderWindow.h>
 #include <OgreRoot.h>
+#include <OgreSceneManager.h>
 #include <hoibase/helper/os.hpp>
 
 #include <string>
@@ -44,10 +45,10 @@ class GameManager final {
   std::unique_ptr<Ogre::RenderWindow> const& GetWindow() const;
 
   // Gets the OGRE scene manager
-  std::unique_ptr<Ogre::SceneManager> const& GetSceneManager() const;
+  std::shared_ptr<Ogre::SceneManager> const& GetSceneManager() const;
 
   // Gets the OGRE camera
-  std::unique_ptr<Ogre::Camera> const& GetCamera() const;
+  std::shared_ptr<Ogre::Camera> const& GetCamera() const;
 
  protected:
   // Initializes the game manager
@@ -56,12 +57,19 @@ class GameManager final {
   ~GameManager();
 
  private:
+  // Create the render system
+  void CreateRenderSystem();
+
+  // Create camera
+  void CreateCamera();
+
   std::unique_ptr<Options> options;
   std::unique_ptr<StateManager> stateManager;
   std::unique_ptr<Ogre::Root> root;
   std::unique_ptr<Ogre::RenderWindow> window;
-  std::unique_ptr<Ogre::SceneManager> sceneManager;
-  std::unique_ptr<Ogre::Camera> camera;
+  std::shared_ptr<Ogre::SceneManager> sceneManager;
+  std::shared_ptr<Ogre::Camera> camera;
+  std::unique_ptr<Ogre::RenderSystem> renderSystem;
 };
 
 }  // namespace openhoi
