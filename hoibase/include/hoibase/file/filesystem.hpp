@@ -57,9 +57,9 @@
 // Include it
 #  include <experimental/filesystem>
 
-// We need the alias from std::experimental::filesystem to std::filesystem
+// We need the alias from std::experimental::filesystem to openhoi::filesystem
 namespace openhoi {
-namespace filesystem = experimental::filesystem;
+namespace filesystem = std::experimental::filesystem;
 }
 
 // We have a decent compiler and can use the normal version
@@ -67,7 +67,7 @@ namespace filesystem = experimental::filesystem;
 // Include it
 #  include <filesystem>
 
-// Map to openhoi namespace
+// We need the alias from std::filesystem to openhoi::filesystem
 namespace openhoi {
 namespace filesystem = std::filesystem;
 }
