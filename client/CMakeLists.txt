@@ -21,6 +21,10 @@ else()
     find_package(SDL2 REQUIRED)
 endif()
 
+if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+    find_package(X11 REQUIRED)
+endif()
+
 
 # Add main code
 list(APPEND CLIENT_INCLUDES include/game_manager_base.hpp
@@ -89,6 +93,7 @@ target_link_libraries(client hoibase
                              ${OGRE_LIBRARIES}
                              ${SDL2_LIBRARIES}
                              ${OPENAL_LIBRARY}
+                             ${X11_LIBRARIES}
                              Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
                              Threads::Threads)
 
