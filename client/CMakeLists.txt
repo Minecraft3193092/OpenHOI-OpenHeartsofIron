@@ -13,12 +13,22 @@ if(WIN32)
 endif()
 find_package(OpenAL REQUIRED)
 
+if(WIN32)
+    set(SDL2_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/lib/ogre3d/build/Dependencies/include/SDL2)
+    list(APPEND SDL2_LIBRARIES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/lib/ogre3d/build/Dependencies/lib/SDL2.lib
+                               ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/lib/ogre3d/build/Dependencies/lib/SDL2main.lib)
+else()
+    find_package(SDL2 REQUIRED)
+endif()
+
 
 # Add main code
-list(APPEND CLIENT_INCLUDES include/game_manager.hpp
+list(APPEND CLIENT_INCLUDES include/game_manager_base.hpp
+                            include/game_manager.hpp
                             include/options.hpp)
 source_group("Header Files" FILES ${RENDERER_INCLUDES})
 list(APPEND CLIENT_SOURCES src/client.cpp
+                           src/game_manager_base.cpp
                            src/game_manager.cpp
                            src/options.cpp)
 source_group("Source Files" FILES ${CLIENT_SOURCES})
@@ -76,8 +86,9 @@ add_executable(client WIN32 MACOSX_BUNDLE
 
 target_link_libraries(client hoibase
                              ${FILESYSTEM_LIB}
-                             ${OPENAL_LIBRARY}
                              ${OGRE_LIBRARIES}
+                             ${SDL2_LIBRARIES}
+                             ${OPENAL_LIBRARY}
                              Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
                              Threads::Threads)
 
@@ -87,6 +98,7 @@ target_include_directories(client
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>
         $<INSTALL_INTERFACE:include>
         ${OGRE_INCLUDE_DIRS}
+        ${SDL2_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
         ${THIRDPARTY_INCLUDE_DIRS})
 

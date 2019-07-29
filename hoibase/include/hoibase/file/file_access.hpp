@@ -8,6 +8,8 @@
 
 #include <string>
 
+#define OPENHOI_GENERAL_RESOURCE_GROUP "openhoi_general"
+
 namespace openhoi {
 
 // Visual Studio warnings
@@ -24,14 +26,14 @@ class OPENHOI_LIB_EXPORT FileAccess final {
   // thrown.
   static filesystem::path GetUserGameConfigDirectory();
 
+  // Get the game asset root directory. If it cannot be found, an exception will
+  // be thrown.
+  static filesystem::path GetAssetRootDirectory();
+
  private:
   // Get the current user's home directory. If it cannot be found, an exception
   // will be thrown.
   static filesystem::path GetUserHomeDirectory();
-
-  // Get the game asset root directory. If it cannot be found, an exception will
-  // be thrown.
-  static filesystem::path GetAssetRootDirectory();
 
   // Cached game config directory
   static filesystem::path gameConfigDirectory;

@@ -21,7 +21,10 @@ std::string Debug::PrettyPrintException(const std::exception* ex) {
   }
 
   // Add stack trace
-  message << std::endl << std::endl << "Stack trace:" << std::endl << boost::stacktrace::stacktrace();
+  message << std::endl
+          << std::endl
+          << "Stack trace:" << std::endl
+          << boost::stacktrace::stacktrace();
 
   // Return pretty printed exception with stacktrace
   return message.str();

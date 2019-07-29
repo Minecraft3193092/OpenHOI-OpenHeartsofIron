@@ -72,14 +72,14 @@ if [ $OSTYPE == "linux-gnu" ]; then
         printf " $CHECKMARK Arch Linux is supported. Using \e[1mpacman\e[0m install system...\n"
 
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
-        PACKAGES="base-devel cmake pkgconf boost cgal openssl openal ogg zlib rapidjson clang"
+        PACKAGES="base-devel cmake pkgconf boost cgal openssl openal ogg zlib rapidjson sdl2 clang"
         AUR_PACKAGES=("v8", "ogre")
     elif [ $DISTRO == "ubuntu" ]; then
         printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
 
         #CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev libcgal-dev clang-format"
+        PACKAGES="cmake pkg-config build-essential libgl1-mesa-dev libxrandr-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev libcgal-dev libsdl2-dev clang-format"
         OGRE_MANUAL_BUILD=true
     else
         printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
@@ -89,7 +89,7 @@ elif [[ $MACOS == true ]]; then
     printf " $CHECKMARK macOS is supported\n"
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
-    PACKAGES=(cmake boost cgal v8 zlib openssl openal-soft libogg rapidjson freeimage freetype clang-format)
+    PACKAGES=(cmake boost cgal v8 zlib openssl openal-soft libogg rapidjson freeimage freetype sdl2 clang-format)
     OGRE_MANUAL_BUILD=true
 : '
 elif [[ $OSTYPE == "freebsd"* ]]; then

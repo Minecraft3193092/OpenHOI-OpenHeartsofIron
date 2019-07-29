@@ -14,7 +14,7 @@ Options::Options()
 
 // Gets the rendering device name
 std::string const& Options::GetRenderingDevice() const {
-  return this->renderingDevice;
+  return renderingDevice;
 }
 
 // Sets the rendering device name
@@ -23,7 +23,7 @@ void Options::SetRenderingDevice(std::string const& renderingDevice) {
 }
 
 // Gets the video mode name
-std::string const& Options::GetVideoMode() const { return this->videoMode; }
+std::string const& Options::GetVideoMode() const { return videoMode; }
 
 // Sets the video mode name
 void Options::SetVideoMode(std::string const& videoMode) {
@@ -41,7 +41,7 @@ void Options::SetFullScreenAntiAliasing(byte const& fullScreenAntiAliasing) {
 }
 
 // Gets the window mode
-WindowMode const& Options::GetWindowMode() const { return this->windowMode; }
+WindowMode const& Options::GetWindowMode() const { return windowMode; }
 
 // Sets the window mode
 void Options::SetWindowMode(WindowMode const& windowMode) {
@@ -49,7 +49,7 @@ void Options::SetWindowMode(WindowMode const& windowMode) {
 }
 
 // Gets the vertical sync flag
-bool const& Options::IsVerticalSync() const { return this->verticalSync; }
+bool const& Options::IsVerticalSync() const { return verticalSync; }
 
 // Sets the vertical sync flag
 void Options::SetVerticalSync(bool const& verticalSync) {

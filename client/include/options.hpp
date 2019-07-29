@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <hoibase/helper/os.hpp>
+#include <hoibase/openhoi.hpp>
 
 #include <string>
 

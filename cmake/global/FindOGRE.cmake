@@ -301,7 +301,13 @@ if (OGRE_FOUND)
     endif()
     
     
-	set(OGRE_INCLUDE_DIRS ${OGRE_INCLUDE_DIR})
+	set(OGRE_INCLUDE_DIRS ${OGRE_INCLUDE_DIR} ${OGRE_INCLUDE_DIR}/Bites ${OGRE_INCLUDE_DIR}/HLMS ${OGRE_INCLUDE_DIR}/MeshLodGenerator ${OGRE_INCLUDE_DIR}/Overlay
+                          ${OGRE_INCLUDE_DIR}/Property ${OGRE_INCLUDE_DIR}/RTShaderSystem ${OGRE_INCLUDE_DIR}/Threading)
+    if(WIN32)
+        list(APPEND OGRE_INCLUDE_DIRS ${OGRE_INCLUDE_DIR}/RenderSystems/Direct3D11)
+    else()
+        list(APPEND OGRE_INCLUDE_DIRS ${OGRE_INCLUDE_DIR}/RenderSystems/GL3Plus)
+    endif()
 endif()
 
 # Hide some variables
