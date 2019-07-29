@@ -148,7 +148,8 @@ set(BASE_SOURCES ${BASE_SOURCES} ${SCRIPTING_SOURCES})
 
 # Create library
 if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC"
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 add_library(hoibase SHARED
