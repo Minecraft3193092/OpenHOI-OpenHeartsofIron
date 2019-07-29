@@ -26,16 +26,16 @@ class GameManagerBase final : public OgreBites::ApplicationContext,
   // Creates the OGRE root (overrides OGRE Bites)
   virtual void createRoot();
 
-  // Create a new render window  (overrides OGRE Bites)
+  // Create a new render window (overrides OGRE Bites)
   virtual OgreBites::NativeWindowPair createWindow(
       const Ogre::String& name, uint32_t w = 0, uint32_t h = 0,
       Ogre::NameValuePairList miscParams = Ogre::NameValuePairList());
 
   // Locate resources (overrides OGRE Bites)
-  virtual void GameManagerBase::locateResources();
+  virtual void locateResources();
 
   // Load resources (overrides OGRE Bites)
-  virtual void GameManagerBase::loadResources();
+  virtual void loadResources();
 
  private:
   // Create the render system
