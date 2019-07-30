@@ -28,11 +28,10 @@ if(WIN32 OR ${BUILD_OGRE_STATIC_LIB})
 endif()
 find_package(OGRE REQUIRED)
 add_definitions(-DHAVE_OGRE_BITES)
-
-if(${BUILD_OGRE_STATIC_LIB})
+if(${BUILD_OGRE_STATIC_LIB} AND ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
     find_package(Freetype REQUIRED)
-    list(APPEND OGRE_LIBRARIES_DEBUG Freetype::Freetype)
-    list(APPEND OGRE_LIBRARIES_RELEASE Freetype::Freetype)
+    find_package(X11 REQUIRED)
+    list(APPEND OGRE_LIBRARIES ${X11_LIBRARIES} Xt Xaw Freetype::Freetype)
 endif()
 
 
