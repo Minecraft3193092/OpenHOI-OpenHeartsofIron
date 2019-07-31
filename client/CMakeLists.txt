@@ -90,8 +90,7 @@ target_link_libraries(client hoibase
                              ${SDL2_LIBRARIES}
                              ${OPENAL_LIBRARY}
                              Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
-                             Threads::Threads
-                             Freetype::Freetype)
+                             Threads::Threads)
 
 target_include_directories(client
     PUBLIC
