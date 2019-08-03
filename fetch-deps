@@ -54,6 +54,8 @@ for ((i=0; i < $isa; i++)); do
     declare -r ${ISE_NAME}=$i
 done
 
+INSTALL_SNAPCRAFT=false
+
 CGAL_MANUAL_BUILD=false
 OGRE_MANUAL_BUILD=false
 
@@ -79,8 +81,9 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         #CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake pkg-config build-essential libx11-dev libgl1-mesa-dev libxrandr-dev libxt-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev libcgal-dev libsdl2-dev clang-format"
+        PACKAGES="cmake pkg-config build-essential libx11-dev libgl1-mesa-dev libxrandr-dev libxt-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev libogg-dev zlib1g-dev rapidjson-dev libv8-dev libfreetype6-dev libfreeimage-dev libcgal-dev libsdl2-dev clang-format snapd"
         OGRE_MANUAL_BUILD=true
+        INSTALL_SNAPCRAFT=true
     else
         printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
     fi
@@ -148,6 +151,10 @@ if [ $INSTALLSYSTEM ]; then
         done
     fi
 
+    if [ $INSTALL_SNAPCRAFT = true ]; then
+        command -v snapcraft >/dev/null 2>&1 || { sudo snap install --classic snapcraft; }
+    fi
+
     if [ $CGAL_MANUAL_BUILD = true ]; then
         printf "$LINEBG Building CGAL...\n"
         CGAL_VERSION="4.14"
@@ -168,8 +175,7 @@ if [ $INSTALLSYSTEM ]; then
 
     if [ $OGRE_MANUAL_BUILD = true ]; then
         printf "$LINEBG Building OGRE...\n"
-        OGRE_VERSION="1.12.1"
-        OGRE_BRANCH="v$OGRE_VERSION"
+        OGRE_BRANCH="v1.12.1"
         if [ ! -d thirdparty/manual-build/lib/ogre3d ]; then
             git clone https://github.com/OGRECave/ogre --depth 1 --branch $OGRE_BRANCH thirdparty/manual-build/lib/ogre3d
         else
