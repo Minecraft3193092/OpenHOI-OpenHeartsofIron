@@ -111,9 +111,14 @@ if not exist thirdparty\manual-build\lib\win64-prebuilt-deps (
 )
 git reset --hard
 git pull --depth 1
+
+echo %LINEBEG% GMP / MPFR...
 robocopy "%CD%\gmp\lib" "%CWD%\thirdparty\manual-build\precompiled\gmp\lib" libgmp-10.lib libmpfr-4.lib
 robocopy "%CD%\gmp\lib" "%CWD%\thirdparty\manual-build\precompiled\gmp\bin" libgmp-10.dll libmpfr-4.dll
 robocopy "%CD%\gmp\include" "%CWD%\thirdparty\manual-build\precompiled\gmp\include" /mir
+
+echo %LINEBEG% OGRE...
+robocopy "%CD%\ogre3d" "%CWD%\thirdparty\manual-build\precompiled\ogre3d" /mir
 cd %CWD%
 
 echo %LINEBEG% Boost...
@@ -264,7 +269,9 @@ robocopy "%CWD%\thirdparty\manual-build\lib\%V8_NAME%.%V8_VERSION%\include" "%CW
 robocopy "%CWD%\thirdparty\manual-build\lib\%V8_REDIST_NAME%.%V8_VERSION%\lib\Release" "%CWD%\thirdparty\manual-build\precompiled\v8\bin" /mir
 cd %CWD%
 
-echo %LINEBEG% Ogre3D...
+rem Skip OGRE building because we now provide pre-build binaries via our win64-prebuilt-libs repository
+goto skip_ogre
+echo %LINEBEG% OGRE...
 set OGRE_VERSION=1.12.1
 if not exist thirdparty\manual-build\lib\ogre3d (
     git clone https://github.com/OGRECave/ogre --depth 1 --branch v%OGRE_VERSION% thirdparty\manual-build\lib\ogre3d
@@ -298,6 +305,6 @@ if /I NOT "%CI%" == "True" (
     robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI_d.dll OgreBites_d.dll OgreHLMS_d.dll OgreMain_D.dll OgreMeshLodGenerator_d.dll OgreOverlay_d.dll OgreProperty_d.dll OgreRTShaderSystem_d.dll RenderSystem_Direct3D11_d.dll
 )
 cd %CWD%
-
+:skip_ogre
 
 :end
