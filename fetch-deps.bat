@@ -295,15 +295,13 @@ robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdpa
 robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib\OGRE" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" Codec_STBI.lib RenderSystem_Direct3D11.lib
 robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI.dll OgreBites.dll OgreHLMS.dll OgreMain.dll OgreMeshLodGenerator.dll OgreOverlay.dll OgreProperty.dll OgreRTShaderSystem.dll RenderSystem_Direct3D11.dll
 robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\Dependencies\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" SDL2.dll
-if /I NOT "%CI%" == "True" (
-    rem Build Debug
-    cmake %OGRE_CMAKE_PARAMS% -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
-    ninja
-    ninja install
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreBites_d.lib OgreHLMS_d.lib OgreMain_d.lib OgreMeshLodGenerator_d.lib OgreOverlay_d.lib OgreProperty_d.lib OgreRTShaderSystem_d.lib
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib\OGRE" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" Codec_STBI_d.lib RenderSystem_Direct3D11_d.lib
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI_d.dll OgreBites_d.dll OgreHLMS_d.dll OgreMain_D.dll OgreMeshLodGenerator_d.dll OgreOverlay_d.dll OgreProperty_d.dll OgreRTShaderSystem_d.dll RenderSystem_Direct3D11_d.dll
-)
+rem Build Debug
+cmake %OGRE_CMAKE_PARAMS% -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
+ninja
+ninja install
+robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreBites_d.lib OgreHLMS_d.lib OgreMain_d.lib OgreMeshLodGenerator_d.lib OgreOverlay_d.lib OgreProperty_d.lib OgreRTShaderSystem_d.lib
+robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib\OGRE" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" Codec_STBI_d.lib RenderSystem_Direct3D11_d.lib
+robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI_d.dll OgreBites_d.dll OgreHLMS_d.dll OgreMain_D.dll OgreMeshLodGenerator_d.dll OgreOverlay_d.dll OgreProperty_d.dll OgreRTShaderSystem_d.dll RenderSystem_Direct3D11_d.dll
 cd %CWD%
 :skip_ogre
 
