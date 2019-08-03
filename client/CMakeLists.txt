@@ -14,9 +14,9 @@ endif()
 find_package(OpenAL REQUIRED)
 
 if(WIN32)
-    set(SDL2_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/lib/ogre3d/build/Dependencies/include/SDL2)
-    list(APPEND SDL2_LIBRARIES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/lib/ogre3d/build/Dependencies/lib/SDL2.lib
-                               ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/lib/ogre3d/build/Dependencies/lib/SDL2main.lib)
+    set(SDL2_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/include/SDL2)
+    list(APPEND SDL2_LIBRARIES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/lib/SDL2.lib
+                               ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/lib/SDL2main.lib)
 else()
     find_package(SDL2 REQUIRED)
 endif()

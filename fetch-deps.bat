@@ -119,6 +119,9 @@ robocopy "%CD%\gmp\include" "%CWD%\thirdparty\manual-build\precompiled\gmp\inclu
 
 echo %LINEBEG% OGRE...
 robocopy "%CD%\ogre3d" "%CWD%\thirdparty\manual-build\precompiled\ogre3d" /mir
+
+echo %LINEBEG% SDL2...
+robocopy "%CD%\sdl2" "%CWD%\thirdparty\manual-build\precompiled\sdl2" /mir
 cd %CWD%
 
 echo %LINEBEG% Boost...
