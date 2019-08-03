@@ -13,7 +13,6 @@ std::string Debug::PrettyPrintException(const std::exception* ex) {
   std::stringstream message;
 
   // Add exception message
-  message << "Exception:" << std::endl;
   if (const Ogre::Exception* oe = dynamic_cast<const Ogre::Exception*>(ex)) {
     message << oe->getFullDescription();
   } else {
