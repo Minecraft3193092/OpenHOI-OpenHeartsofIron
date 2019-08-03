@@ -40,7 +40,7 @@ class GameManager final {
   Ogre::Root* const& GetRoot() const;
 
   // Gets the OGRE scene manager
-  std::unique_ptr<Ogre::SceneManager> const& GetSceneManager() const;
+  Ogre::SceneManager* const& GetSceneManager() const;
 
  protected:
   // Initializes the game manager
@@ -50,10 +50,10 @@ class GameManager final {
   ~GameManager();
 
  private:
-  std::unique_ptr<GameManagerBase> gameManagerBase;
+  GameManagerBase* gameManagerBase;
   std::shared_ptr<Options> options;
   std::unique_ptr<StateManager> stateManager;
-  std::unique_ptr<Ogre::SceneManager> sceneManager;
+  Ogre::SceneManager* sceneManager;
   Ogre::Root* root;
 };
 

@@ -16,18 +16,18 @@ GameManager::GameManager() {
   options.reset(new Options());
 
   // Create the game manager base delegate
-  gameManagerBase.reset(OGRE_NEW GameManagerBase(options));
+  gameManagerBase = OGRE_NEW GameManagerBase(options);
 
   // Set OGRE root
   root = gameManagerBase->getRoot();
 
   // Create a generic scene manager
-  sceneManager.reset(root->createSceneManager(Ogre::ST_GENERIC));
+  sceneManager = root->createSceneManager(Ogre::ST_GENERIC);
 
   // Register our scene with the RTSS
   Ogre::RTShader::ShaderGenerator* shaderGenerator =
       Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-  shaderGenerator->addSceneManager(sceneManager.get());
+  shaderGenerator->addSceneManager(sceneManager);
 
   // Disable mipmapping
   Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(0);
@@ -35,8 +35,8 @@ GameManager::GameManager() {
 
 // Destroys the gam manager
 GameManager::~GameManager() {
-  // Closes down the game
-  gameManagerBase->closeApp();
+  // Shutdown state manager
+  if (stateManager) stateManager->RequestStateChange(nullptr);
 }
 
 // Gets the game options
@@ -52,13 +52,18 @@ std::unique_ptr<StateManager> const& GameManager::GetStateManager() const {
 // Gets the OGRE root object (no smart pointer because we don't own the root)
 Ogre::Root* const& GameManager::GetRoot() const { return this->root; }
 
+// Gets the OGRE scene manager
+Ogre::SceneManager* const& GameManager::GetSceneManager() const {
+  return sceneManager;
+}
+
 // Start the main loop
 void GameManager::Run() {
   // Start rendering
   root->startRendering();
 
-  // Shutdown the current state
-  stateManager->RequestStateChange(nullptr);
+  // Close down the game
+  gameManagerBase->closeApp();
 }
 
 // Request game exit

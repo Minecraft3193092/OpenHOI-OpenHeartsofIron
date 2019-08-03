@@ -7,19 +7,19 @@ namespace openhoi {
 // StateManager destructor
 StateManager::~StateManager() {
   // If a state is active, shut down the state to clean up
-  if (this->currentState != nullptr) {
+  if (currentState != nullptr) {
     // Switch state to null
     SwitchToNewState(nullptr);
   }
 
-  if (this->newState != nullptr) delete newState;
-  if (this->currentState != nullptr) delete currentState;
+  if (newState != nullptr) delete newState;
+  if (currentState != nullptr) delete currentState;
 }
 
 // Starts up the state manager *
 void StateManager::Startup(State* firstState) {
   // Can't start up the state manager again if it's already running
-  if (this->currentState != nullptr || this->newState != nullptr) return;
+  if (currentState != nullptr || newState != nullptr) return;
 
   // Initialize with first state
   RequestStateChange(firstState);
@@ -28,17 +28,17 @@ void StateManager::Startup(State* firstState) {
 // Update the current state
 void StateManager::UpdateState() {
   // Check if a state change was requested. If yes, switch to the new state
-  if (this->newState != nullptr) SwitchToNewState(this->newState);
+  if (newState != nullptr) SwitchToNewState(newState);
 
   // If a state is active, update it
-  if (this->currentState != nullptr) this->currentState->UpdateScene();
+  if (currentState != nullptr) currentState->UpdateScene();
 }
 
 // Request state manager to change state
 void StateManager::RequestStateChange(State* newState) {
   // Don't change the state if the requested state class matches the current
   // state
-  if (this->currentState && newState == this->currentState) return;
+  if (currentState && newState == currentState) return;
 
   // Backup old state
   State* oldState = this->newState;
@@ -53,16 +53,16 @@ void StateManager::RequestStateChange(State* newState) {
 // Switch to the new state
 void StateManager::SwitchToNewState(State* newState) {
   // If a state is active, shut it down
-  if (this->currentState != nullptr) {
+  if (currentState != nullptr) {
     // Remove the current scene
-    this->currentState->RemoveScene();
+    currentState->RemoveScene();
 
     // Shutdown the current state
-    this->currentState->Shutdown();
+    currentState->Shutdown();
   }
 
   // Backup old state
-  State* oldState = this->currentState;
+  State* oldState = currentState;
 
   // Switch to the new state, might be null if no new state should be activated
   this->currentState = newState;
@@ -74,12 +74,12 @@ void StateManager::SwitchToNewState(State* newState) {
   if (oldState != nullptr) delete oldState;
 
   // If a state is active, start it up
-  if (this->currentState) {
+  if (currentState) {
     // Startup new state
-    this->currentState->Startup();
+    currentState->Startup();
 
     // Create the new scene
-    this->currentState->CreateScene();
+    currentState->CreateScene();
   }
 }
 
