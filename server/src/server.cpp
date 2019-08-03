@@ -15,6 +15,8 @@
 
 namespace po = boost::program_options;
 
+using namespace openhoi;
+
 // Main entry point of program
 int main(int argc, const char* argv[]) {
 #ifndef OPENHOI_OS_WINDOWS
@@ -39,11 +41,11 @@ int main(int argc, const char* argv[]) {
   std::cout << OPENHOI_GIT_URL << std::endl << std::endl;
 
   // Parse program options
-  std::filesystem::path configFile;
+  filesystem::path configFile;
   po::options_description desc("Options");
   desc.add_options()("help", "Produce help message")(
       "config",
-      po::value<std::filesystem::path>(&configFile)
+      po::value<filesystem::path>(&configFile)
           ->default_value(openhoi::FileAccess::GetUserGameConfigDirectory() /
                           "server.yml"),
       "Path to config file");
