@@ -9,6 +9,7 @@
 #
 # The following variables can be set as arguments for the module.
 # - OGRE_ROOT_DIR : Root library directory of OGRE
+# - OGRE_NIX_MANUAL_BUILD : Flag, if we did an manualy OGRE build
 
 # Additional modules
 include(FindPackageHandleStandardArgs)
@@ -28,7 +29,7 @@ find_path(
     DOC "The directory where Ogre.h resides")
 
 
-if(EXISTS ${OGRE_ROOT_DIR}/lib/libOgreGLSupport.a)
+if(${OGRE_NIX_MANUAL_BUILD})
     set(NON_PREFIX_SUFFIX .so.1.12.1)
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BAK ${CMAKE_FIND_LIBRARY_SUFFIXES})
     list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ${NON_PREFIX_SUFFIX})
@@ -89,11 +90,14 @@ find_library(
     ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     ${OGRE_ROOT_DIR}/lib/OGRE
-    ${OGRE_ROOT_DIR}/lib/OGRE-openhoi
     /usr/lib64
+    /usr/lib64/OGRE
     /usr/lib
+    /usr/lib/OGRE
     /usr/local/lib64
+    /usr/local/lib64/OGRE
     /usr/local/lib
+    /usr/local/lib/OGRE
     /sw/lib
     /opt/local/lib
     DOC "The OGRE Codec_STBI library")
@@ -263,11 +267,14 @@ else()
         ${OGRE_ROOT_DIR}/lib/macosx/Release
         ${OGRE_ROOT_DIR}/lib
         ${OGRE_ROOT_DIR}/lib/OGRE
-        ${OGRE_ROOT_DIR}/lib/OGRE-openhoi
         /usr/lib64
+        /usr/lib64/OGRE
         /usr/lib
+        /usr/lib/OGRE
         /usr/local/lib64
+        /usr/local/lib64/OGRE
         /usr/local/lib
+        /usr/local/lib/OGRE
         /sw/lib
         /opt/local/lib
         DOC "The OGRE RenderSystem_GL3Plus library")
@@ -280,11 +287,14 @@ else()
         ${OGRE_ROOT_DIR}/lib/macosx/Release
         ${OGRE_ROOT_DIR}/lib
         ${OGRE_ROOT_DIR}/lib/OGRE
-        ${OGRE_ROOT_DIR}/lib/OGRE-openhoi
         /usr/lib64
+        /usr/lib64/OGRE
         /usr/lib
+        /usr/lib/OGRE
         /usr/local/lib64
+        /usr/local/lib64/OGRE
         /usr/local/lib
+        /usr/local/lib/OGRE
         /sw/lib
         /opt/local/lib
         DOC "The OGRE Codec_FreeImage library")
