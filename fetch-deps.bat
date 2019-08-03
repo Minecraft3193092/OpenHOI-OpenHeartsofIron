@@ -107,10 +107,9 @@ if not exist thirdparty\manual-build\lib\win64-prebuilt-deps (
     cd thirdparty\manual-build\lib\win64-prebuilt-deps
 ) else (
     git -C thirdparty\manual-build\lib\win64-prebuilt-deps reset --hard
+    git -C thirdparty\manual-build\lib\win64-prebuilt-deps pull --depth 1
     cd thirdparty\manual-build\lib\win64-prebuilt-deps
 )
-git reset --hard
-git pull --depth 1
 
 echo %LINEBEG% GMP / MPFR...
 robocopy "%CD%\gmp\lib" "%CWD%\thirdparty\manual-build\precompiled\gmp\lib" libgmp-10.lib libmpfr-4.lib
