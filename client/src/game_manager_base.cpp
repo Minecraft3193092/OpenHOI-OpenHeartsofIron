@@ -128,9 +128,6 @@ void GameManagerBase::CreateRenderSystem() {
                    ? "Yes"
                    : "No");
 
-  // Set VSync interval
-  renderSystem->setConfigOption("VSync Interval", "1");
-
   // Disable sRGB Gamma conversion
   renderSystem->setConfigOption("sRGB Gamma Conversion", "No");
 

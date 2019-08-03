@@ -84,6 +84,16 @@ add_executable(client WIN32 MACOSX_BUNDLE
     ${THIRDPARTY_INCLUDES} ${THIRDPARTY_SOURCES}
     ${WINDOWS_RESOURCE_PATH})
 
+if(${OGRE_NIX_MANUAL_BUILD})
+    # In case have to manually build OGRE on linux, we need to set the correct RPATH in order to allow runtime linker
+    # to find the OGRE plugins
+    set_target_properties(client
+                          PROPERTIES
+                          BUILD_WITH_INSTALL_RPATH TRUE
+                          INSTALL_RPATH_USE_LINK_PATH TRUE
+                          INSTALL_RPATH "\$ORIGIN/../hoibase:/usr/local/lib/OGRE:${INSTALL_RPATH}")
+endif()
+
 target_link_libraries(client hoibase
                              ${FILESYSTEM_LIB}
                              ${OGRE_LIBRARIES}
