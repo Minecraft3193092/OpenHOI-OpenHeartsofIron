@@ -97,6 +97,7 @@ target_include_directories(client
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>
         $<INSTALL_INTERFACE:include>
+    SYSTEM
         ${OGRE_INCLUDE_DIRS}
         ${SDL2_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}

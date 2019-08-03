@@ -165,6 +165,7 @@ target_include_directories(hoibase
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>
         $<INSTALL_INTERFACE:include>
+    SYSTEM
         ${OGRE_INCLUDE_DIRS}
         ${CGAL_INCLUDE_DIRS_HOI}
         ${GMP_INCLUDE_DIR}
