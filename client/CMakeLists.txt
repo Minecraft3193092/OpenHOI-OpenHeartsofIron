@@ -23,12 +23,10 @@ endif()
 
 
 # Add main code
-list(APPEND CLIENT_INCLUDES include/game_manager_base.hpp
-                            include/game_manager.hpp
+list(APPEND CLIENT_INCLUDES include/game_manager.hpp
                             include/options.hpp)
 source_group("Header Files" FILES ${RENDERER_INCLUDES})
 list(APPEND CLIENT_SOURCES src/client.cpp
-                           src/game_manager_base.cpp
                            src/game_manager.cpp
                            src/options.cpp)
 source_group("Source Files" FILES ${CLIENT_SOURCES})

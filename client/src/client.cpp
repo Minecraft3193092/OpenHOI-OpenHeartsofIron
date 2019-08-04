@@ -36,19 +36,20 @@ int main(int argc, const char* argv[])
 
   try {
     // Initialize game manager
-    GameManager& gameManager = GameManager::GetInstance();
+    GameManager& gameManager = GameManager::getInstance();
 
     // Run game
-    gameManager.Run();
+    gameManager.run();
 
     exitStatus = EXIT_SUCCESS;
   } catch (const std::exception& e) {
+    // Handle exception
+    std::string exception = Debug::PrettyPrintException(&e);
 #ifdef OPENHOI_OS_WINDOWS
-    MessageBox(NULL, Debug::PrettyPrintException(&e).c_str(),
-               "An exception has occured", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+    MessageBox(NULL, exception.c_str(), "An exception has occured",
+               MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
-    std::cerr << "An exception has occured: " << Debug::PrettyPrintException(&e)
-              << std::endl;
+    std::cerr << "An exception has occured: " << exception << std::endl;
 #endif
   }
 

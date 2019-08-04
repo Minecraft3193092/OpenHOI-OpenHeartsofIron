@@ -8,7 +8,9 @@
 
 #include <string>
 
-#define OPENHOI_GENERAL_RESOURCE_GROUP "openhoi_general"
+// Macro the build a dynamic object's name (=dynamic objects are e.g. materials built by code)
+#define BUILD_DYNAMIC_OBJECT_NAME(materialName) \
+  (OPENHOI_GAME_NAME "__dyn__" materialName)
 
 namespace openhoi {
 

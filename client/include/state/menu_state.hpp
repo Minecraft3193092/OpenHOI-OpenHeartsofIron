@@ -4,6 +4,8 @@
 
 #include "state.hpp"
 
+#include <OgreRectangle2D.h>
+
 namespace openhoi {
 
 // Main menu state class
@@ -26,6 +28,10 @@ class MenuState final : public State {
 
   // Used to remove the scene
   void RemoveScene();
+
+ private:
+  std::string backgroundImageName;
+  Ogre::Rectangle2D* backgroundImageRect;
 };
 
 }  // namespace openhoi
