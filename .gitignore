@@ -8,3 +8,8 @@ build*/
 # Eclipse
 .project
 .cproject
+
+# Snapcraft
+parts/
+prime/
+*.snap
