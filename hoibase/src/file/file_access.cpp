@@ -15,7 +15,9 @@
 #  include <sys/types.h>
 #  include <unistd.h>
 #  if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
-#    define _GNU_SOURCE
+#    ifndef _GNU_SOURCE
+#      define _GNU_SOURCE
+#    endif
 #    include <dlfcn.h>
 #  endif
 #endif
@@ -179,14 +181,16 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
 
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
     Dl_info dlInfo;
-    dladdr(boost::format("libOgreMain.so.%d.%d.%d") % OGRE_VERSION_MAJOR % OGRE_VERSION_MINOR % OGRE_VERSION_PATCH,
+    dladdr(boost::format("libOgreMain.so.%d.%d.%d") % OGRE_VERSION_MAJOR %
+               OGRE_VERSION_MINOR % OGRE_VERSION_PATCH,
            &dlInfo);
 
     filesystem::path libDir = filesystem::path(dlInfo.dli_fname).parent_path();
     // TODO: Checks
     FileAccess::ogrePluginDirectory = libDir;
 #else
-    // Use an empty path because all libs are stored in the same directory than our executables
+    // Use an empty path because all libs are stored in the same directory than
+    // our executables
     FileAccess::ogrePluginDirectory = filesystem::path();
 #endif
   }
