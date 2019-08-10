@@ -70,6 +70,9 @@ class GameManager final : public OgreBites::ApplicationContext,
   // Load and configure the render system
   void loadRenderSystem();
 
+  // Gets the plugin prefix (e.g. absolute path)
+  std::string getPluginPrefix();
+
   // Recursively declare resources with the provided type
   void declareResources(filesystem::path directory, std::string resourceType);
 

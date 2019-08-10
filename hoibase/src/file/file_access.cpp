@@ -3,6 +3,9 @@
 #include "hoibase/file/file_access.hpp"
 #include "hoibase/helper/os.hpp"
 
+#include <OgreBuildSettings.h>
+#include <boost/format.hpp>
+
 #ifdef OPENHOI_OS_WINDOWS
 #  include <KnownFolders.h>
 #  include <ShlObj.h>
@@ -11,9 +14,12 @@
 #  include <pwd.h>
 #  include <sys/types.h>
 #  include <unistd.h>
+#  if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+#    define _GNU_SOURCE
+#    include <dlfcn.h>
+#  endif
 #endif
 #include <array>
-#include <boost/format.hpp>
 #include <fstream>
 #include <stdexcept>
 
@@ -23,13 +29,14 @@
 
 namespace openhoi {
 
-// Cached game config and asset directories
+// Cached game config and asset directories, etc.
 filesystem::path FileAccess::gameConfigDirectory;
 filesystem::path FileAccess::gameAssetRootDirectory;
+filesystem::path FileAccess::ogrePluginDirectory;
 
 // Get the current user's home directory. If it cannot be found, an exception
 // will be thrown.
-filesystem::path FileAccess::GetUserHomeDirectory() {
+filesystem::path FileAccess::getUserHomeDirectory() {
   filesystem::path homeDirectory;
 
 #ifdef OPENHOI_OS_WINDOWS
@@ -57,13 +64,13 @@ filesystem::path FileAccess::GetUserHomeDirectory() {
 
 // Get the game config directory. If it does not exist, this function also tries
 // to create it. In case something bad happens, an exception will be thrown.
-filesystem::path FileAccess::GetUserGameConfigDirectory() {
+filesystem::path FileAccess::getUserGameConfigDirectory() {
   // Check if we have already calculated the game config directory
   if (FileAccess::gameConfigDirectory.empty()) {
     // Yeah, this is not thread-safe..
 
     // Get home directory
-    filesystem::path homeDirectory = GetUserHomeDirectory();
+    filesystem::path homeDirectory = getUserHomeDirectory();
 
     // Get config directory which is placed inside the home directory
     filesystem::path configDirectory =
@@ -108,7 +115,7 @@ filesystem::path FileAccess::GetUserGameConfigDirectory() {
 
 // Get the game asset root directory. If it cannot be found, an exception will
 // be thrown.
-filesystem::path FileAccess::GetAssetRootDirectory() {
+filesystem::path FileAccess::getAssetRootDirectory() {
   // Check if we have already fetched the game asset directory
   if (FileAccess::gameAssetRootDirectory.empty()) {
     // Yeah, this is not thread-safe..
@@ -161,6 +168,31 @@ filesystem::path FileAccess::GetAssetRootDirectory() {
   }
 
   return FileAccess::gameAssetRootDirectory;
+}
+
+// Gets the OGRE plugin directory. In case the plugins should be located
+// relatively to the executables, an empty path is returned.
+filesystem::path FileAccess::getOgrePluginDirectory() {
+  // Check if we have already fetched the OGRE plugin directory
+  if (FileAccess::ogrePluginDirectory.empty()) {
+    // Yeah, this is not thread-safe..
+
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+    Dl_info dlInfo;
+    dladdr("libOgreMain.so." OGRE_VERSION_MAJOR "." OGRE_VERSION_MINOR
+           "." OGRE_VERSION_PATCH,
+           &dlInfo);
+
+    filesystem::path libDir = filesystem::path(dlInfo.dli_fname).parent_path();
+    // TODO: Checks
+    FileAccess::ogrePluginDirectory = libDir;
+#else
+    // Use an empty path because all libs are stored in the same directory than our executables
+    FileAccess::ogrePluginDirectory = filesystem::path();
+#endif
+  }
+
+  return FileAccess::ogrePluginDirectory;
 }
 
 }  // namespace openhoi

@@ -82,12 +82,6 @@ add_executable(client WIN32 MACOSX_BUNDLE
     ${THIRDPARTY_INCLUDES} ${THIRDPARTY_SOURCES}
     ${WINDOWS_RESOURCE_PATH})
 
-if(${OGRE_NIX_MANUAL_BUILD})
-    # In case have to manually build OGRE on linux, we need to set the correct RUNPATH in order to allow the
-    # runtime linker to find the OGRE plugins
-    set(CMAKE_EXE_LINKER_FLAGS "-Wl,-R,/usr/local/lib/OGRE -Wl,--enable-new-dtags")
-endif()
-
 target_link_libraries(client hoibase
                              ${FILESYSTEM_LIB}
                              ${OGRE_LIBRARIES}

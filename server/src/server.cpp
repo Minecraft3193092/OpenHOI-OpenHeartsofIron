@@ -46,7 +46,7 @@ int main(int argc, const char* argv[]) {
   desc.add_options()("help", "Produce help message")(
       "config",
       po::value<filesystem::path>(&configFile)
-          ->default_value(openhoi::FileAccess::GetUserGameConfigDirectory() /
+          ->default_value(openhoi::FileAccess::getUserGameConfigDirectory() /
                           "server.yml"),
       "Path to config file");
   po::variables_map vm;

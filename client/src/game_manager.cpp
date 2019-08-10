@@ -9,8 +9,8 @@
 #include <OgreRoot.h>
 #include <OgreSTBICodec.h>
 #include <OgreTextureManager.h>
-#include <hoibase/file/file_access.hpp>
 #include <SDL.h>
+#include <hoibase/file/file_access.hpp>
 
 #include <exception>
 
@@ -95,10 +95,17 @@ void GameManager::run() {
 // Request game exit
 void GameManager::requestExit() { mRoot->queueEndRendering(true); }
 
+// Gets the plugin prefix (e.g. absolute path)
+std::string GameManager::getPluginPrefix() {
+  filesystem::path pluginDirectory = FileAccess::getOgrePluginDirectory();
+  if (!pluginDirectory.empty()) return pluginDirectory.u8string() + "/";
+  return "";
+}
+
 // Creates the OGRE root (overrides OGRE Bites)
 void GameManager::createRoot() {
   // Create root object of OGRE system
-  std::string logFile = (FileAccess::GetUserGameConfigDirectory() /
+  std::string logFile = (FileAccess::getUserGameConfigDirectory() /
                          filesystem::path("client.log"))
                             .u8string();
   mRoot = OGRE_NEW Ogre::Root("", "", logFile);
@@ -115,7 +122,7 @@ void GameManager::createRoot() {
   loadRenderSystem();
 
   // Load the STBI codec plugin for image processing
-  mRoot->loadPlugin("Codec_STBI");
+  mRoot->loadPlugin(getPluginPrefix() + "Codec_STBI");
 }
 
 // Load and configure the render system
@@ -124,7 +131,7 @@ void GameManager::loadRenderSystem() {
 #ifdef OPENHOI_OS_WINDOWS
   // Prefer DirectX11 on Windows
   try {
-    mRoot->loadPlugin("RenderSystem_Direct3D11");
+    mRoot->loadPlugin(getPluginPrefix() + "RenderSystem_Direct3D11");
     directX = true;
   } catch (const std::exception&) {
     // do nothing
@@ -134,7 +141,7 @@ void GameManager::loadRenderSystem() {
 #endif
     // Check if we can use OpenGL3+
     try {
-      mRoot->loadPlugin("RenderSystem_GL3Plus");
+      mRoot->loadPlugin(getPluginPrefix() + "RenderSystem_GL3Plus");
     } catch (const std::exception&) {
       // do nothing
     }
@@ -144,7 +151,7 @@ void GameManager::loadRenderSystem() {
 
   if (mRoot->getAvailableRenderers().empty()) {
     // Use legacy OpenGL as a fallback
-    mRoot->loadPlugin("RenderSystem_GL");
+    mRoot->loadPlugin(getPluginPrefix() + "RenderSystem_GL");
   }
 
   // Get loaded render system
@@ -243,11 +250,11 @@ void GameManager::locateResources() {
 
   // Loop through whole graphics directory and declare every single resource in
   // it
-  declareResources(FileAccess::GetAssetRootDirectory() / "graphics", "Texture");
+  declareResources(FileAccess::getAssetRootDirectory() / "graphics", "Texture");
 
   // Loop through whole material directory and declare every single resource in
   // it
-  declareResources(FileAccess::GetAssetRootDirectory() / "materials",
+  declareResources(FileAccess::getAssetRootDirectory() / "materials",
                    "Material");
 }
 
