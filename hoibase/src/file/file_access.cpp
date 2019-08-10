@@ -181,7 +181,7 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
 
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
     Dl_info dlInfo;
-    dladdr((void*)Ogre::LogManager::getSingletonPtr(), &dlInfo);
+    dladdr((void*)Ogre::LogManager::getSingletonPtr, &dlInfo);
 
     filesystem::path libDir = filesystem::path(dlInfo.dli_fname).parent_path();
     // TODO: Checks
