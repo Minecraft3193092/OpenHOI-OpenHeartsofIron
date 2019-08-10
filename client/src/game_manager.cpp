@@ -10,11 +10,6 @@
 #include <OgreSTBICodec.h>
 #include <OgreTextureManager.h>
 #include <hoibase/file/file_access.hpp>
-#ifdef OPENHOI_OS_WINDOWS
-#  include <OgreD3D11Plugin.h>
-#endif
-#include <OgreGL3PlusPlugin.h>
-#include <OgreGLPlugin.h>
 #include <SDL.h>
 
 #include <exception>
@@ -119,43 +114,37 @@ void GameManager::createRoot() {
   // Load the render system
   loadRenderSystem();
 
-  // Load the STBI codec for image processing
-  // mRoot->installPlugin(OGRE_NEW Ogre::STBIPlugin());
+  // Load the STBI codec plugin for image processing
+  mRoot->loadPlugin("Codec_STBI");
 }
 
 // Load and configure the render system
 void GameManager::loadRenderSystem() {
-  // Load and install render system plugin
-  Ogre::Plugin* renderSystemPlugin;
-
   bool directX = false;
 #ifdef OPENHOI_OS_WINDOWS
   // Prefer DirectX11 on Windows
   try {
-    renderSystemPlugin = OGRE_NEW Ogre::D3D11Plugin();
-    mRoot->installPlugin(renderSystemPlugin);
+    mRoot->loadPlugin("RenderSystem_Direct3D11");
     directX = true;
-  } catch (const std::exception& e) {
-    renderSystemPlugin = nullptr;
+  } catch (const std::exception&) {
+    // do nothing
   }
 
-  if (renderSystemPlugin == nullptr) {
+  if (mRoot->getAvailableRenderers().empty()) {
 #endif
     // Check if we can use OpenGL3+
     try {
-      renderSystemPlugin = OGRE_NEW Ogre::GL3PlusPlugin();
-      mRoot->installPlugin(renderSystemPlugin);
-    } catch (const std::exception& e) {
-      renderSystemPlugin = nullptr;
+      mRoot->loadPlugin("RenderSystem_GL3Plus");
+    } catch (const std::exception&) {
+      // do nothing
     }
 #ifdef OPENHOI_OS_WINDOWS
   }
 #endif
 
-  if (renderSystemPlugin == nullptr) {
+  if (mRoot->getAvailableRenderers().empty()) {
     // Use legacy OpenGL as a fallback
-    renderSystemPlugin = OGRE_NEW Ogre::GLPlugin();
-    mRoot->installPlugin(renderSystemPlugin);
+    mRoot->loadPlugin("RenderSystem_GL");
   }
 
   // Get loaded render system
