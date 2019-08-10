@@ -8,7 +8,8 @@
 
 #include <string>
 
-// Macro the build a dynamic object's name (=dynamic objects are e.g. materials built by code)
+// Macro the build a dynamic object's name (=dynamic objects are e.g. materials
+// built by code)
 #define BUILD_DYNAMIC_OBJECT_NAME(materialName) \
   (OPENHOI_GAME_NAME "__dyn__" materialName)
 

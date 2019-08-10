@@ -200,6 +200,8 @@ if(WIN32)
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreProperty${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreRTShaderSystem${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_Direct3D11${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL3Plus${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/SDL2.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libcrypto-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libssl-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/${target}/"

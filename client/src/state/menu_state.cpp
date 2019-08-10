@@ -29,9 +29,9 @@ void MenuState::CreateScene() {
   GameManager& gameManager = GameManager::getInstance();
 
   // Position it at 100 in Z direction
-  //gameManager.getCamera()->setPosition(Ogre::Vector3(0, 0, 100));
+  // gameManager.getCamera()->setPosition(Ogre::Vector3(0, 0, 100));
   // Look -300 back along Z
-  //gameManager.getCamera()->lookAt(Ogre::Vector3(0, 0, -300));
+  // gameManager.getCamera()->lookAt(Ogre::Vector3(0, 0, -300));
   // ^ TODO: do we need this here? ^
 
   // Set ambient light
@@ -62,9 +62,9 @@ void MenuState::CreateScene() {
   backgroundImageRect->setBoundingBox(aabInf);
 
   // Attach background to the scene
-  Ogre::SceneNode* node =gameManager.getSceneManager()
-                              ->getRootSceneNode()
-                              ->createChildSceneNode(backgroundImageName);
+  Ogre::SceneNode* node =
+      gameManager.getSceneManager()->getRootSceneNode()->createChildSceneNode(
+          backgroundImageName);
   node->attachObject(backgroundImageRect);
 }
 

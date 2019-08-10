@@ -3,19 +3,22 @@
 #include "game_manager.hpp"
 #include "state/menu_state.hpp"
 
-#include <hoibase/file/file_access.hpp>
 #include <OgreLogManager.h>
 #include <OgreOverlaySystem.h>
 #include <OgreRTShaderSystem.h>
 #include <OgreRoot.h>
 #include <OgreSTBICodec.h>
 #include <OgreTextureManager.h>
+#include <hoibase/file/file_access.hpp>
 #ifdef OPENHOI_OS_WINDOWS
 #  include <OgreD3D11Plugin.h>
-#else
-#  include <OgreGL3PlusPlugin.h>
+#  include <OgreD3D11RenderSystem.h>
 #endif
+#include <OgreGL3PlusPlugin.h>
+#include <OgreGLPlugin.h>
 #include <SDL.h>
+
+#include <exception>
 
 namespace openhoi {
 
@@ -118,42 +121,70 @@ void GameManager::createRoot() {
   loadRenderSystem();
 
   // Load the STBI codec for image processing
-  mRoot->installPlugin(OGRE_NEW Ogre::STBIPlugin());
+  // mRoot->installPlugin(OGRE_NEW Ogre::STBIPlugin());
 }
 
 // Load and configure the render system
 void GameManager::loadRenderSystem() {
   // Load and install render system plugin
   Ogre::Plugin* renderSystemPlugin;
-#ifdef OPENHOI_OS_WINDOWS
-  renderSystemPlugin = OGRE_NEW Ogre::D3D11Plugin();
-#else
-  renderSystemPlugin = OGRE_NEW Ogre::OgreGL3PlusPlugin();
-#endif
-  mRoot->installPlugin(renderSystemPlugin);
 
-  // http://wiki.ogre3d.org/SafelyLoadingRenderSystems
+#ifdef OPENHOI_OS_WINDOWS
+  // Prefer DirectX11 on Windows
+  try {
+    renderSystemPlugin = OGRE_NEW Ogre::D3D11Plugin();
+    mRoot->installPlugin(renderSystemPlugin);
+  } catch (const std::exception& e) {
+    renderSystemPlugin = nullptr;
+  }
+
+  if (renderSystemPlugin == nullptr) {
+#endif
+    // Check if we can use OpenGL3+
+    try {
+      renderSystemPlugin = OGRE_NEW Ogre::GL3PlusPlugin();
+      mRoot->installPlugin(renderSystemPlugin);
+    } catch (const std::exception& e) {
+      renderSystemPlugin = nullptr;
+    }
+#ifdef OPENHOI_OS_WINDOWS
+  }
+#endif
+
+  if (renderSystemPlugin == nullptr) {
+    // Use legacy OpenGL as a fallback
+    renderSystemPlugin = OGRE_NEW Ogre::GLPlugin();
+    mRoot->installPlugin(renderSystemPlugin);
+  }
 
   // Get loaded render system
   Ogre::RenderSystem* renderSystem = mRoot->getAvailableRenderers().front();
 
+  // Configure render system
+  bool directx = false;
 #ifdef OPENHOI_OS_WINDOWS
-  // Set driver type to hardware
-  renderSystem->setConfigOption("Driver type", "Hardware");
+  if (Ogre::D3D11RenderSystem* rs =
+          dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem)) {
+    // Set driver type to hardware
+    renderSystem->setConfigOption("Driver type", "Hardware");
 
-  // Disable NVIDIA PerfHUD
-  renderSystem->setConfigOption("Allow NVPerfHUD", "No");
+    // Disable NVIDIA PerfHUD
+    renderSystem->setConfigOption("Allow NVPerfHUD", "No");
 
-  // Set floating-point mode to double precision
-  renderSystem->setConfigOption("Floating-point mode", "Consistent");
+    // Set floating-point mode to double precision
+    renderSystem->setConfigOption("Floating-point mode", "Consistent");
 
-  // Set DirectX feature levels
-  renderSystem->setConfigOption("Min Requested Feature Levels", "9.1");
-  renderSystem->setConfigOption("Max Requested Feature Levels", "11.0");
-#else
-  // Set RTT Preferred Mode to FBO
-  renderSystem->setConfigOption("RTT Preferred Mode", "FBO");
+    // Set DirectX feature levels
+    renderSystem->setConfigOption("Min Requested Feature Levels", "9.1");
+    renderSystem->setConfigOption("Max Requested Feature Levels", "11.0");
+
+    directx = true;
+  }
 #endif
+  if (!directx) {
+    // Set RTT Preferred Mode to FBO
+    renderSystem->setConfigOption("RTT Preferred Mode", "FBO");
+  }
 
   // Set video mode
   renderSystem->setConfigOption("Video Mode", options->GetVideoMode());
