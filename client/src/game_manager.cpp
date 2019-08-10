@@ -12,7 +12,6 @@
 #include <hoibase/file/file_access.hpp>
 #ifdef OPENHOI_OS_WINDOWS
 #  include <OgreD3D11Plugin.h>
-#  include <OgreD3D11RenderSystem.h>
 #endif
 #include <OgreGL3PlusPlugin.h>
 #include <OgreGLPlugin.h>
@@ -129,11 +128,13 @@ void GameManager::loadRenderSystem() {
   // Load and install render system plugin
   Ogre::Plugin* renderSystemPlugin;
 
+  bool directX = false;
 #ifdef OPENHOI_OS_WINDOWS
   // Prefer DirectX11 on Windows
   try {
     renderSystemPlugin = OGRE_NEW Ogre::D3D11Plugin();
     mRoot->installPlugin(renderSystemPlugin);
+    directX = true;
   } catch (const std::exception& e) {
     renderSystemPlugin = nullptr;
   }
@@ -161,10 +162,8 @@ void GameManager::loadRenderSystem() {
   Ogre::RenderSystem* renderSystem = mRoot->getAvailableRenderers().front();
 
   // Configure render system
-  bool directx = false;
 #ifdef OPENHOI_OS_WINDOWS
-  if (Ogre::D3D11RenderSystem* rs =
-          dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem)) {
+  if (directX) {
     // Set driver type to hardware
     renderSystem->setConfigOption("Driver type", "Hardware");
 
@@ -177,11 +176,9 @@ void GameManager::loadRenderSystem() {
     // Set DirectX feature levels
     renderSystem->setConfigOption("Min Requested Feature Levels", "9.1");
     renderSystem->setConfigOption("Max Requested Feature Levels", "11.0");
-
-    directx = true;
   }
 #endif
-  if (!directx) {
+  if (!directX) {
     // Set RTT Preferred Mode to FBO
     renderSystem->setConfigOption("RTT Preferred Mode", "FBO");
   }
