@@ -3,8 +3,8 @@
 #include "hoibase/file/file_access.hpp"
 #include "hoibase/helper/os.hpp"
 
-#include <OgreRoot.h>
 #include <boost/format.hpp>
+#include <OgreLogManager.h>
 
 #ifdef OPENHOI_OS_WINDOWS
 #  include <KnownFolders.h>
@@ -181,7 +181,7 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
 
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
     Dl_info dlInfo;
-    dladdr((void*)Ogre::Root, &dlInfo);
+    dladdr((void*)Ogre::LogManager::getSingletonPtr(), &dlInfo);
 
     filesystem::path libDir = filesystem::path(dlInfo.dli_fname).parent_path();
     // TODO: Checks
