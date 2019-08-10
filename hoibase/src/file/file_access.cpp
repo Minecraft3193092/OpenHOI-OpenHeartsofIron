@@ -179,8 +179,7 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
 
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
     Dl_info dlInfo;
-    dladdr("libOgreMain.so." OGRE_VERSION_MAJOR "." OGRE_VERSION_MINOR
-           "." OGRE_VERSION_PATCH,
+    dladdr(std::printf("libOgreMain.so.%i.%i.%i", OGRE_VERSION_MAJOR, OGRE_VERSION_MINOR, OGRE_VERSION_PATCH),
            &dlInfo);
 
     filesystem::path libDir = filesystem::path(dlInfo.dli_fname).parent_path();
