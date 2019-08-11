@@ -143,6 +143,8 @@ void GameManager::loadRenderSystem() {
   if (mRoot->getAvailableRenderers().empty()) {
 #endif
     // Check if we can use OpenGL3+
+    // We also try to detect if we are running inside a VM because VM's OpenGL
+    // support is very bad and it will most likely crash with GL3+
     if (!OS::isRunningInVirtualMachine()) {
       try {
         mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_GL3PLUS));

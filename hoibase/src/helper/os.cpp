@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <array>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/format.hpp>
 #include <memory>
 
@@ -30,7 +31,7 @@ std::string OS::executeCommand(std::string command) {
     result += buffer.data();
   }
 
-  return result;
+  return boost::trim_copy_if(result);
 }
 
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
