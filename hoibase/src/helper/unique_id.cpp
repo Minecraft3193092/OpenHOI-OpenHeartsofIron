@@ -16,7 +16,7 @@
 namespace openhoi {
 
 // Generate a Universally Unique Identifier (UUID)
-std::string GenerateUUID() {
+std::string generateUUID() {
   std::string uuidString;
 
 #ifdef OPENHOI_OS_WINDOWS

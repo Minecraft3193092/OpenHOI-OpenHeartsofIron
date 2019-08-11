@@ -27,14 +27,6 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
   // Add input listener
   addInputListener(this);
 
-  /*
-  // Create camera
-  CreateCamera();
-
-  // Add frame listener
-  root->addFrameListener(this);
-  */
-
   // Create a generic scene manager
   sceneManager = mRoot->createSceneManager(Ogre::ST_GENERIC);
 
@@ -43,8 +35,8 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
       Ogre::RTShader::ShaderGenerator::getSingletonPtr();
   shaderGenerator->addSceneManager(sceneManager);
 
-  // Disable mipmapping
-  Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(0);
+  // Create camera
+  createCamera();
 
   // Create state manager and startup with menu state
   stateManager = new StateManager();
@@ -60,10 +52,11 @@ GameManager::~GameManager() {
   }
 
   // Unload resources
-  Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup(
-      Ogre::RGN_DEFAULT);
-  Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(
-      Ogre::RGN_DEFAULT);
+  for (std::string& resourceGroup : defaultResourceGroups) {
+    Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup(
+        resourceGroup);
+    Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(resourceGroup);
+  }
 
   // Close down the game
   closeApp();
@@ -83,6 +76,11 @@ StateManager* const& GameManager::getStateManager() const {
 // Gets the OGRE scene manager
 Ogre::SceneManager* const& GameManager::getSceneManager() const {
   return sceneManager;
+}
+
+// Gets the OGRE camera
+Ogre::Camera* const& GameManager::getCamera() const {
+  return camera;
 }
 
 // Start the main loop
@@ -252,47 +250,46 @@ OgreBites::NativeWindowPair GameManager::createWindow(
 
 // Locate resources (overrides OGRE Bites)
 void GameManager::locateResources() {
-  // Loop through whole audio directory and declare every single resource in it
-  // declareResources(FileAccess::GetAssetRootDirectory() / "audio", "Texture");
+  // Declare all audio resources
+  // declareResources(FileAccess::GetAssetRootDirectory() / "audio", "Audio");
 
-  // Loop through whole graphics directory and declare every single resource in
-  // it
+  // Declare all texture resources
   declareResources(FileAccess::getAssetRootDirectory() / "graphics", "Texture");
+  declareResources(FileAccess::getAssetRootDirectory() / "graphics" / "coat_of_arms", "Texture", OPENHOI_RSG_COA_TEXTURES);
+  declareResources(FileAccess::getAssetRootDirectory() / "graphics" / "flags", "Texture", OPENHOI_RSG_FLAG_TEXTURES);
 
-  // Loop through whole material directory and declare every single resource in
-  // it
-  declareResources(FileAccess::getAssetRootDirectory() / "materials",
-                   "Material");
+  // Declare all material resources
+  declareResources(FileAccess::getAssetRootDirectory() / "materials", "Material");
 }
 
-// Recursively declare resources with the provided type
-void GameManager::declareResources(filesystem::path directory,
-                                   std::string resourceType) {
+// Declare resources in the provided directory (non-recusive!) with the provided type for the given resource group
+void GameManager::declareResources(filesystem::path directory, std::string resourceType, std::string resourceGroup /* = Ogre::RGN_DEFAULT */) {
   // Add resource location
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-      directory.u8string(), "FileSystem", Ogre::RGN_DEFAULT);
+      directory.u8string(), "FileSystem", resourceGroup);
 
   filesystem::directory_iterator endItr;
   for (filesystem::directory_iterator itr(directory); itr != endItr; ++itr) {
-    // Check if resource is directory or file
-    filesystem::path path = itr->path();
-    if (filesystem::is_directory(itr->status())) {
-      // Check for single resources in this directory
-      declareResources(path, resourceType);
-    } else {
+    // Check if resource is a file
+    if (!filesystem::is_directory(itr->status())) {
       // Declare single resource file
       Ogre::ResourceGroupManager::getSingleton().declareResource(
-          path.filename().u8string(), resourceType, Ogre::RGN_DEFAULT);
+          itr->path().filename().u8string(), resourceType, resourceGroup);
     }
   }
 }
 
 // Load resources (overrides OGRE Bites)
 void GameManager::loadResources() {
-  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(
-      Ogre::RGN_DEFAULT);
-  Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(
-      Ogre::RGN_DEFAULT);
+  // Disable mipmapping
+  Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(0);
+
+  // Initialize and load resource groups
+  for (std::string& resourceGroup : defaultResourceGroups) {
+    Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(
+        resourceGroup);
+    Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(resourceGroup);
+  }
 }
 
 // Frame rendering queued event (overrides OGRE Bites)
@@ -304,6 +301,26 @@ bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
     stateManager->UpdateState();
   }
   return continueRendering;
+}
+
+// Create camera
+void GameManager::createCamera() {
+  // Create the camera
+  camera = sceneManager->createCamera("PlayerCam");
+
+  // Position it at 100 in Z direction
+  camera->setPosition(Ogre::Vector3(0, 0, 100));
+  // Look -300 back along Z
+  camera->lookAt(Ogre::Vector3(0, 0, -300));
+
+  // Set clip distances
+  camera->setNearClipDistance(0.1f);
+  camera->setFarClipDistance(500000);
+  if (mRoot->getRenderSystem()->getCapabilities()->hasCapability(
+          Ogre::RSC_INFINITE_FAR_PLANE)) {
+    // If possible, set infinite far clip distance
+    camera->setFarClipDistance(0);
+  }
 }
 
 }  // namespace openhoi

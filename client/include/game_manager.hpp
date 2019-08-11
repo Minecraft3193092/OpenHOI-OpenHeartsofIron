@@ -12,6 +12,8 @@
 #include <hoibase/file/filesystem.hpp>
 #include <hoibase/helper/os.hpp>
 
+#include <array>
+#include <map>
 #include <string>
 
 namespace openhoi {
@@ -42,6 +44,9 @@ class GameManager final : public OgreBites::ApplicationContext,
   // Gets the OGRE scene manager
   Ogre::SceneManager* const& getSceneManager() const;
 
+  // Gets the OGRE camera
+  Ogre::Camera* const& getCamera() const;
+
   // Creates the OGRE root (overrides OGRE Bites)
   virtual void createRoot();
 
@@ -70,15 +75,22 @@ class GameManager final : public OgreBites::ApplicationContext,
   // Load and configure the render system
   void loadRenderSystem();
 
+  // Create camera
+  void createCamera();
+
   // Gets the full path to the provided OGRE plugin
   std::string getPluginPath(std::string pluginName);
 
-  // Recursively declare resources with the provided type
-  void declareResources(filesystem::path directory, std::string resourceType);
+  // Declare resources in the provided directory (non-recusive!) with the
+  // provided type for the given resource group
+  void declareResources(filesystem::path directory, std::string resourceType,
+                        std::string resourceGroup = Ogre::RGN_DEFAULT);
 
+  std::array<std::string, 3> defaultResourceGroups = {Ogre::RGN_DEFAULT, OPENHOI_RSG_COA_TEXTURES, OPENHOI_RSG_FLAG_TEXTURES};
   Options* options;
   StateManager* stateManager;
   Ogre::SceneManager* sceneManager;
+  Ogre::Camera* camera;
 };
 
 }  // namespace openhoi

@@ -20,11 +20,6 @@
 // The OGRE legacy OpenGL render system plugin name
 #define OGRE_PLUGIN_RS_GL "RenderSystem_GL"
 
-// Macro the build a dynamic object's name (=dynamic objects are e.g. materials
-// built by code)
-#define BUILD_DYNAMIC_OBJECT_NAME(materialName) \
-  (OPENHOI_GAME_NAME "__dyn__" materialName)
-
 namespace openhoi {
 
 // Visual Studio warnings

@@ -17,3 +17,13 @@
 
 // The default TCP game server port
 #define OPENHOI_DEFAULT_SERVER_PORT 1936
+
+// Resource group for flag textures
+#define OPENHOI_RSG_FLAG_TEXTURES OPENHOI_GAME_NAME "_RSG_FLAG_TEXTURES"
+
+// Resource group for coat of armes textures
+#define OPENHOI_RSG_COA_TEXTURES OPENHOI_GAME_NAME "_RSG_COA_TEXTURES"
+
+// Macro the build a dynamic object's name (=dynamic objects are e.g. materials
+// built by code)
+#define OPENHOI_BUILD_DYNAMIC_OBJECT_NAME(materialName) (OPENHOI_GAME_NAME "__dyn__" materialName)

@@ -3,8 +3,6 @@
 #include "state/menu_state.hpp"
 #include "game_manager.hpp"
 
-#include <hoibase/file/file_access.hpp>
-
 #include <Ogre.h>
 #include <OgreLogManager.h>
 #include <OgreMaterialManager.h>
@@ -15,7 +13,8 @@ namespace openhoi {
 void MenuState::Startup() {
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Menu State startup ***");
 
-  backgroundImageName = BUILD_DYNAMIC_OBJECT_NAME("Main_Menu_Background");
+  backgroundImageName =
+      OPENHOI_BUILD_DYNAMIC_OBJECT_NAME("Main_Menu_Background");
 }
 
 // Called when the state is shutting down
@@ -29,9 +28,9 @@ void MenuState::CreateScene() {
   GameManager& gameManager = GameManager::getInstance();
 
   // Position it at 100 in Z direction
-  // gameManager.getCamera()->setPosition(Ogre::Vector3(0, 0, 100));
+  gameManager.getCamera()->setPosition(Ogre::Vector3(0, 0, 100));
   // Look -300 back along Z
-  // gameManager.getCamera()->lookAt(Ogre::Vector3(0, 0, -300));
+  gameManager.getCamera()->lookAt(Ogre::Vector3(0, 0, -300));
   // ^ TODO: do we need this here? ^
 
   // Set ambient light
@@ -69,7 +68,8 @@ void MenuState::CreateScene() {
 }
 
 // Used to update the scene
-void MenuState::UpdateScene() {}
+void MenuState::UpdateScene() {
+}
 
 // Used to remove the scene
 void MenuState::RemoveScene() {

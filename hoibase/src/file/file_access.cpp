@@ -145,12 +145,13 @@ filesystem::path FileAccess::getAssetRootDirectory() {
     std::array<std::string, 5> possibleResourcePaths = {
         "", "dist", "..\\dist", "..\\..\\dist", "..\\..\\..\\dist"};
 #    else
-    std::array<std::string, 5> possibleResourcePaths = {""};
+    std::array<std::string, 1> possibleResourcePaths = {""};
 #    endif
 #  else
-    std::array<std::string, 7> possibleResourcePaths = {
+    std::array<std::string, 8> possibleResourcePaths = {
         "/usr/local/share/openhoi/",
         "/usr/share/openhoi/",
+        "/opt/openhoi",
         "",
         "dist",
         "../dist",
@@ -184,7 +185,7 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
     // Yeah, this is not thread-safe..
 
     // Get path where our used libOgreMain resides. We will then use this base
-    // path in order to locate  the directory where the OGRE plugins are stored:
+    // path in order to locate the directory where the OGRE plugins are stored:
     Dl_info dlInfo;
     dladdr((void*)Ogre::LogManager::getSingletonPtr, &dlInfo);
 
