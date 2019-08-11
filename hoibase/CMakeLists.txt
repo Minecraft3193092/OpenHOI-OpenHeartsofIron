@@ -119,6 +119,7 @@ source_group("Header Files\\helper" FILES ${HELPER_INCLUDES})
 set(BASE_INCLUDES ${BASE_INCLUDES} ${HELPER_INCLUDES})
 
 list(APPEND HELPER_SOURCES src/helper/debug.cpp
+                           src/helper/os.cpp
                            src/helper/unique_id.cpp)
 source_group("Source Files\\helper" FILES ${HELPER_SOURCES})
 set(BASE_SOURCES ${BASE_SOURCES} ${HELPER_SOURCES})

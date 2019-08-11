@@ -143,10 +143,12 @@ void GameManager::loadRenderSystem() {
   if (mRoot->getAvailableRenderers().empty()) {
 #endif
     // Check if we can use OpenGL3+
-    try {
-      mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_GL3PLUS));
-    } catch (const std::exception&) {
-      // do nothing
+    if (!OS::isRunningInVirtualMachine()) {
+      try {
+        mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_GL3PLUS));
+      } catch (const std::exception&) {
+        // do nothing
+      }
     }
 #ifdef OPENHOI_OS_WINDOWS
   }

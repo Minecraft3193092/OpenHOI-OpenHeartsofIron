@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "hoibase/helper/library.hpp"
+
 ////////////////////////////////////////////////////////////////////////////
 //
 //   DETECT WINDOWS
@@ -75,3 +77,13 @@
 #ifndef byte
 typedef unsigned char byte;
 #endif
+
+namespace openhoi {
+
+class OPENHOI_LIB_EXPORT OS final {
+ public:
+  // Checks if we are currently running inside a virtual machine
+  static bool isRunningInVirtualMachine();
+};
+
+}  // namespace openhoi
