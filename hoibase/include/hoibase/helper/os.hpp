@@ -4,6 +4,8 @@
 
 #include "hoibase/helper/library.hpp"
 
+#include <string>
+
 ////////////////////////////////////////////////////////////////////////////
 //
 //   DETECT WINDOWS
@@ -82,8 +84,17 @@ namespace openhoi {
 
 class OPENHOI_LIB_EXPORT OS final {
  public:
+  // Execute command line program and return result
+  static std::string executeCommand(std::string command);
+
   // Checks if we are currently running inside a virtual machine
   static bool isRunningInVirtualMachine();
+
+ private:
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+  // Check if system is running systemd
+  static bool isRunningSystemd();
+#endif
 };
 
 }  // namespace openhoi
