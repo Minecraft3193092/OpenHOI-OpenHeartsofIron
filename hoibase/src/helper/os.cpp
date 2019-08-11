@@ -31,7 +31,9 @@ std::string OS::executeCommand(std::string command) {
     result += buffer.data();
   }
 
-  return boost::trim_copy_if(result);
+  boost::trim_right(result);
+  boost::trim_left(result);
+  return result;
 }
 
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
