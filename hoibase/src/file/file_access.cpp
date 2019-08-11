@@ -3,8 +3,9 @@
 #include "hoibase/file/file_access.hpp"
 #include "hoibase/helper/os.hpp"
 
-#include <OgreLogManager.h>
+#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
+#include <OgreLogManager.h>
 
 #ifdef OPENHOI_OS_WINDOWS
 #  include <KnownFolders.h>
@@ -24,7 +25,7 @@
 #include <array>
 #include <fstream>
 #include <stdexcept>
-
+#include <iostream>
 // The game config directory. Starting with "." makes it a hidden folder on
 // Linux etc.
 #define OPENHOI_CONFIG_DIRECTORY_NAME ".openhoi"
@@ -199,9 +200,14 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
 
     // Build the expected file name based on the dlInfo.dli_fname. We want to
     // use the same extension (e.g. ".so.1.12.1")
+    filesystem::path fileNameOnly = libFilePath.filename();
+    size_t dotIndex = fileNameOnly.u8string().find(".");
+    std::string extension;
+    if (dotIndex != std::string::npos)
+        extension = fileNameOnly.u8string().substr(dotIndex);
     std::string expectedPluginFileName =
-        OGRE_PLUGIN_STBI libFilePath.extension();
-
+        std::string(OGRE_PLUGIN_STBI) + extension;
+std::cout << "expectedPluginFileName: " << expectedPluginFileName << std::endl;
     // Build a list of possible plugin library directories
     std::vector<std::string> possiblePluginDirectories;
     possiblePluginDirectories.push_back(libDir.u8string());
@@ -209,7 +215,7 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
     for (filesystem::directory_iterator itr(libDir); itr != endItr; ++itr) {
       filesystem::path path = itr->path();
       if (filesystem::is_directory(itr->status()) &&
-          std::tolower(path.filename().u8string()).rfind("ogre", 0) == 0) {
+          boost::algorithm::to_lower_copy(path.filename().u8string()).find("ogre", 0) == 0) {
         possiblePluginDirectories.push_back(path.u8string());
       }
     }
@@ -220,7 +226,7 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
       possibleFileName = filesystem::path(dir) / expectedPluginFileName;
       if (filesystem::exists(possibleFileName) &&
           !filesystem::is_directory(possibleFileName)) {
-        FileAccess::ogrePluginDirectory = filesystem::canonical(possibleDir);
+        FileAccess::ogrePluginDirectory = filesystem::canonical(possibleFileName).parent_path();
         break;
       }
     }
