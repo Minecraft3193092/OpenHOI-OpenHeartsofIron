@@ -3,8 +3,8 @@
 #include "hoibase/file/file_access.hpp"
 #include "hoibase/helper/os.hpp"
 
-#include <boost/format.hpp>
 #include <OgreLogManager.h>
+#include <boost/format.hpp>
 
 #ifdef OPENHOI_OS_WINDOWS
 #  include <KnownFolders.h>
@@ -34,7 +34,9 @@ namespace openhoi {
 // Cached game config and asset directories, etc.
 filesystem::path FileAccess::gameConfigDirectory;
 filesystem::path FileAccess::gameAssetRootDirectory;
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
 filesystem::path FileAccess::ogrePluginDirectory;
+#endif
 
 // Get the current user's home directory. If it cannot be found, an exception
 // will be thrown.
@@ -175,25 +177,61 @@ filesystem::path FileAccess::getAssetRootDirectory() {
 // Gets the OGRE plugin directory. In case the plugins should be located
 // relatively to the executables, an empty path is returned.
 filesystem::path FileAccess::getOgrePluginDirectory() {
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
   // Check if we have already fetched the OGRE plugin directory
   if (FileAccess::ogrePluginDirectory.empty()) {
     // Yeah, this is not thread-safe..
 
-#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+    // Get path where our used libOgreMain resides. We will then use this base
+    // path in order to locate  the directory where the OGRE plugins are stored:
     Dl_info dlInfo;
     dladdr((void*)Ogre::LogManager::getSingletonPtr, &dlInfo);
 
-    filesystem::path libDir = filesystem::path(dlInfo.dli_fname).parent_path();
-    // TODO: Checks
-    FileAccess::ogrePluginDirectory = libDir;
-#else
-    // Use an empty path because all libs are stored in the same directory than
-    // our executables
-    FileAccess::ogrePluginDirectory = filesystem::path();
-#endif
+    // Create filesystem::path from dlInfo.dli_fname.
+    // dlInfo.dli_fname can be something like:
+    //  - /usr/local/lib/libOgreMain.so.1.12.1
+    //  - /usr/lib/x86_64-linux-gnu/libOgreMain.so
+    //  - etc.
+    filesystem::path libFilePath = filesystem::path(dlInfo.dli_fname);
+
+    // Extract the directory where the file "dlInfo.dli_fname" is stored at
+    filesystem::path libDir = libFilePath.parent_path();
+
+    // Build the expected file name based on the dlInfo.dli_fname. We want to
+    // use the same extension (e.g. ".so.1.12.1")
+    std::string expectedPluginFileName =
+        OGRE_PLUGIN_STBI libFilePath.extension();
+
+    // Build a list of possible plugin library directories
+    std::vector<std::string> possiblePluginDirectories;
+    possiblePluginDirectories.push_back(libDir.u8string());
+    filesystem::directory_iterator endItr;
+    for (filesystem::directory_iterator itr(libDir); itr != endItr; ++itr) {
+      filesystem::path path = itr->path();
+      if (filesystem::is_directory(itr->status()) &&
+          std::tolower(path.filename().u8string()).rfind("ogre", 0) == 0) {
+        possiblePluginDirectories.push_back(path.u8string());
+      }
+    }
+
+    // Search for the right plugin library directory
+    filesystem::path possibleFileName;
+    for (std::string& dir : possiblePluginDirectories) {
+      possibleFileName = filesystem::path(dir) / expectedPluginFileName;
+      if (filesystem::exists(possibleFileName) &&
+          !filesystem::is_directory(possibleFileName)) {
+        FileAccess::ogrePluginDirectory = filesystem::canonical(possibleDir);
+        break;
+      }
+    }
   }
 
   return FileAccess::ogrePluginDirectory;
+#else
+  // Use an empty path because all libs are stored in the same directory than
+  // our executables
+  return filesystem::path();
+#endif
 }
 
 }  // namespace openhoi

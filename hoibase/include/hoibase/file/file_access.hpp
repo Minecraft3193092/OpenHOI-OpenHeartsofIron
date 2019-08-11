@@ -8,6 +8,18 @@
 
 #include <string>
 
+// The OGRE STBI codec plugin name
+#define OGRE_PLUGIN_STBI "Codec_STBI"
+
+// The OGRE Direct3D 11 render system plugin name
+#define OGRE_PLUGIN_RS_D3D11 "RenderSystem_Direct3D11"
+
+// The OGRE OpenGL 3+ render system plugin name
+#define OGRE_PLUGIN_RS_GL3PLUS "RenderSystem_GL3Plus"
+
+// The OGRE legacy OpenGL render system plugin name
+#define OGRE_PLUGIN_RS_GL "RenderSystem_GL"
+
 // Macro the build a dynamic object's name (=dynamic objects are e.g. materials
 // built by code)
 #define BUILD_DYNAMIC_OBJECT_NAME(materialName) \
@@ -48,8 +60,10 @@ class OPENHOI_LIB_EXPORT FileAccess final {
   // Cached game asset root directory
   static filesystem::path gameAssetRootDirectory;
 
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
   // Cached OGRE plugin directory
   static filesystem::path ogrePluginDirectory;
+#endif
 };
 
 }  // namespace openhoi

@@ -95,11 +95,14 @@ void GameManager::run() {
 // Request game exit
 void GameManager::requestExit() { mRoot->queueEndRendering(true); }
 
-// Gets the plugin prefix (e.g. absolute path)
-std::string GameManager::getPluginPrefix() {
+// Gets the full path to the provided OGRE plugin
+std::string GameManager::getPluginPath(std::string pluginName) {
   filesystem::path pluginDirectory = FileAccess::getOgrePluginDirectory();
-  if (!pluginDirectory.empty()) return pluginDirectory.u8string() + "/";
-  return "";
+  if (!pluginDirectory.empty()) {
+    return (pluginDirectory / pluginName).u8string();
+  } else {
+    return pluginName;
+  }
 }
 
 // Creates the OGRE root (overrides OGRE Bites)
@@ -122,7 +125,7 @@ void GameManager::createRoot() {
   loadRenderSystem();
 
   // Load the STBI codec plugin for image processing
-  mRoot->loadPlugin(getPluginPrefix() + "Codec_STBI");
+  mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_STBI));
 }
 
 // Load and configure the render system
@@ -131,7 +134,7 @@ void GameManager::loadRenderSystem() {
 #ifdef OPENHOI_OS_WINDOWS
   // Prefer DirectX11 on Windows
   try {
-    mRoot->loadPlugin(getPluginPrefix() + "RenderSystem_Direct3D11");
+    mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_D3D11));
     directX = true;
   } catch (const std::exception&) {
     // do nothing
@@ -141,7 +144,7 @@ void GameManager::loadRenderSystem() {
 #endif
     // Check if we can use OpenGL3+
     try {
-      mRoot->loadPlugin(getPluginPrefix() + "RenderSystem_GL3Plus");
+      mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_GL3PLUS));
     } catch (const std::exception&) {
       // do nothing
     }
@@ -151,7 +154,7 @@ void GameManager::loadRenderSystem() {
 
   if (mRoot->getAvailableRenderers().empty()) {
     // Use legacy OpenGL as a fallback
-    mRoot->loadPlugin(getPluginPrefix() + "RenderSystem_GL");
+    mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_GL));
   }
 
   // Get loaded render system
@@ -269,7 +272,7 @@ void GameManager::declareResources(filesystem::path directory,
   for (filesystem::directory_iterator itr(directory); itr != endItr; ++itr) {
     // Check if resource is directory or file
     filesystem::path path = itr->path();
-    if (is_directory(itr->status())) {
+    if (filesystem::is_directory(itr->status())) {
       // Check for single resources in this directory
       declareResources(path, resourceType);
     } else {
