@@ -68,8 +68,7 @@ void MenuState::CreateScene() {
 }
 
 // Used to update the scene
-void MenuState::UpdateScene() {
-}
+void MenuState::UpdateScene() {}
 
 // Used to remove the scene
 void MenuState::RemoveScene() {

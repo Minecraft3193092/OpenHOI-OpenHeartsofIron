@@ -55,7 +55,8 @@ GameManager::~GameManager() {
   for (std::string& resourceGroup : defaultResourceGroups) {
     Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup(
         resourceGroup);
-    Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(resourceGroup);
+    Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(
+        resourceGroup);
   }
 
   // Close down the game
@@ -79,9 +80,7 @@ Ogre::SceneManager* const& GameManager::getSceneManager() const {
 }
 
 // Gets the OGRE camera
-Ogre::Camera* const& GameManager::getCamera() const {
-  return camera;
-}
+Ogre::Camera* const& GameManager::getCamera() const { return camera; }
 
 // Start the main loop
 void GameManager::run() {
@@ -255,15 +254,22 @@ void GameManager::locateResources() {
 
   // Declare all texture resources
   declareResources(FileAccess::getAssetRootDirectory() / "graphics", "Texture");
-  declareResources(FileAccess::getAssetRootDirectory() / "graphics" / "coat_of_arms", "Texture", OPENHOI_RSG_COA_TEXTURES);
-  declareResources(FileAccess::getAssetRootDirectory() / "graphics" / "flags", "Texture", OPENHOI_RSG_FLAG_TEXTURES);
+  declareResources(
+      FileAccess::getAssetRootDirectory() / "graphics" / "coat_of_arms",
+      "Texture", OPENHOI_RSG_COA_TEXTURES);
+  declareResources(FileAccess::getAssetRootDirectory() / "graphics" / "flags",
+                   "Texture", OPENHOI_RSG_FLAG_TEXTURES);
 
   // Declare all material resources
-  declareResources(FileAccess::getAssetRootDirectory() / "materials", "Material");
+  declareResources(FileAccess::getAssetRootDirectory() / "materials",
+                   "Material");
 }
 
-// Declare resources in the provided directory (non-recusive!) with the provided type for the given resource group
-void GameManager::declareResources(filesystem::path directory, std::string resourceType, std::string resourceGroup /* = Ogre::RGN_DEFAULT */) {
+// Declare resources in the provided directory (non-recusive!) with the provided
+// type for the given resource group
+void GameManager::declareResources(
+    filesystem::path directory, std::string resourceType,
+    std::string resourceGroup /* = Ogre::RGN_DEFAULT */) {
   // Add resource location
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
       directory.u8string(), "FileSystem", resourceGroup);

@@ -86,7 +86,8 @@ class GameManager final : public OgreBites::ApplicationContext,
   void declareResources(filesystem::path directory, std::string resourceType,
                         std::string resourceGroup = Ogre::RGN_DEFAULT);
 
-  std::array<std::string, 3> defaultResourceGroups = {Ogre::RGN_DEFAULT, OPENHOI_RSG_COA_TEXTURES, OPENHOI_RSG_FLAG_TEXTURES};
+  std::array<std::string, 3> defaultResourceGroups = {
+      Ogre::RGN_DEFAULT, OPENHOI_RSG_COA_TEXTURES, OPENHOI_RSG_FLAG_TEXTURES};
   Options* options;
   StateManager* stateManager;
   Ogre::SceneManager* sceneManager;

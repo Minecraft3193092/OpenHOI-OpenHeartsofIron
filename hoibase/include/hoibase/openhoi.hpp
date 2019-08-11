@@ -26,4 +26,5 @@
 
 // Macro the build a dynamic object's name (=dynamic objects are e.g. materials
 // built by code)
-#define OPENHOI_BUILD_DYNAMIC_OBJECT_NAME(materialName) (OPENHOI_GAME_NAME "__dyn__" materialName)
+#define OPENHOI_BUILD_DYNAMIC_OBJECT_NAME(materialName) \
+  (OPENHOI_GAME_NAME "__dyn__" materialName)
