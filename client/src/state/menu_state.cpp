@@ -6,11 +6,14 @@
 #include <Ogre.h>
 #include <OgreLogManager.h>
 #include <OgreMaterialManager.h>
+#include <OgreTextureManager.h>
+
+#include <cassert>
 
 namespace openhoi {
 
 // Called when the state is started up
-void MenuState::Startup() {
+void MenuState::startup() {
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Menu State startup ***");
 
   backgroundImageName =
@@ -18,31 +21,65 @@ void MenuState::Startup() {
 }
 
 // Called when the state is shutting down
-void MenuState::Shutdown() {
+void MenuState::shutdown() {
   Ogre::LogManager::getSingletonPtr()->logMessage(
       "*** Menu State shutdown ***");
 }
 
 // Used to create the scene
-void MenuState::CreateScene() {
+void MenuState::createScene() {
+  // Set ambient light
+  GameManager::getInstance().getSceneManager()->setAmbientLight(
+      Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+
+  // Create background image
+  createBackground();
+}
+
+// Create background image
+void MenuState::createBackground() {
   GameManager& gameManager = GameManager::getInstance();
 
-  // Set ambient light
-  gameManager.getSceneManager()->setAmbientLight(
-      Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+  // Get background texture
+  Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().getByName(
+      "background.jpg", Ogre::RGN_DEFAULT);
+  assert(texture->isLoaded());
 
   // Create background material
   Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create(
       backgroundImageName, Ogre::RGN_DEFAULT);
   material->getTechnique(0)->getPass(0)->createTextureUnitState(
-      "background.jpg");
+      texture->getName());
   material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
   material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
   material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
   // Create background rectangle covering the whole screen
+  int windowWidth = gameManager.getRenderWindow()->getWidth();
+  int windowHeight = gameManager.getRenderWindow()->getHeight();
+  Ogre::Real xRatio = 1, yRatio = 1;
+  if (texture->getWidth() != windowWidth ||
+      texture->getHeight() != windowHeight) {
+    // Texture size is not the same as the window size. Thus, we have to find a
+    // stretch factor for the corners
+    Ogre::Real backgroundRatio =
+        (Ogre::Real)texture->getWidth() / texture->getHeight();
+    if (backgroundRatio >= 1) {
+      // Width of BG image is greater or equal than height
+      xRatio =
+          (OPENHOI_OGRE_ABS(1 - (Ogre::Real)texture->getWidth() / windowWidth) /
+           2) +
+          1;
+    } else {
+      // Height of BG image is greater than width
+      yRatio = (OPENHOI_OGRE_ABS(1 - (Ogre::Real)texture->getHeight() /
+                                         windowHeight) /
+                2) +
+               1;
+    }
+  }
   backgroundImageRect = OGRE_NEW Ogre::Rectangle2D(true);
-  backgroundImageRect->setCorners(-1.0, 1.0, 1.0, -1.0);
+  backgroundImageRect->setCorners(xRatio * -1, yRatio, xRatio, yRatio * -1);
   backgroundImageRect->setMaterial(material);
 
   // Render the background before everything else
@@ -62,10 +99,10 @@ void MenuState::CreateScene() {
 }
 
 // Used to update the scene
-void MenuState::UpdateScene() {}
+void MenuState::updateScene() {}
 
 // Used to remove the scene
-void MenuState::RemoveScene() {
+void MenuState::removeScene() {
   // Delete background image
   GameManager::getInstance()
       .getSceneManager()

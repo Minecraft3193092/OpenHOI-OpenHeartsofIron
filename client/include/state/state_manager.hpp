@@ -13,17 +13,17 @@ class StateManager final {
   ~StateManager();
 
   // Starts up the state manager *
-  void Startup(State* firstState);
+  void startup(State* firstState);
 
   // Update the current state
-  void UpdateState();
+  void updateState();
 
   // Request state manager to change state
-  void RequestStateChange(State* newState);
+  void requestStateChange(State* newState);
 
  private:
   // Switch to the new state
-  void SwitchToNewState(State* newState);
+  void switchToNewState(State* newState);
 
   // Describes the current state
   State* currentState = nullptr;

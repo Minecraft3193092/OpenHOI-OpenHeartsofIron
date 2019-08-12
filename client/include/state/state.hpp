@@ -11,19 +11,19 @@ class State {
   virtual ~State(){};
 
   // Called when the state is started up
-  virtual void Startup() = 0;
+  virtual void startup() = 0;
 
   // Called when the state is shutting down
-  virtual void Shutdown() = 0;
+  virtual void shutdown() = 0;
 
   // Used to create the scene
-  virtual void CreateScene() = 0;
+  virtual void createScene() = 0;
 
   // Used to update the scene
-  virtual void UpdateScene() = 0;
+  virtual void updateScene() = 0;
 
   // Used to remove the scene
-  virtual void RemoveScene() = 0;
+  virtual void removeScene() = 0;
 };
 
 }  // namespace openhoi

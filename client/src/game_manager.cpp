@@ -46,14 +46,14 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
 
   // Create state manager and startup with menu state
   stateManager = new StateManager();
-  stateManager->Startup(new MenuState());
+  stateManager->startup(new MenuState());
 }
 
 // Destroys the game manager
 GameManager::~GameManager() {
   // Shutdown state manager
   if (stateManager) {
-    stateManager->RequestStateChange(nullptr);
+    stateManager->requestStateChange(nullptr);
     delete stateManager;
   }
 
@@ -329,7 +329,7 @@ bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
       OgreBites::ApplicationContext::frameRenderingQueued(evt);
   if (continueRendering) {
     // Update state
-    stateManager->UpdateState();
+    stateManager->updateState();
   }
   return continueRendering;
 }

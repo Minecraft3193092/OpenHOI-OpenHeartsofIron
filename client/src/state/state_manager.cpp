@@ -9,7 +9,7 @@ StateManager::~StateManager() {
   // If a state is active, shut down the state to clean up
   if (currentState != nullptr) {
     // Switch state to null
-    SwitchToNewState(nullptr);
+    switchToNewState(nullptr);
   }
 
   if (newState != nullptr) delete newState;
@@ -17,25 +17,25 @@ StateManager::~StateManager() {
 }
 
 // Starts up the state manager *
-void StateManager::Startup(State* firstState) {
+void StateManager::startup(State* firstState) {
   // Can't start up the state manager again if it's already running
   if (currentState != nullptr || newState != nullptr) return;
 
   // Initialize with first state
-  RequestStateChange(firstState);
+  requestStateChange(firstState);
 }
 
 // Update the current state
-void StateManager::UpdateState() {
+void StateManager::updateState() {
   // Check if a state change was requested. If yes, switch to the new state
-  if (newState != nullptr) SwitchToNewState(newState);
+  if (newState != nullptr) switchToNewState(newState);
 
   // If a state is active, update it
-  if (currentState != nullptr) currentState->UpdateScene();
+  if (currentState != nullptr) currentState->updateScene();
 }
 
 // Request state manager to change state
-void StateManager::RequestStateChange(State* newState) {
+void StateManager::requestStateChange(State* newState) {
   // Don't change the state if the requested state class matches the current
   // state
   if (currentState && newState == currentState) return;
@@ -51,14 +51,14 @@ void StateManager::RequestStateChange(State* newState) {
 }
 
 // Switch to the new state
-void StateManager::SwitchToNewState(State* newState) {
+void StateManager::switchToNewState(State* newState) {
   // If a state is active, shut it down
   if (currentState != nullptr) {
     // Remove the current scene
-    currentState->RemoveScene();
+    currentState->removeScene();
 
     // Shutdown the current state
-    currentState->Shutdown();
+    currentState->shutdown();
   }
 
   // Backup old state
@@ -76,10 +76,10 @@ void StateManager::SwitchToNewState(State* newState) {
   // If a state is active, start it up
   if (currentState) {
     // Startup new state
-    currentState->Startup();
+    currentState->startup();
 
     // Create the new scene
-    currentState->CreateScene();
+    currentState->createScene();
   }
 }
 

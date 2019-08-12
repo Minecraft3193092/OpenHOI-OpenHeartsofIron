@@ -15,21 +15,24 @@ class MenuState final : public State {
   ~MenuState(){};
 
   // Called when the state is started up
-  void Startup();
+  void startup();
 
   // Called when the state is shutting down
-  void Shutdown();
+  void shutdown();
 
   // Used to create the scene
-  void CreateScene();
+  void createScene();
 
   // Used to update the scene
-  void UpdateScene();
+  void updateScene();
 
   // Used to remove the scene
-  void RemoveScene();
+  void removeScene();
 
  private:
+  // Create background image
+  void createBackground();
+
   std::string backgroundImageName;
   Ogre::Rectangle2D* backgroundImageRect;
 };

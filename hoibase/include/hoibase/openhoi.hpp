@@ -5,6 +5,8 @@
 #include "helper/os.hpp"
 #include "version.hpp"
 
+#include <stdlib.h>
+
 // The game name
 #define OPENHOI_GAME_NAME "openhoi"
 
@@ -28,3 +30,11 @@
 // built by code)
 #define OPENHOI_BUILD_DYNAMIC_OBJECT_NAME(materialName) \
   (OPENHOI_GAME_NAME "__dyn__" materialName)
+
+#if OGRE_DOUBLE_PRECISION == 1
+// Call 'abs' function for double values (Ogre::Real)
+#  define OPENHOI_OGRE_ABS(num) abs(num)
+#else
+// Call 'abs' function for float values (Ogre::Real)
+#  define OPENHOI_OGRE_ABS(num) fabs(num)
+#endif
