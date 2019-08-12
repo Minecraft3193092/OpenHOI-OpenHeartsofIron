@@ -61,6 +61,9 @@ class GameManager final : public OgreBites::ApplicationContext,
   // Load resources (overrides OGRE Bites)
   virtual void loadResources();
 
+  // Frame started event (override OGRE Bites)
+  virtual bool frameStarted(const Ogre::FrameEvent& evt);
+
   // Frame rendering queued event (overrides OGRE Bites)
   virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 

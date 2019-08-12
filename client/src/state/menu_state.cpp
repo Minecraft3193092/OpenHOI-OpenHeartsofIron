@@ -27,12 +27,6 @@ void MenuState::Shutdown() {
 void MenuState::CreateScene() {
   GameManager& gameManager = GameManager::getInstance();
 
-  // Position it at 100 in Z direction
-  gameManager.getCamera()->setPosition(Ogre::Vector3(0, 0, 100));
-  // Look -300 back along Z
-  gameManager.getCamera()->lookAt(Ogre::Vector3(0, 0, -300));
-  // ^ TODO: do we need this here? ^
-
   // Set ambient light
   gameManager.getSceneManager()->setAmbientLight(
       Ogre::ColourValue(1.0f, 1.0f, 1.0f));
@@ -78,6 +72,7 @@ void MenuState::RemoveScene() {
       ->getRootSceneNode()
       ->removeAndDestroyChild(backgroundImageName);
   if (backgroundImageRect) delete backgroundImageRect;
+  backgroundImageRect = nullptr;
 }
 
 }  // namespace openhoi

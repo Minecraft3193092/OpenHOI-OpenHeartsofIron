@@ -46,30 +46,10 @@ bool OS::isRunningSystemd() {
 
 // Checks if we are currently running inside a virtual machine
 bool OS::isRunningInVirtualMachine() {
-#ifdef OPENHOI_OS_WINDOWS
-  // ATTENTION: The virtualization checks for Windows will cause false-positives
-  // when debugging because all it does is measuring time!
-#  ifdef OPENHOI_OS_WINDOWS64
-  UINT64 time1 = __rdtsc();
-  UINT64 time2 = __rdtsc();
-#  else
-  unsigned int time1 = 0;
-  unsigned int time2 = 0;
-  __asm
-  {
-        RDTSC
-        MOV time1, EAX
-        RDTSC
-        MOV time2, EAX
-  }
-#  endif
-  if ((time2 - time1) > 500) {
-    Ogre::LogManager::getSingletonPtr()->logMessage(
-        "*** RUNNING INSIDE VIRTUALIZED WINDOWS ***");
-    return true;
-  }
-#elif defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+  // Check for installed and running systemd
   if (OS::isRunningSystemd()) {
+    // Yes, detect virtualization with help of systemd
     std::string virt = OS::executeCommand("systemd-detect-virt");
     if (!virt.empty()) {
       Ogre::LogManager::getSingletonPtr()->logMessage(

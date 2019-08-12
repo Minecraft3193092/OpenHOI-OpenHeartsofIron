@@ -3,6 +3,7 @@
 #include "game_manager.hpp"
 #include "state/menu_state.hpp"
 
+#include <ImguiManager.h>
 #include <OgreLogManager.h>
 #include <OgreOverlaySystem.h>
 #include <OgreRTShaderSystem.h>
@@ -24,11 +25,16 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
   // Initialize render system and resources
   initApp();
 
-  // Add input listener
+  // Create ImGui manager
+  // Ogre::ImguiManager::createSingleton();
+
+  // Add input listeners
   addInputListener(this);
+  // addInputListener(Ogre::ImguiManager::getSingletonPtr()->getInputListener());
 
   // Create a generic scene manager
-  sceneManager = mRoot->createSceneManager(Ogre::ST_GENERIC);
+  sceneManager = mRoot->createSceneManager();
+  // Ogre::ImguiManager::getSingleton().init(sceneManager);
 
   // Register our scene with the RTSS
   Ogre::RTShader::ShaderGenerator* shaderGenerator =
@@ -263,6 +269,14 @@ void GameManager::locateResources() {
   // Declare all material resources
   declareResources(FileAccess::getAssetRootDirectory() / "materials",
                    "Material");
+  if (Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsl")) {
+    declareResources(FileAccess::getAssetRootDirectory() / "materials" / "glsl",
+                     "Material");
+  } else if (Ogre::GpuProgramManager::getSingleton().isSyntaxSupported(
+                 "hlsl")) {
+    declareResources(FileAccess::getAssetRootDirectory() / "materials" / "hlsl",
+                     "Material");
+  }
 }
 
 // Declare resources in the provided directory (non-recusive!) with the provided
@@ -298,6 +312,17 @@ void GameManager::loadResources() {
   }
 }
 
+// Frame started event (override OGRE Bites)
+bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
+  bool continueRendering = OgreBites::ApplicationContext::frameStarted(evt);
+  if (continueRendering) {
+    // Ogre::ImguiManager::getSingleton().newFrame(evt.timeSinceLastFrame,
+    // Ogre::Rect(0, 0, getRenderWindow()->getWidth(),
+    // getRenderWindow()->getHeight())); ImGui::ShowDemoWindow();
+  }
+  return continueRendering;
+}
+
 // Frame rendering queued event (overrides OGRE Bites)
 bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
   bool continueRendering =
@@ -327,6 +352,15 @@ void GameManager::createCamera() {
     // If possible, set infinite far clip distance
     camera->setFarClipDistance(0);
   }
+
+  // Create one viewport, entire window
+  Ogre::Viewport* vp = getRenderWindow()->addViewport(camera);
+  vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
+
+  // Alter the camera aspect ratio to match the viewport
+  camera->setAspectRatio(Ogre::Real(vp->getActualWidth()) /
+                         Ogre::Real(vp->getActualHeight()));
+  camera->setAutoAspectRatio(true);
 }
 
 }  // namespace openhoi
