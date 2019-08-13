@@ -28,7 +28,8 @@ class Province final {
   GetCoordinates() const;
 
   // Gets the vertices of the triangulated province
-  OPENHOI_LIB_EXPORT std::vector<float> const GetTriangulatedVertices() const;
+  OPENHOI_LIB_EXPORT std::vector<Ogre::Real> const GetTriangulatedVertices()
+      const;
 
   // Gets the province center point
   OPENHOI_LIB_EXPORT OPENHOI_PROVINCE_POINT const& GetCenter() const;

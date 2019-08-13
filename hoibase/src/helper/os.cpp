@@ -27,7 +27,7 @@ std::string OS::executeCommand(std::string command) {
 
   if (!pipe) throw std::runtime_error("popen() failed!");
 
-  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+  while (fgets(buffer.data(), (int)buffer.size(), pipe.get()) != nullptr) {
     result += buffer.data();
   }
 

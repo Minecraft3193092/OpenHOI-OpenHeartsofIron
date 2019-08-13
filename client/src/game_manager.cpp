@@ -258,6 +258,9 @@ void GameManager::locateResources() {
   // Declare all audio resources
   // declareResources(FileAccess::GetAssetRootDirectory() / "audio", "Audio");
 
+  // Declare all font resources
+  declareResources(FileAccess::getAssetRootDirectory() / "fonts", "Font");
+
   // Declare all texture resources
   declareResources(FileAccess::getAssetRootDirectory() / "graphics", "Texture");
   declareResources(
@@ -293,8 +296,10 @@ void GameManager::declareResources(
     // Check if resource is a file
     if (!filesystem::is_directory(itr->status())) {
       // Declare single resource file
+      std::string fileName = itr->path().filename().u8string();
+      Ogre::LogManager::getSingletonPtr()->logMessage(fileName);
       Ogre::ResourceGroupManager::getSingleton().declareResource(
-          itr->path().filename().u8string(), resourceType, resourceGroup);
+          fileName, resourceType, resourceGroup);
     }
   }
 }
@@ -310,6 +315,10 @@ void GameManager::loadResources() {
         resourceGroup);
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(resourceGroup);
   }
+
+  // Initialize font
+  // Ogre::ImguiManager::getSingletonPtr()->addFont("gui.ttf",
+  // Ogre::RGN_DEFAULT);
 }
 
 // Frame started event (override OGRE Bites)

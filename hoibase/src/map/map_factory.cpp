@@ -134,9 +134,8 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
 
     if (!coordinates.empty()) {
       // Build province and add it to map
-      Province province(
-          id, coordinates,
-          OPENHOI_PROVINCE_POINT(0.0f, 0.0f));  // TODO: Center point
+      Province province(id, coordinates,
+                        OPENHOI_PROVINCE_POINT(0, 0));  // TODO: Center point
       map->AddProvince(province);
     }
   }
@@ -158,8 +157,8 @@ std::vector<OPENHOI_PROVINCE_POINT> MapFactory::GetCoordinates(
           auto& lat = coordArray[0];
           auto& lon = coordArray[1];
           if (lat.IsDouble() && lon.IsDouble())
-            coords.push_back(
-                OPENHOI_PROVINCE_POINT(lat.GetDouble(), lon.GetDouble()));
+            coords.push_back(OPENHOI_PROVINCE_POINT(
+                (Ogre::Real)lat.GetDouble(), (Ogre::Real)lon.GetDouble()));
         }
       }
     }

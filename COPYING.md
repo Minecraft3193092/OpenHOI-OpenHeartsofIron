@@ -39,23 +39,23 @@ Source files
  *<sub><sup>(originally taken from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui)))</sup></sub>*
 
 Graphic files
- - `dist/mods/default/graphics/coat_of_arms/de.png` / `dev-assets/coat_of_arms/de.svg` → free for any use but with copyright holder attribution
+ - `dist/graphics/coat_of_arms/de.png` / `dev-assets/coat_of_arms/de.svg` → free for any use but with copyright holder attribution
 *<sub><sup>(taken from [Wikipedia](https://commons.wikimedia.org/wiki/File:Wappen_Deutsches_Reich_-_Reichsadler_1889.svg); Copyright [David Liuzzo](https://commons.wikimedia.org/wiki/User:David_Liuzzo))</sup></sub>*
 
 Audio files
- - `dist/mods/default/audio/background/tannhaeuser.ogg` → [public domain](/legal/public-domain-audio)
+ - `dist/audio/background/tannhaeuser.ogg` → [public domain](/legal/public-domain-audio)
  *<sub><sup>(taken from [Wikipedia](https://commons.wikimedia.org/wiki/File:Overture_to_Tannhauser_-_U.S._Marine_Band.ogg); Composition: Richard Wagner in the 1840s; Performance: United States Marine Corps. from 22 May 1995 until 25 May 1995)</sup></sub>*
- - `dist/mods/default/audio/background/ride_of_the_valkyries.ogg` → [public domain](/legal/public-domain-audio) 
+ - `dist/audio/background/ride_of_the_valkyries.ogg` → [public domain](/legal/public-domain-audio) 
  *<sub><sup>(taken from [Wikipedia](https://commons.wikimedia.org/wiki/File:Richard_Wagner_-_Ride_of_the_Valkyries.ogg); Composition: Richard Wagner in the 1870s; Performance: American Symphony Orchestra for Edison Records, transferred ot the United States National Park Service)</sup></sub>*
- - `dist/mods/default/audio/background/coriolan.ogg` → [CC Public Domain Mark 1.0](/legal/cc-pdm-1.0) 
+ - `dist/audio/background/coriolan.ogg` → [CC Public Domain Mark 1.0](/legal/cc-pdm-1.0) 
  *<sub><sup>(taken from [archive.org / Musopen](https://archive.org/details/MusopenCollectionAsFlac); Composition: Ludwig van Beethoven in 1807; Performance: Czech National Symphony Orchestra for the Musopen Project)</sup></sub>*
 
 Material and shader files
- - `dist/materials/imgui*` → [MIT](/legal/mit-ogre-imgui)
+ - `dist/materials/**/imgui*` → [MIT](/legal/mit-ogre-imgui)
  *<sub><sup>(originally taken from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui))</sup></sub>*
 
 Font files
- - `dist/mods/default/font.ttf` → [SIL 1.1](/legal/sil-1.1)
+ - `dist/fonts/gui.ttf` → [SIL 1.1](/legal/sil-1.1)
  *<sub><sup>(taken from [Google Noto Fonts](https://www.google.com/get/noto))</sup></sub>*
  - `dev-assets/squealer.ttf` → [Free for our usage (logo creation)](/legal/typodermic.pdf) *<sub><sup>(taken from [Typodermic Fonts](http://typodermicfonts.com/squealer/))</sup></sub>*
 

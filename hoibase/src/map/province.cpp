@@ -40,7 +40,7 @@ Province::GetCoordinates() const {
 }
 
 // Gets the vertices of the triangulated province
-std::vector<float> const Province::GetTriangulatedVertices() const {
+std::vector<Ogre::Real> const Province::GetTriangulatedVertices() const {
   // Create province vertex handles and insert contraints
   CDT cdt;
   std::vector<Vertex_handle> handles;
@@ -70,7 +70,7 @@ std::vector<float> const Province::GetTriangulatedVertices() const {
   CGAL::lloyd_optimize_mesh_2(cdt, CGAL::parameters::max_iteration_number = 10);
 
   // Build vertices vector from triangles
-  std::vector<float> vertices;
+  std::vector<Ogre::Real> vertices;
   for (CDT::Finite_faces_iterator it = cdt.finite_faces_begin();
        it != cdt.finite_faces_end(); ++it) {
     // Check if the triangle is in domain which means that it is inside
@@ -81,9 +81,9 @@ std::vector<float> const Province::GetTriangulatedVertices() const {
       CDT::Triangle tri = cdt.triangle(it);
       for (int i = 0; i < 3; i++) {
         auto vertex = tri.vertex(i);
-        vertices.push_back(vertex.x() / 180);
-        vertices.push_back(vertex.y() / 85);
-        vertices.push_back(0.0);
+        vertices.push_back((Ogre::Real)(vertex.x() / 180));
+        vertices.push_back((Ogre::Real)(vertex.y() / 85));
+        vertices.push_back(0);
       }
     }
   }

@@ -148,15 +148,20 @@ filesystem::path FileAccess::getAssetRootDirectory() {
     std::array<std::string, 1> possibleResourcePaths = {""};
 #    endif
 #  else
+#    ifdef _DEBUG
     std::array<std::string, 8> possibleResourcePaths = {
-        "/usr/local/share/openhoi/",
-        "/usr/share/openhoi/",
-        "/opt/openhoi",
         "",
         "dist",
         "../dist",
         "../../dist",
-        "../../../dist"};
+        "../../../dist",
+        "/usr/local/share/openhoi/",
+        "/usr/share/openhoi/",
+        "/opt/openhoi"};
+#    else
+    std::array<std::string, 4> possibleResourcePaths = {
+        "", "/usr/local/share/openhoi/", "/usr/share/openhoi/", "/opt/openhoi"};
+#    endif
 #  endif
 
     filesystem::path possibleDir;
