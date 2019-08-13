@@ -26,15 +26,15 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
   initApp();
 
   // Create ImGui manager
-  // Ogre::ImguiManager::createSingleton();
+  Ogre::ImguiManager::createSingleton();
 
   // Add input listeners
   addInputListener(this);
-  // addInputListener(Ogre::ImguiManager::getSingletonPtr()->getInputListener());
+  addInputListener(Ogre::ImguiManager::getSingletonPtr()->getInputListener());
 
   // Create a generic scene manager
   sceneManager = mRoot->createSceneManager();
-  // Ogre::ImguiManager::getSingleton().init(sceneManager);
+  Ogre::ImguiManager::getSingleton().init(sceneManager);
 
   // Register our scene with the RTSS
   Ogre::RTShader::ShaderGenerator* shaderGenerator =
@@ -316,9 +316,10 @@ void GameManager::loadResources() {
 bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
   bool continueRendering = OgreBites::ApplicationContext::frameStarted(evt);
   if (continueRendering) {
-    // Ogre::ImguiManager::getSingleton().newFrame(evt.timeSinceLastFrame,
-    // Ogre::Rect(0, 0, getRenderWindow()->getWidth(),
-    // getRenderWindow()->getHeight())); ImGui::ShowDemoWindow();
+    Ogre::ImguiManager::getSingleton().newFrame(
+        evt.timeSinceLastFrame, Ogre::Rect(0, 0, getRenderWindow()->getWidth(),
+                                           getRenderWindow()->getHeight()));
+    ImGui::ShowDemoWindow();
   }
   return continueRendering;
 }

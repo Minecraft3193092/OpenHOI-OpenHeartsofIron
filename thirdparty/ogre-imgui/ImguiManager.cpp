@@ -193,6 +193,10 @@ ImguiManager::ImguiManager()
 :mSceneMgr(0)
 {
     ImGui::CreateContext();
+
+    // Disable INI file
+    ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = NULL;
 }
 ImguiManager::~ImguiManager()
 {

@@ -36,7 +36,7 @@ Source files
  - `thirdparty/imgui/*` → [MIT](/legal/mit-imgui)
  *<sub><sup>(taken from [ocornut/imgui](https://github.com/ocornut/imgui))</sup></sub>*
  - `thirdparty/ogre-imgui/*` → [MIT](/legal/mit-ogre-imgui)
- *<sub><sup>(taken from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui)))</sup></sub>*
+ *<sub><sup>(originally taken from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui)))</sup></sub>*
 
 Graphic files
  - `dist/mods/default/graphics/coat_of_arms/de.png` / `dev-assets/coat_of_arms/de.svg` → free for any use but with copyright holder attribution
@@ -52,7 +52,7 @@ Audio files
 
 Material and shader files
  - `dist/materials/imgui*` → [MIT](/legal/mit-ogre-imgui)
- *<sub><sup>(taken from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui))</sup></sub>*
+ *<sub><sup>(originally taken from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui))</sup></sub>*
 
 Font files
  - `dist/mods/default/font.ttf` → [SIL 1.1](/legal/sil-1.1)

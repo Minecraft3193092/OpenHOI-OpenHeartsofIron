@@ -25,10 +25,8 @@ if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
 endif()
 
 
-
 # Make sure that our custom CMake modules are found
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/global)
-
 
 
 # Set output directories for Windows and limit configuration types
@@ -39,7 +37,7 @@ if(WIN32)
         set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo" CACHE STRING "" FORCE) 
     else()
         if(NOT CMAKE_BUILD_TYPE)
-            message("Defaulting to release build.")
+            message("Defaulting to release (RelWithDebInfo) build.")
             set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "" FORCE)
         endif()
         set_property(CACHE CMAKE_BUILD_TYPE PROPERTY HELPSTRING "Choose the type of build")
