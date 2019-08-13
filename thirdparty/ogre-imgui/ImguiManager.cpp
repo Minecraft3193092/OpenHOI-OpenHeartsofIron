@@ -194,9 +194,13 @@ ImguiManager::ImguiManager()
 {
     ImGui::CreateContext();
 
-    // Disable INI file
     ImGuiIO& io = ImGui::GetIO();
+
+    // Disable INI file
     io.IniFilename = NULL;
+
+    // Enable docking
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 ImguiManager::~ImguiManager()
 {
