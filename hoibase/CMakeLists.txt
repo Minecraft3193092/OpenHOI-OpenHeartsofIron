@@ -196,14 +196,13 @@ if(WIN32)
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreBites${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMain${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMeshLodGenerator${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreOverlay${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreProperty${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreRTShaderSystem${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_Direct3D11${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL3Plus${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL${ogre_suffix}" "${CMAKE_BINARY_DIR}/output/${target}/"
-                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/SDL2.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
+                           COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/bin/SDL2.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libcrypto-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libssl-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/${target}/"
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/icudtl.dat" "${CMAKE_BINARY_DIR}/output/${target}/"
@@ -219,6 +218,19 @@ if(WIN32)
     endfunction()
     copy_hoibase_dll(Debug _d.dll)
     copy_hoibase_dll(RelWithDebInfo .dll)
+
+    add_custom_command(TARGET hoibase POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreBites_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMain_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreOverlay_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreProperty_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreRTShaderSystem_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_Direct3D11_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL3Plus_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       VERBATIM)
 endif()
 
 
