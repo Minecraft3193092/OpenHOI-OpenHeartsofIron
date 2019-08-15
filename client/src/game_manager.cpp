@@ -172,8 +172,8 @@ void GameManager::loadRenderSystem() {
     // Disable NVIDIA PerfHUD
     renderSystem->setConfigOption("Allow NVPerfHUD", "No");
 
-    // Set floating-point mode to double precision
-    renderSystem->setConfigOption("Floating-point mode", "Consistent");
+    // Set floating-point mode to fastest
+    renderSystem->setConfigOption("Floating-point mode", "Fastest");
 
     // Set DirectX feature levels
     renderSystem->setConfigOption("Min Requested Feature Levels", "9.1");
@@ -207,7 +207,7 @@ void GameManager::loadRenderSystem() {
   // can cause timing issues at lower frame rates here)
   renderSystem->setConfigOption(
       "VSync", (options->IsVerticalSync() ||
-                !options->GetWindowMode() == WindowMode::FULLSCREEN)
+                options->GetWindowMode() != WindowMode::FULLSCREEN)
                    ? "Yes"
                    : "No");
 
