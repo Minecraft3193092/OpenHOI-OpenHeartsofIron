@@ -193,14 +193,6 @@ ImguiManager::ImguiManager()
 :mSceneMgr(0)
 {
     ImGui::CreateContext();
-
-    ImGuiIO& io = ImGui::GetIO();
-
-    // Disable INI file
-    io.IniFilename = NULL;
-
-    // Enable docking
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 ImguiManager::~ImguiManager()
 {

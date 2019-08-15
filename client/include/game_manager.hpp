@@ -81,6 +81,9 @@ class GameManager final : public OgreBites::ApplicationContext,
   // Create camera
   void createCamera();
 
+  // Configure GUI
+  void configureGui();
+
   // Gets the full path to the provided OGRE plugin
   std::string getPluginPath(std::string pluginName);
 
