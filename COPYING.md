@@ -56,7 +56,7 @@ Material and shader files
 
 Font files
  - `dist/fonts/gui.ttf` → [SIL 1.1](/legal/sil-1.1)
- *<sub><sup>(taken from [Google Noto Fonts](https://www.google.com/get/noto))</sup></sub>*
+ *<sub><sup>(based on from [Google Noto Fonts](https://www.google.com/get/noto) but extended by SS runes)</sup></sub>*
  - `dev-assets/squealer.ttf` → [Free for our usage (logo creation)](/legal/typodermic.pdf) *<sub><sup>(taken from [Typodermic Fonts](http://typodermicfonts.com/squealer/))</sup></sub>*
 
 CMake Files

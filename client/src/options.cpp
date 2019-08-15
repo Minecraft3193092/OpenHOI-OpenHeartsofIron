@@ -7,7 +7,7 @@ namespace openhoi {
 // Options constructor
 Options::Options()
     : renderingDevice(""),
-      videoMode("1024 x  768"),
+      videoMode("1920 x 1080"),
       fullScreenAntiAliasing(8),
       windowMode(WindowMode::WINDOWED),
       verticalSync(true) {}

@@ -15,6 +15,10 @@
 
 #include <exception>
 
+// Direct3D11 causes blurry font textures and thus we disable support for it at
+// the moment
+//#define ENABLE_DIRECT3D11
+
 namespace openhoi {
 
 // Initializes the game manager
@@ -55,14 +59,6 @@ GameManager::~GameManager() {
   if (stateManager) {
     stateManager->requestStateChange(nullptr);
     delete stateManager;
-  }
-
-  // Unload resources
-  for (std::string& resourceGroup : defaultResourceGroups) {
-    Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup(
-        resourceGroup);
-    Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(
-        resourceGroup);
   }
 
   // Close down the game
@@ -134,7 +130,7 @@ void GameManager::createRoot() {
 // Load and configure the render system
 void GameManager::loadRenderSystem() {
   bool directX = false;
-#ifdef OPENHOI_OS_WINDOWS
+#if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
   // Prefer DirectX11 on Windows
   try {
     mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_D3D11));
@@ -155,7 +151,7 @@ void GameManager::loadRenderSystem() {
         // do nothing
       }
     }
-#ifdef OPENHOI_OS_WINDOWS
+#if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
   }
 #endif
 
@@ -168,7 +164,7 @@ void GameManager::loadRenderSystem() {
   Ogre::RenderSystem* renderSystem = mRoot->getAvailableRenderers().front();
 
   // Configure render system
-#ifdef OPENHOI_OS_WINDOWS
+#if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
   if (directX) {
     // Set driver type to hardware
     renderSystem->setConfigOption("Driver type", "Hardware");
@@ -298,8 +294,9 @@ void GameManager::declareResources(
       // Declare single resource file
       std::string fileName = itr->path().filename().u8string();
       Ogre::LogManager::getSingletonPtr()->logMessage(fileName);
-      Ogre::ResourceGroupManager::getSingleton().declareResource(
-          fileName, resourceType, resourceGroup);
+      if (resourceType != "Font")
+        Ogre::ResourceGroupManager::getSingleton().declareResource(
+            fileName, resourceType, resourceGroup);
     }
   }
 }
@@ -310,6 +307,8 @@ void GameManager::loadResources() {
   Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(0);
 
   // Initialize and load resource groups
+  std::array<std::string, 3> defaultResourceGroups = {
+      Ogre::RGN_DEFAULT, OPENHOI_RSG_COA_TEXTURES, OPENHOI_RSG_FLAG_TEXTURES};
   for (std::string& resourceGroup : defaultResourceGroups) {
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(
         resourceGroup);
@@ -317,8 +316,8 @@ void GameManager::loadResources() {
   }
 
   // Initialize font
-  // Ogre::ImguiManager::getSingletonPtr()->addFont("gui.ttf",
-  // Ogre::RGN_DEFAULT);
+  Ogre::ImguiManager::getSingletonPtr()->addFont("gui/default",
+                                                 Ogre::RGN_DEFAULT);
 }
 
 // Frame started event (override OGRE Bites)

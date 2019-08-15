@@ -141,12 +141,8 @@ filesystem::path FileAccess::getAssetRootDirectory() {
         filesystem::path(path) / filesystem::path(assets);
 #else
 #  ifdef OPENHOI_OS_WINDOWS
-#    ifdef _DEBUG
     std::array<std::string, 5> possibleResourcePaths = {
         "", "dist", "..\\dist", "..\\..\\dist", "..\\..\\..\\dist"};
-#    else
-    std::array<std::string, 1> possibleResourcePaths = {""};
-#    endif
 #  else
 #    ifdef _DEBUG
     std::array<std::string, 8> possibleResourcePaths = {
