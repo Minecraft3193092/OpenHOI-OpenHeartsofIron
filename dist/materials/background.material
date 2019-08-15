@@ -1,0 +1,16 @@
+material background
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture background.jpg
+                depth_check off
+                depth_write off
+                lighting off
+            }
+        }   
+    }
+}

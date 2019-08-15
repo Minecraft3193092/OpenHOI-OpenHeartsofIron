@@ -35,16 +35,15 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
 
   // Add input listeners
   addInputListener(this);
-  addInputListener(Ogre::ImguiManager::getSingletonPtr()->getInputListener());
+  addInputListener(Ogre::ImguiManager::getSingleton().getInputListener());
 
   // Create a generic scene manager
   sceneManager = mRoot->createSceneManager();
+  sceneManager->addRenderQueueListener(mOverlaySystem);
   Ogre::ImguiManager::getSingleton().init(sceneManager);
 
   // Register our scene with the RTSS
-  Ogre::RTShader::ShaderGenerator* shaderGenerator =
-      Ogre::RTShader::ShaderGenerator::getSingletonPtr();
-  shaderGenerator->addSceneManager(sceneManager);
+  Ogre::RTShader::ShaderGenerator::getSingleton().addSceneManager(sceneManager);
 
   // Create camera
   createCamera();
@@ -252,53 +251,38 @@ OgreBites::NativeWindowPair GameManager::createWindow(
 
 // Locate resources (overrides OGRE Bites)
 void GameManager::locateResources() {
+  filesystem::path assetRoot = FileAccess::getAssetRootDirectory();
+
   // Declare all audio resources
-  // declareResources(FileAccess::GetAssetRootDirectory() / "audio", "Audio");
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "audio").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
 
   // Declare all font resources
-  declareResources(FileAccess::getAssetRootDirectory() / "fonts", "Font");
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "fonts").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
 
   // Declare all texture resources
-  declareResources(FileAccess::getAssetRootDirectory() / "graphics", "Texture");
-  declareResources(
-      FileAccess::getAssetRootDirectory() / "graphics" / "coat_of_arms",
-      "Texture", OPENHOI_RSG_COA_TEXTURES);
-  declareResources(FileAccess::getAssetRootDirectory() / "graphics" / "flags",
-                   "Texture", OPENHOI_RSG_FLAG_TEXTURES);
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "graphics").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "graphics" / "coat_of_arms").u8string(), "FileSystem",
+      OPENHOI_RSG_COA_TEXTURES);
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "graphics" / "flags").u8string(), "FileSystem",
+      OPENHOI_RSG_FLAG_TEXTURES);
 
   // Declare all material resources
-  declareResources(FileAccess::getAssetRootDirectory() / "materials",
-                   "Material");
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "materials").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
   if (Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsl")) {
-    declareResources(FileAccess::getAssetRootDirectory() / "materials" / "glsl",
-                     "Material");
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+        (assetRoot / "materials" / "glsl").u8string(), "FileSystem",
+        Ogre::RGN_DEFAULT);
   } else if (Ogre::GpuProgramManager::getSingleton().isSyntaxSupported(
                  "hlsl")) {
-    declareResources(FileAccess::getAssetRootDirectory() / "materials" / "hlsl",
-                     "Material");
-  }
-}
-
-// Declare resources in the provided directory (non-recusive!) with the provided
-// type for the given resource group
-void GameManager::declareResources(
-    filesystem::path directory, std::string resourceType,
-    std::string resourceGroup /* = Ogre::RGN_DEFAULT */) {
-  // Add resource location
-  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-      directory.u8string(), "FileSystem", resourceGroup);
-
-  filesystem::directory_iterator endItr;
-  for (filesystem::directory_iterator itr(directory); itr != endItr; ++itr) {
-    // Check if resource is a file
-    if (!filesystem::is_directory(itr->status())) {
-      // Declare single resource file
-      std::string fileName = itr->path().filename().u8string();
-      Ogre::LogManager::getSingletonPtr()->logMessage(fileName);
-      if (resourceType != "Font")
-        Ogre::ResourceGroupManager::getSingleton().declareResource(
-            fileName, resourceType, resourceGroup);
-    }
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+        (assetRoot / "materials" / "hlsl").u8string(), "FileSystem",
+        Ogre::RGN_DEFAULT);
   }
 }
 
@@ -317,8 +301,7 @@ void GameManager::loadResources() {
   }
 
   // Initialize font
-  Ogre::ImguiManager::getSingletonPtr()->addFont("gui/default",
-                                                 Ogre::RGN_DEFAULT);
+  Ogre::ImguiManager::getSingleton().addFont("gui/default", Ogre::RGN_DEFAULT);
 }
 
 // Frame started event (override OGRE Bites)

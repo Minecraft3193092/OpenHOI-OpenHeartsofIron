@@ -87,11 +87,6 @@ class GameManager final : public OgreBites::ApplicationContext,
   // Gets the full path to the provided OGRE plugin
   std::string getPluginPath(std::string pluginName);
 
-  // Declare resources in the provided directory (non-recusive!) with the
-  // provided type for the given resource group
-  void declareResources(filesystem::path directory, std::string resourceType,
-                        std::string resourceGroup = Ogre::RGN_DEFAULT);
-
   Options* options;
   StateManager* stateManager;
   Ogre::SceneManager* sceneManager;

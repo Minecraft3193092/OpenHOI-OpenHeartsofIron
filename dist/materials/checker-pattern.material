@@ -1,0 +1,27 @@
+material checker/1x1
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture checker-pattern-1x1.png
+            }
+        }   
+    }
+}
+
+material checker/2x1
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture checker-pattern-2x1.png
+            }
+        }   
+    }
+}

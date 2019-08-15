@@ -31,6 +31,15 @@ list(APPEND CLIENT_SOURCES src/client.cpp
                            src/options.cpp)
 source_group("Source Files" FILES ${CLIENT_SOURCES})
 
+# Add graphic code
+list(APPEND GRAPHIC_INCLUDES include/graphic/texture_helper.hpp)
+source_group("Header Files\\graphic" FILES ${GRAPHIC_INCLUDES})
+list(APPEND CLIENT_INCLUDES ${GRAPHIC_INCLUDES})
+
+list(APPEND GRAPHIC_SOURCES src/graphic/texture_helper.cpp)
+source_group("Source Files\\graphic" FILES ${GRAPHIC_SOURCES})
+list(APPEND CLIENT_SOURCES ${GRAPHIC_SOURCES})
+
 # Add state code
 list(APPEND STATE_INCLUDES include/state/menu_state.hpp
                            include/state/state_manager.hpp

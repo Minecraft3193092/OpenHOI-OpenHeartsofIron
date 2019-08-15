@@ -33,6 +33,9 @@ class MenuState final : public State {
   // Create background image
   void createBackground();
 
+  // Create logo
+  void createLogo();
+
   std::string backgroundImageName;
   Ogre::Rectangle2D* backgroundImageRect;
 };

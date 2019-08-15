@@ -2,10 +2,14 @@
 
 #include "state/menu_state.hpp"
 #include "game_manager.hpp"
+#include "graphic/texture_helper.hpp"
 
 #include <Ogre.h>
 #include <OgreLogManager.h>
 #include <OgreMaterialManager.h>
+#include <OgreOverlay.h>
+#include <OgreOverlayContainer.h>
+#include <OgreOverlayManager.h>
 #include <OgreTextureManager.h>
 
 #include <cassert>
@@ -34,25 +38,24 @@ void MenuState::createScene() {
 
   // Create background image
   createBackground();
+
+  // Create logo
+  createLogo();
 }
 
 // Create background image
 void MenuState::createBackground() {
   GameManager& gameManager = GameManager::getInstance();
 
-  // Get background texture
-  Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().getByName(
-      "background.jpg", Ogre::RGN_DEFAULT);
-  assert(texture->isLoaded());
-
   // Create background material
-  Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create(
-      backgroundImageName, Ogre::RGN_DEFAULT);
-  material->getTechnique(0)->getPass(0)->createTextureUnitState(
-      texture->getName());
-  material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-  material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-  material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+  Ogre::MaterialPtr material =
+      Ogre::MaterialManager::getSingleton().getByName("background");
+  assert(!material.isNull() && material->isLoaded());
+
+  // Get background texture
+  Ogre::TexturePtr texture =
+      TextureHelper::extractTextureFromSimpleMaterial(material);
+  assert(!texture.isNull() && texture->isLoaded());
 
   // Create background rectangle covering the whole screen
   int windowWidth = gameManager.getRenderWindow()->getWidth();
@@ -63,7 +66,7 @@ void MenuState::createBackground() {
     // Texture size is not the same as the window size. Thus, we have to find a
     // stretch factor for the corners
     Ogre::Real backgroundRatio =
-        (Ogre::Real)texture->getWidth() / texture->getHeight();
+        TextureHelper::getTextureWidthHeightRatio(texture);
     if (backgroundRatio >= 1) {
       // Width of BG image is greater or equal than height
       xRatio =
@@ -96,6 +99,41 @@ void MenuState::createBackground() {
       gameManager.getSceneManager()->getRootSceneNode()->createChildSceneNode(
           backgroundImageName);
   node->attachObject(backgroundImageRect);
+}
+
+// Create logo
+void MenuState::createLogo() {
+  GameManager& gameManager = GameManager::getInstance();
+  Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
+
+  // Create an overlay
+  Ogre::Overlay* overlay = overlayManager.create(
+      OPENHOI_BUILD_DYNAMIC_OBJECT_NAME("Main_Menu_Logo"));
+
+  // Get width/height ratio of logo
+  Ogre::TexturePtr texture =
+      TextureHelper::extractTextureFromSimpleMaterial("logo");
+  assert(!texture.isNull() && texture->isLoaded());
+  Ogre::Real logoRatio = TextureHelper::getTextureWidthHeightRatio(texture);
+
+  // Calculate panel (=logo) height
+  int windowWidth = gameManager.getRenderWindow()->getWidth();
+  int windowHeight = gameManager.getRenderWindow()->getHeight();
+  Ogre::Real panelHeight = (0.4f / logoRatio) * ((Ogre::Real) windowWidth / windowHeight);
+
+  // Create a panel
+  Ogre::OverlayContainer* panel =
+      static_cast<Ogre::OverlayContainer*>(overlayManager.createOverlayElement(
+          "Panel", OPENHOI_BUILD_DYNAMIC_OBJECT_NAME("Main_Menu_Logo_Panel")));
+  panel->setPosition(0.3f, 0.5f - (panelHeight / 2));
+  panel->setDimensions(0.4f, panelHeight);
+  panel->setMaterialName("logo");
+
+  // Add panel to overlay
+  overlay->add2D(panel);
+
+  // Show the overlay
+  overlay->show();
 }
 
 // Used to update the scene
