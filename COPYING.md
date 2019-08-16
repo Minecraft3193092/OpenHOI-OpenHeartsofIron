@@ -51,6 +51,8 @@ Audio files
  *<sub><sup>(taken from [archive.org / Musopen](https://archive.org/details/MusopenCollectionAsFlac); Composition: Ludwig van Beethoven in 1807; Performance: Czech National Symphony Orchestra for the Musopen Project)</sup></sub>*
 
 Material and shader files
+ - `dist/materials/**/DualQuaternionSkinning_*`, `dist/materials/**/FFPLib_*`, `dist/materials/**/HardwareSkinningShadow*`, `dist/materials/**/SGXLib_*` → [MIT](/legal/mit-ogre)
+ *<sub><sup>(taken from [OGRECave/ogre](https://github.com/OGRECave/ogre))</sup></sub>*
  - `dist/materials/**/imgui*` → [MIT](/legal/mit-ogre-imgui)
  *<sub><sup>(originally taken from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui))</sup></sub>*
 
