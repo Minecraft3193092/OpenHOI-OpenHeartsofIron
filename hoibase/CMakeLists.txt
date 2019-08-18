@@ -221,8 +221,8 @@ if(WIN32)
 
     add_custom_command(TARGET hoibase POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL_Core-vc140-mt-$<$<CONFIG:Debug>:gd->4.14.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc140-mt-$<$<CONFIG:Debug>:gd->4.14.dll" "${CMAKE_BINARY_DIR}/output//$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND $<$<CONFIG:Debug>${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/">
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc140-mt-$<$<CONFIG:Debug>:gd->4.14.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreBites_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMain_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
