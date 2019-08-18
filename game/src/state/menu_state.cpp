@@ -2,16 +2,19 @@
 
 #include "state/menu_state.hpp"
 #include "game_manager.hpp"
+#include "graphic/gui_manager.hpp"
 #include "graphic/texture_helper.hpp"
 
-#include <Ogre.h>
 #include <OgreLogManager.h>
 #include <OgreMaterialManager.h>
 #include <OgreOverlay.h>
 #include <OgreOverlayContainer.h>
 #include <OgreOverlayManager.h>
+#include <OgrePrerequisites.h>
 #include <OgreTextureManager.h>
+#include <imgui.h>
 
+#include <algorithm>
 #include <cassert>
 
 namespace openhoi {
@@ -119,7 +122,8 @@ void MenuState::createLogo() {
   // Calculate panel (=logo) height
   int windowWidth = gameManager.getRenderWindow()->getWidth();
   int windowHeight = gameManager.getRenderWindow()->getHeight();
-  Ogre::Real panelHeight = (0.4f / logoRatio) * ((Ogre::Real) windowWidth / windowHeight);
+  Ogre::Real panelHeight =
+      (0.4f / logoRatio) * ((Ogre::Real)windowWidth / windowHeight);
 
   // Create a panel
   Ogre::OverlayContainer* panel =
@@ -137,7 +141,89 @@ void MenuState::createLogo() {
 }
 
 // Used to update the scene
-void MenuState::updateScene() {}
+void MenuState::updateScene() {
+  // xxxx
+}
+
+// Used to update the GUI of the scene
+void MenuState::updateGui() {
+  // Get window size
+  GameManager& gameManager = GameManager::getInstance();
+  int windowWidth = gameManager.getRenderWindow()->getWidth();
+  int windowHeight = gameManager.getRenderWindow()->getHeight();
+
+  // ----------------------------------------------------------------------------
+
+  // Render menu buttons
+  ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+  ImVec2 buttonAreaSize = ImVec2(windowWidth, windowHeight * (Ogre::Real)0.1f);
+  ImGui::SetNextWindowSize(buttonAreaSize, ImGuiCond_Always);
+  ImGui::SetNextWindowContentSize(buttonAreaSize);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+  ImGui::Begin("Game Menu Buttons", NULL,
+               ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+                   ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |
+                   ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
+
+  ImVec2 buttonSize = ImVec2(200, std::min(50.0f, buttonAreaSize.y));
+  const int numberOfButtons = 5;
+  float widthOfAllButtons = (buttonSize.x * numberOfButtons);
+  float buttonSpacing =
+      std::min(buttonSize.x * 0.4f,
+               (windowWidth - widthOfAllButtons) / (numberOfButtons + 1));
+  float widthOfAllSpacings = buttonSpacing * (numberOfButtons - 1);
+  float buttonLeftPos =
+      (windowWidth - widthOfAllButtons - widthOfAllSpacings) / 2;
+  float buttonTopPos = (buttonAreaSize.y - buttonSize.y) / 2;
+
+  ImGui::PushFont(GuiManager::getInstance().getBigFont());
+  ImVec4 originalButtonStyle = ImGui::GetStyle().Colors[ImGuiCol_Button];
+  ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(originalButtonStyle.x, originalButtonStyle.y, originalButtonStyle.z, 0.8f);
+
+  ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
+  ImGui::Button("Singleplayer", buttonSize);
+
+  buttonLeftPos += buttonSpacing + buttonSize.x;
+  ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
+  ImGui::Button("Multiplayer", buttonSize);
+
+  buttonLeftPos += buttonSpacing + buttonSize.x;
+  ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
+  ImGui::Button("Options", buttonSize);
+
+  buttonLeftPos += buttonSpacing + buttonSize.x;
+  ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
+  ImGui::Button("Credits", buttonSize);
+
+  buttonLeftPos += buttonSpacing + buttonSize.x;
+  ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
+  ImGui::Button("Quit", buttonSize);
+
+  ImGui::GetStyle().Colors[ImGuiCol_Button] = originalButtonStyle;
+  ImGui::PopFont();
+
+  ImGui::End();
+  ImGui::PopStyleVar();
+
+  // ----------------------------------------------------------------------------
+
+  // Render game version
+  std::string version = "v" OPENHOI_GAME_VERSION;
+  ImVec2 textSize = ImGui::CalcTextSize(version.c_str());
+  ImGui::SetNextWindowPos(
+      ImVec2(windowWidth - textSize.x - 10, windowHeight - textSize.y - 10),
+      ImGuiCond_Always);
+  ImGui::SetNextWindowSize(textSize, ImGuiCond_Always);
+  ImGui::SetNextWindowContentSize(textSize);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+  ImGui::Begin("Game Menu Version", NULL,
+               ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+                   ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |
+                   ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
+  ImGui::Text(version.c_str());
+  ImGui::End();
+  ImGui::PopStyleVar();
+}
 
 // Used to remove the scene
 void MenuState::removeScene() {

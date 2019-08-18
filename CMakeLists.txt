@@ -54,8 +54,8 @@ enable_testing()
 add_subdirectory(hoibase)
 
 
-# Add game client executable
-add_subdirectory(client)
+# Add game executable
+add_subdirectory(game)
 
 
 # Add game server executable

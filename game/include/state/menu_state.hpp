@@ -26,6 +26,9 @@ class MenuState final : public State {
   // Used to update the scene
   void updateScene();
 
+  // Used to update the GUI of the scene
+  void updateGui();
+
   // Used to remove the scene
   void removeScene();
 

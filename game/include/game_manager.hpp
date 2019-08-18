@@ -5,9 +5,9 @@
 #include "options.hpp"
 #include "state/state_manager.hpp"
 
-#include <Ogre.h>
 #include <OgreApplicationContext.h>
 #include <OgreInput.h>
+#include <OgrePrerequisites.h>
 #include <OgreSceneManager.h>
 #include <hoibase/file/filesystem.hpp>
 #include <hoibase/helper/os.hpp>
@@ -80,9 +80,6 @@ class GameManager final : public OgreBites::ApplicationContext,
 
   // Create camera
   void createCamera();
-
-  // Configure GUI
-  void configureGui();
 
   // Gets the full path to the provided OGRE plugin
   std::string getPluginPath(std::string pluginName);

@@ -36,20 +36,11 @@ Ogre::TexturePtr TextureHelper::extractTextureFromSimpleMaterial(
   // Ensure that material is loaded
   assert(!material.isNull() && material->isLoaded());
 
-  // Check for technique
-  //if (material->getTechniques().empty()) return Ogre::MaterialPtr();
-  Ogre::Technique* technique = material->getTechnique(0);
-
-  // Check for pass inside technique
-  // if (technique->getPasses().empty()) return Ogre::MaterialPtr();
-  Ogre::Pass* pass = technique->getPass(0);
-
-  // Check for texture unit state inside pass
-  // if (pass->getTextureUnitStates().empty()) return Ogre::MaterialPtr();
-  Ogre::TextureUnitState* textureUnitState = pass->getTextureUnitState(0);
-
   // Get texture name and texture
-  std::string textureName = textureUnitState->getTextureName();
+  std::string textureName = material->getTechnique(0)
+                                ->getPass(0)
+                                ->getTextureUnitState(0)
+                                ->getTextureName();
   return Ogre::TextureManager::getSingleton().getByName(textureName,
                                                         resourceGroupName);
 }

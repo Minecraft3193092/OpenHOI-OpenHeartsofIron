@@ -8,7 +8,7 @@ set LF=^
 
 rem LF end -- The two empty lines are required here
 
-set DIRS=client/ server/ hoibase/
+set DIRS=game/ server/ hoibase/
 
 where /q clang-format
 if %errorLevel% neq 0 (

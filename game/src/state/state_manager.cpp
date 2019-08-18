@@ -34,6 +34,12 @@ void StateManager::updateState() {
   if (currentState != nullptr) currentState->updateScene();
 }
 
+// Update the GUI of the current state
+void StateManager::updateGui() {
+  // If a state is active, update it's GUI
+  if (currentState != nullptr) currentState->updateGui();
+}
+
 // Request state manager to change state
 void StateManager::requestStateChange(State* newState) {
   // Don't change the state if the requested state class matches the current

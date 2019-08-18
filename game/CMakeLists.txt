@@ -1,8 +1,8 @@
 # Setup project details
-project(client
+project(game
         VERSION "${OPENHOI_VERSION_MAJOR}.${OPENHOI_VERSION_MINOR}.${OPENHOI_VERSION_PATCH}"
         LANGUAGES CXX
-        DESCRIPTION "openhoi client executable")
+        DESCRIPTION "openhoi game executable")
 
 
 # Find required dependencies
@@ -23,35 +23,37 @@ endif()
 
 
 # Add main code
-list(APPEND CLIENT_INCLUDES include/game_manager.hpp
+list(APPEND GAME_INCLUDES include/game_manager.hpp
                             include/options.hpp)
-source_group("Header Files" FILES ${RENDERER_INCLUDES})
-list(APPEND CLIENT_SOURCES src/client.cpp
+source_group("Header Files" FILES ${GAME_INCLUDES})
+list(APPEND GAME_SOURCES src/client.cpp
                            src/game_manager.cpp
                            src/options.cpp)
-source_group("Source Files" FILES ${CLIENT_SOURCES})
+source_group("Source Files" FILES ${GAME_SOURCES})
 
 # Add graphic code
-list(APPEND GRAPHIC_INCLUDES include/graphic/texture_helper.hpp)
+list(APPEND GRAPHIC_INCLUDES include/graphic/gui_manager.hpp
+                             include/graphic/texture_helper.hpp)
 source_group("Header Files\\graphic" FILES ${GRAPHIC_INCLUDES})
-list(APPEND CLIENT_INCLUDES ${GRAPHIC_INCLUDES})
+list(APPEND GAME_INCLUDES ${GRAPHIC_INCLUDES})
 
-list(APPEND GRAPHIC_SOURCES src/graphic/texture_helper.cpp)
+list(APPEND GRAPHIC_SOURCES src/graphic/gui_manager.cpp
+                            src/graphic/texture_helper.cpp)
 source_group("Source Files\\graphic" FILES ${GRAPHIC_SOURCES})
-list(APPEND CLIENT_SOURCES ${GRAPHIC_SOURCES})
+list(APPEND GAME_SOURCES ${GRAPHIC_SOURCES})
 
 # Add state code
 list(APPEND STATE_INCLUDES include/state/menu_state.hpp
                            include/state/state_manager.hpp
                            include/state/state.hpp)
 source_group("Header Files\\state" FILES ${STATE_INCLUDES})
-list(APPEND CLIENT_INCLUDES ${STATE_INCLUDES})
+list(APPEND GAME_INCLUDES ${STATE_INCLUDES})
 
 list(APPEND STATE_SOURCES src/state/menu_state.cpp
                           src/state/state_manager.cpp
                           src/state/state.cpp)
 source_group("Source Files\\state" FILES ${STATE_SOURCES})
-list(APPEND CLIENT_SOURCES ${STATE_SOURCES})
+list(APPEND GAME_SOURCES ${STATE_SOURCES})
 
 # Add third-party library ImGui
 list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imconfig.h
@@ -86,20 +88,22 @@ set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${OGRE_IMGUI_SOURCES})
 if(WIN32)
     set(WINDOWS_RESOURCE_PATH ${CMAKE_SOURCE_DIR}/winicon.rc)
 endif()
-add_executable(client WIN32 MACOSX_BUNDLE
-    ${CLIENT_INCLUDES} ${CLIENT_SOURCES}
+add_executable(game WIN32 MACOSX_BUNDLE
+    ${GAME_INCLUDES} ${GAME_SOURCES}
     ${THIRDPARTY_INCLUDES} ${THIRDPARTY_SOURCES}
     ${WINDOWS_RESOURCE_PATH})
 
-target_link_libraries(client hoibase
-                             ${FILESYSTEM_LIB}
-                             ${OGRE_LIBRARIES}
-                             ${SDL2_LIBRARIES}
-                             ${OPENAL_LIBRARY}
-                             Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
-                             Threads::Threads)
+set_target_properties(game PROPERTIES OUTPUT_NAME "openhoi")
 
-target_include_directories(client
+target_link_libraries(game hoibase
+                           ${FILESYSTEM_LIB}
+                           ${OGRE_LIBRARIES}
+                           ${SDL2_LIBRARIES}
+                           ${OPENAL_LIBRARY}
+                           Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
+                           Threads::Threads)
+
+target_include_directories(game
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>
@@ -112,7 +116,7 @@ target_include_directories(client
 
 
 # Set error level
-target_compile_options(client PRIVATE
+target_compile_options(game PRIVATE
     $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wc++17-compat-pedantic>
     $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -pedantic>
     $<$<CXX_COMPILER_ID:MSVC>:/W3>)

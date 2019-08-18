@@ -18,6 +18,9 @@ class StateManager final {
   // Update the current state
   void updateState();
 
+  // Update the GUI of the current state
+  void updateGui();
+
   // Request state manager to change state
   void requestStateChange(State* newState);
 

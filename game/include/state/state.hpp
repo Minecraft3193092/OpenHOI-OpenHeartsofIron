@@ -22,6 +22,9 @@ class State {
   // Used to update the scene
   virtual void updateScene() = 0;
 
+  // Used to update the GUI of the scene
+  virtual void updateGui() = 0;
+
   // Used to remove the scene
   virtual void removeScene() = 0;
 };

@@ -22,6 +22,8 @@ add_executable(server
     ${SERVER_SOURCES}
     ${WINDOWS_RESOURCE_PATH})
 
+set_target_properties(server PROPERTIES OUTPUT_NAME "openhoi-server")
+
 target_link_libraries(server hoibase
                              ${FILESYSTEM_LIB}
                              Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale)
@@ -34,7 +36,7 @@ target_include_directories(server
 
 
 # Set error level
-target_compile_options(client PRIVATE
+target_compile_options(server PRIVATE
     $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wc++17-compat-pedantic>
     $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -pedantic>
     $<$<CXX_COMPILER_ID:MSVC>:/W3>)
