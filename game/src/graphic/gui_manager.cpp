@@ -54,6 +54,9 @@ ImFont* GuiManager::getBigFont() {
   return bigFont;
 }
 
+ // Toggle debug console
+void GuiManager::toggleDebugConsole() { debugConsole = !debugConsole; }
+
 // Render new GUI frame
 void GuiManager::newFrame(const Ogre::FrameEvent& evt, Ogre::uint32 windowWidth,
                           Ogre::uint32 windowHeight) {

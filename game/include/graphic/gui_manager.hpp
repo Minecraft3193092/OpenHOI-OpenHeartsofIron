@@ -37,6 +37,9 @@ class GuiManager final {
   // Gets the big font
   ImFont* getBigFont();
 
+  // Toggle debug console
+  void toggleDebugConsole();
+
  protected:
   // Initializes the GUI manager
   GuiManager();
@@ -49,6 +52,7 @@ class GuiManager final {
   void configureGui();
 
   Ogre::ImguiManager* imGuiManager;
+  bool debugConsole;
   ImFont* defaultFont;
   ImFont* bigFont;
 };

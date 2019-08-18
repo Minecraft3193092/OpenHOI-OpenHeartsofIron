@@ -178,7 +178,9 @@ void MenuState::updateGui() {
 
   ImGui::PushFont(GuiManager::getInstance().getBigFont());
   ImVec4 originalButtonStyle = ImGui::GetStyle().Colors[ImGuiCol_Button];
-  ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(originalButtonStyle.x, originalButtonStyle.y, originalButtonStyle.z, 0.8f);
+  ImGui::GetStyle().Colors[ImGuiCol_Button] =
+      ImVec4(originalButtonStyle.x, originalButtonStyle.y,
+             originalButtonStyle.z, 0.8f);
 
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
   ImGui::Button("Singleplayer", buttonSize);
@@ -197,7 +199,7 @@ void MenuState::updateGui() {
 
   buttonLeftPos += buttonSpacing + buttonSize.x;
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  ImGui::Button("Quit", buttonSize);
+  if (ImGui::Button("Quit", buttonSize)) gameManager.requestExit();
 
   ImGui::GetStyle().Colors[ImGuiCol_Button] = originalButtonStyle;
   ImGui::PopFont();

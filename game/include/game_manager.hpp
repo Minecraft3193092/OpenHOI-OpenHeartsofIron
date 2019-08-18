@@ -67,6 +67,9 @@ class GameManager final : public OgreBites::ApplicationContext,
   // Frame rendering queued event (overrides OGRE Bites)
   virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
+  // Key released event
+  virtual bool keyReleased(const OgreBites::KeyboardEvent& arg);
+
  protected:
   // Initializes the game manager
   GameManager();

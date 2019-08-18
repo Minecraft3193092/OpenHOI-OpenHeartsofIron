@@ -328,6 +328,15 @@ bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
   return continueRendering;
 }
 
+// Key released event
+bool GameManager::keyReleased(const OgreBites::KeyboardEvent& arg) {
+  // Tilde key will toggle console everywhere
+  if (arg.keysym.sym == '^')
+    GuiManager::getInstance().toggleDebugConsole();
+
+  return true;
+}
+
 // Create camera
 void GameManager::createCamera() {
   // Create the camera
