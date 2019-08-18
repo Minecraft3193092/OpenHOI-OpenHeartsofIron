@@ -71,7 +71,7 @@ find_package(CGAL ${CGAL_VERSION} REQUIRED)
 if(${MANUAL_CGAL_BUILD})
     set(CGAL_VERSION "${CGAL_VERSION_MAJOR}.${CGAL_VERSION_MINOR}")
     if(WIN32 AND NOT CGAL_LIBRARY)
-        set(CGAL_LIBRARY optimized ${CGAL_LIBRARIES_DIR}/libCGAL-vc140-mt-${CGAL_VERSION}.lib debug ${CGAL_LIBRARIES_DIR}/libCGAL-vc140-mt-gd-${CGAL_VERSION}.lib)
+        set(CGAL_LIBRARY optimized ${CGAL_LIBRARIES_DIR}/CGAL-vc140-mt-${CGAL_VERSION}.lib debug ${CGAL_LIBRARIES_DIR}/CGAL-vc140-mt-gd-${CGAL_VERSION}.lib)
     endif()
     string(REPLACE ";" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CGAL_DEBUG_CFLAGS}")
     string(REPLACE ";" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CGAL_DEBUG_CFLAGS}")
@@ -220,6 +220,11 @@ if(WIN32)
     copy_hoibase_dll(RelWithDebInfo .dll)
 
     add_custom_command(TARGET hoibase POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL_Core-vc140-mt-4.14.dll" "${CMAKE_BINARY_DIR}/output/RelWithDebInfo/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc140-mt-4.14.dll" "${CMAKE_BINARY_DIR}/output/RelWithDebInfo/"
+                       VERBATIM)
+
+    add_custom_command(TARGET hoibase POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreBites_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
@@ -230,6 +235,8 @@ if(WIN32)
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_Direct3D11_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL3Plus_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL_d.pdb" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL_Core-vc140-mt-gd-4.14.dll" "${CMAKE_BINARY_DIR}/output/Debug/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc140-mt-gd-4.14.dll" "${CMAKE_BINARY_DIR}/output/Debug/"
                        VERBATIM)
 endif()
 
