@@ -4,12 +4,12 @@ material background
     {
         pass
         {
+            depth_check off
+            depth_write off
+            lighting off
             texture_unit
             {
                 texture background.jpg
-                depth_check off
-                depth_write off
-                lighting off
             }
         }   
     }

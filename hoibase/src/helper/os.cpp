@@ -51,7 +51,7 @@ bool OS::isRunningInVirtualMachine() {
   if (OS::isRunningSystemd()) {
     // Yes, detect virtualization with help of systemd
     std::string virt = OS::executeCommand("systemd-detect-virt");
-    if (!virt.empty()) {
+    if (!virt.empty() && virt != "none") {
       Ogre::LogManager::getSingletonPtr()->logMessage(
           (boost::format(
                "*** RUNNING INSIDE VIRTUALIZATION PLATFORM \"%s\" ***") %

@@ -155,8 +155,15 @@ filesystem::path FileAccess::getAssetRootDirectory() {
         "/usr/share/openhoi/",
         "/opt/openhoi"};
 #    else
-    std::array<std::string, 4> possibleResourcePaths = {
-        "", "/usr/local/share/openhoi/", "/usr/share/openhoi/", "/opt/openhoi"};
+    std::array<std::string, 8> possibleResourcePaths = {
+        "",
+        "/usr/local/share/openhoi/",
+        "/usr/share/openhoi/",
+        "/opt/openhoi",
+        "dist",
+        "../dist",
+        "../../dist",
+        "../../../dist"};
 #    endif
 #  endif
 
