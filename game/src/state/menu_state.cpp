@@ -2,8 +2,8 @@
 
 #include "state/menu_state.hpp"
 #include "game_manager.hpp"
-#include "graphic/gui_manager.hpp"
 #include "graphic/texture_helper.hpp"
+#include "gui/gui_manager.hpp"
 
 #include <OgreLogManager.h>
 #include <OgreMaterialManager.h>

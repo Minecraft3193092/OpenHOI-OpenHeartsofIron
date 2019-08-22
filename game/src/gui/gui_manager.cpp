@@ -1,6 +1,6 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
-#include "graphic/gui_manager.hpp"
+#include "gui/gui_manager.hpp"
 
 #include <OgreFrameListener.h>
 

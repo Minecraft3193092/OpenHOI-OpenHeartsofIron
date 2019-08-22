@@ -32,15 +32,25 @@ list(APPEND GAME_SOURCES src/client.cpp
 source_group("Source Files" FILES ${GAME_SOURCES})
 
 # Add graphic code
-list(APPEND GRAPHIC_INCLUDES include/graphic/gui_manager.hpp
-                             include/graphic/texture_helper.hpp)
+list(APPEND GRAPHIC_INCLUDES include/graphic/texture_helper.hpp)
 source_group("Header Files\\graphic" FILES ${GRAPHIC_INCLUDES})
 list(APPEND GAME_INCLUDES ${GRAPHIC_INCLUDES})
 
-list(APPEND GRAPHIC_SOURCES src/graphic/gui_manager.cpp
-                            src/graphic/texture_helper.cpp)
+list(APPEND GRAPHIC_SOURCES src/graphic/texture_helper.cpp)
 source_group("Source Files\\graphic" FILES ${GRAPHIC_SOURCES})
 list(APPEND GAME_SOURCES ${GRAPHIC_SOURCES})
+
+# Add gui code
+list(APPEND GUI_INCLUDES include/gui/debug_console.hpp
+                         include/gui/gui_element.hpp
+                         include/gui/gui_manager.hpp)
+source_group("Header Files\\gui" FILES ${GUI_INCLUDES})
+list(APPEND GAME_INCLUDES ${GUI_INCLUDES})
+
+list(APPEND GUI_SOURCES src/gui/debug_console.cpp
+                        src/gui/gui_manager.cpp)
+source_group("Source Files\\gui" FILES ${GUI_SOURCES})
+list(APPEND GAME_SOURCES ${GUI_SOURCES})
 
 # Add state code
 list(APPEND STATE_INCLUDES include/state/menu_state.hpp

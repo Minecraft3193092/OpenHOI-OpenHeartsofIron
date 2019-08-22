@@ -1,7 +1,7 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "game_manager.hpp"
-#include "graphic/gui_manager.hpp"
+#include "gui/gui_manager.hpp"
 #include "state/menu_state.hpp"
 
 #include <Ogre.h>
@@ -51,6 +51,9 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
   // Create state manager and startup with menu state
   stateManager = new StateManager();
   stateManager->startup(new MenuState());
+
+  // Create debug console
+  debugConsole = new DebugConsole();
 }
 
 // Destroys the game manager
@@ -64,7 +67,10 @@ GameManager::~GameManager() {
   // Close down the game
   closeApp();
 
-  // Unload options
+  // Destroy debug console
+  if (debugConsole) delete debugConsole;
+
+  // Destroy options
   if (options) delete options;
 }
 
@@ -308,11 +314,16 @@ void GameManager::loadResources() {
 bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
   bool continueRendering = OgreBites::ApplicationContext::frameStarted(evt);
   if (continueRendering) {
-    // Update GUI
+    // Start new ImGui frame
     Ogre::RenderWindow* renderWindow = getRenderWindow();
     GuiManager::getInstance().newFrame(evt, renderWindow->getWidth(),
                                        renderWindow->getHeight());
+
+    // Update GUI in current state
     stateManager->updateGui();
+
+    // Update debug console
+    debugConsole->draw();
   }
   return continueRendering;
 }
