@@ -53,16 +53,16 @@ void MenuState::createBackground() {
   // Create background material
   Ogre::MaterialPtr material =
       Ogre::MaterialManager::getSingleton().getByName("background");
-  assert(!material.isNull() && material->isLoaded());
+  assert(material.operator bool() && material->isLoaded());
 
   // Get background texture
   Ogre::TexturePtr texture =
       TextureHelper::extractTextureFromSimpleMaterial(material);
-  assert(!texture.isNull() && texture->isLoaded());
+  assert(texture.operator bool() && texture->isLoaded());
 
   // Create background rectangle covering the whole screen
-  int windowWidth = gameManager.getRenderWindow()->getWidth();
-  int windowHeight = gameManager.getRenderWindow()->getHeight();
+  Ogre::uint32 windowWidth = gameManager.getRenderWindow()->getWidth();
+  Ogre::uint32 windowHeight = gameManager.getRenderWindow()->getHeight();
   Ogre::Real xRatio = 1, yRatio = 1;
   if (texture->getWidth() != windowWidth ||
       texture->getHeight() != windowHeight) {
@@ -116,7 +116,7 @@ void MenuState::createLogo() {
   // Get width/height ratio of logo
   Ogre::TexturePtr texture =
       TextureHelper::extractTextureFromSimpleMaterial("logo");
-  assert(!texture.isNull() && texture->isLoaded());
+  assert(texture.operator bool() && texture->isLoaded());
   Ogre::Real logoRatio = TextureHelper::getTextureWidthHeightRatio(texture);
 
   // Calculate panel (=logo) height
@@ -218,11 +218,11 @@ void MenuState::updateGui() {
   ImGui::SetNextWindowSize(textSize, ImGuiCond_Always);
   ImGui::SetNextWindowContentSize(textSize);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-  ImGui::Begin("Game Menu Version", NULL,
+  ImGui::Begin("Game Menu Version", nullptr,
                ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
                    ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |
                    ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
-  ImGui::Text(version.c_str());
+  ImGui::Text(version.c_str(), nullptr);
   ImGui::End();
   ImGui::PopStyleVar();
 }

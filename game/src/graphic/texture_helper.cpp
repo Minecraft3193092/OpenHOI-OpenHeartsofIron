@@ -10,7 +10,7 @@ namespace openhoi {
 // Gets the width/height ratio of the given texture
 Ogre::Real TextureHelper::getTextureWidthHeightRatio(Ogre::TexturePtr texture) {
   // Ensure that texture is loaded
-  assert(!texture.isNull() && texture->isLoaded());
+  assert(texture.operator bool() && texture->isLoaded());
 
   // Calculate and return width/height ratio
   return (Ogre::Real)texture->getWidth() / texture->getHeight();
@@ -34,7 +34,7 @@ Ogre::TexturePtr TextureHelper::extractTextureFromSimpleMaterial(
     Ogre::MaterialPtr material,
     std::string resourceGroupName /* = Ogre::RGN_DEFAULT */) {
   // Ensure that material is loaded
-  assert(!material.isNull() && material->isLoaded());
+  assert(material.operator bool() && material->isLoaded());
 
   // Get texture name and texture
   std::string textureName = material->getTechnique(0)

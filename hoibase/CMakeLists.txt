@@ -165,8 +165,9 @@ target_include_directories(hoibase
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>
-        $<INSTALL_INTERFACE:include>
-    SYSTEM
+        $<INSTALL_INTERFACE:include>)
+target_include_directories(hoibase SYSTEM
+    PRIVATE
         ${OGRE_INCLUDE_DIRS}
         ${CGAL_INCLUDE_DIRS_HOI}
         ${GMP_INCLUDE_DIR}
@@ -174,7 +175,6 @@ target_include_directories(hoibase
         ${Boost_INCLUDE_DIRS}
         ${RAPIDJSON_INCLUDES}
         ${V8_INCLUDE_DIR})
-
 
 # Copy hoibase windows dependencies to output directories
 if(WIN32)

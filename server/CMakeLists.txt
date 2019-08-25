@@ -29,10 +29,13 @@ target_link_libraries(server hoibase
                              Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale)
 
 target_include_directories(server
-    PUBLIC
+    PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>
         $<INSTALL_INTERFACE:include>)
+target_include_directories(server SYSTEM
+    PRIVATE
+        ${OGRE_INCLUDE_DIRS})
 
 
 # Set error level

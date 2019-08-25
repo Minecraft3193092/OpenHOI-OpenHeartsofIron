@@ -117,8 +117,9 @@ target_include_directories(game
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>
-        $<INSTALL_INTERFACE:include>
-    SYSTEM
+        $<INSTALL_INTERFACE:include>)
+target_include_directories(game SYSTEM
+     PRIVATE
         ${OGRE_INCLUDE_DIRS}
         ${SDL2_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
