@@ -28,7 +28,7 @@ int main(int argc, const char* argv[])
   // Don't allow people to run openhoi with root permissions because we will
   // access the user's home directory
   if (geteuid() == 0) {
-    std::cerr << "Please do not run the " OPENHOI_GAME_NAME
+    std::cerr << "Please do not run " OPENHOI_GAME_NAME
                  " with root permissions!"
               << std::endl;
     exit(exitStatus);

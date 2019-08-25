@@ -1,6 +1,7 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "gui/debug_console.hpp"
+#include "gui/gui_manager.hpp"
 
 #include <imgui.h>
 
@@ -16,6 +17,9 @@ DebugConsole::~DebugConsole() {
   // xxxx
 }
 
+// Toggle debug console
+void DebugConsole::toggle() { showConsole = !showConsole; }
+
 // Add log to debug console
 void DebugConsole::addLog(const char* fmt, ...) {
   // xxxx
@@ -23,8 +27,11 @@ void DebugConsole::addLog(const char* fmt, ...) {
 
 // Draw the debug console (inherited from GuiElement)
 void DebugConsole::draw() {
+  GuiManager& guiManager = GuiManager::getInstance();
+
   ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-  if (!ImGui::Begin("Debug console", NULL)) {
+  if (!ImGui::Begin("Debug console", &showConsole,
+                    ImGuiWindowFlags_NoDocking)) {
     ImGui::End();
     return;
   }
@@ -36,7 +43,7 @@ void DebugConsole::draw() {
   ImGui::TextWrapped(
       "Enter 'HELP' for help, press TAB to use text completion.");
 
-   ImGui::End();
+  ImGui::End();
 }
 
 }  // namespace openhoi

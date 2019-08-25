@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "gui/debug_console.hpp"
+
 #include <ImguiManager.h>
 #include <OgrePrerequisites.h>
 #include <OgreSceneManager.h>
@@ -52,7 +54,7 @@ class GuiManager final {
   void configureGui();
 
   Ogre::ImguiManager* imGuiManager;
-  bool debugConsole;
+  DebugConsole* debugConsole;
   ImFont* defaultFont;
   ImFont* bigFont;
 };

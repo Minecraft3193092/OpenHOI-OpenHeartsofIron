@@ -220,8 +220,9 @@ void MenuState::updateGui() {
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
   ImGui::Begin("Game Menu Version", nullptr,
                ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-                   ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |
-                   ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
+                   ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |
+                   ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar |
+                   ImGuiWindowFlags_NoBackground);
   ImGui::Text(version.c_str(), nullptr);
   ImGui::End();
   ImGui::PopStyleVar();

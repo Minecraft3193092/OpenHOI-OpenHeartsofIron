@@ -9,17 +9,23 @@ namespace openhoi {
 // Debug console GUI element
 class DebugConsole final : public GuiElement {
  public:
-   // Creates the debug console
+  // Creates the debug console
   DebugConsole();
 
   // Destroys the debug console
   ~DebugConsole();
+
+  // Toggle debug console
+  void toggle();
 
   // Add log to debug console
   void addLog(const char* fmt, ...);
 
   // Draw the debug console (inherited from GuiElement)
   virtual void draw();
+
+ private:
+  bool showConsole;
 };
 
 }  // namespace openhoi

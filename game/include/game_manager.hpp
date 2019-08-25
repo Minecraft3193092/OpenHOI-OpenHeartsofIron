@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "gui/debug_console.hpp"
 #include "options.hpp"
 #include "state/state_manager.hpp"
 
@@ -92,7 +91,6 @@ class GameManager final : public OgreBites::ApplicationContext,
   StateManager* stateManager;
   Ogre::SceneManager* sceneManager;
   Ogre::Camera* camera;
-  DebugConsole* debugConsole;
 };
 
 }  // namespace openhoi

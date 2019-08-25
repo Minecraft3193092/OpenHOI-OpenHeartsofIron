@@ -14,11 +14,15 @@ GuiManager::GuiManager() {
   Ogre::ImguiManager::createSingleton();
   imGuiManager = Ogre::ImguiManager::getSingletonPtr();
   configureGui();
+
+  // Create debug console
+  debugConsole = new DebugConsole();
 }
 
 // Destroys the GuiManager manager
 GuiManager::~GuiManager() {
-  // xxxx
+  // Destroy debug console
+  if (debugConsole) delete debugConsole;
 }
 
 // Get input listener
@@ -54,8 +58,8 @@ ImFont* GuiManager::getBigFont() {
   return bigFont;
 }
 
- // Toggle debug console
-void GuiManager::toggleDebugConsole() { debugConsole = !debugConsole; }
+// Toggle debug console
+void GuiManager::toggleDebugConsole() { debugConsole->toggle(); }
 
 // Render new GUI frame
 void GuiManager::newFrame(const Ogre::FrameEvent& evt, Ogre::uint32 windowWidth,
@@ -63,6 +67,9 @@ void GuiManager::newFrame(const Ogre::FrameEvent& evt, Ogre::uint32 windowWidth,
   // Start new ImGui frame
   imGuiManager->newFrame(evt.timeSinceLastFrame,
                          Ogre::Rect(0, 0, windowWidth, windowHeight));
+
+  // Draw debug console
+  debugConsole->draw();
 }
 
 // Configure GUI

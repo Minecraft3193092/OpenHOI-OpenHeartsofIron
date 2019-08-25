@@ -51,9 +51,6 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
   // Create state manager and startup with menu state
   stateManager = new StateManager();
   stateManager->startup(new MenuState());
-
-  // Create debug console
-  debugConsole = new DebugConsole();
 }
 
 // Destroys the game manager
@@ -66,9 +63,6 @@ GameManager::~GameManager() {
 
   // Close down the game
   closeApp();
-
-  // Destroy debug console
-  if (debugConsole) delete debugConsole;
 
   // Destroy options
   if (options) delete options;
@@ -321,9 +315,6 @@ bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
 
     // Update GUI in current state
     stateManager->updateGui();
-
-    // Update debug console
-    debugConsole->draw();
   }
   return continueRendering;
 }
@@ -342,8 +333,7 @@ bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 // Key released event
 bool GameManager::keyReleased(const OgreBites::KeyboardEvent& arg) {
   // Tilde key will toggle console everywhere
-  if (arg.keysym.sym == '^')
-    GuiManager::getInstance().toggleDebugConsole();
+  if (arg.keysym.sym == '^') GuiManager::getInstance().toggleDebugConsole();
 
   return true;
 }
