@@ -4,7 +4,7 @@
 @rem ##                                                                          ##
 @rem ## Tool to fetch openhoi dependencies for Win64                             ##
 @rem ## !YOU MUST RUN THIS SCRIPT IN THE MSVC X64 DEVELOPER COMMAND PROMPT!      ##
-@rem ## !DO NOT RUN THIS SCRIPT AS ADMIN!                                        ##
+@rem ## !ONLY RUN THIS SCRIPT AS ADMIN IF YOU ARE ASKED FOR IT!                  ##
 @rem ##                                                                          ##
 @rem ##############################################################################
 
@@ -44,46 +44,92 @@ if "%PROGRAMFILES%" == "C:\Program Files" (
 @rem Then, check for required tools
 echo %LINEBEG% Checking for required tools...
 
+where /q choco
+if %errorLevel% == 0 (
+    echo %CHECKMARK% Chocolatey is installed and found.
+    set CHOCOLATEY_INSTALLED=y
+) else (
+    echo %CROSSMARK% Chocolatey is not installed or not inside Windows PATH. This is okay, but you may have to install required dependencies manually. If you want, install Chocolatey from https://chocolatey.org/install
+    set CHOCOLATEY_INSTALLED=n
+    goto end
+)
+
 where /q git
 if %errorLevel% == 0 (
     echo %CHECKMARK% Git is installed and found.
 ) else (
-    echo %CROSSMARK% Git is not installed or not inside Windows PATH. Aborting. Please install Git from https://git-scm.com/download/win
-    goto end
+    if "%CHOCOLATEY_INSTALLED%" == "y" (
+        echo %LINEBEG% Installing Git...
+        choco install git.install --yes --force --params "/GitAndUnixToolsOnPath /SChannel"
+        set SCRIPT_INSTALLED_SOMETHING=y
+    ) else (
+        echo %CROSSMARK% Git is not installed or not inside Windows PATH. Aborting. Please install Git from https://git-scm.com/download/win
+        goto end
+    )
 )
 
 where /q cmake
 if %errorLevel% == 0 (
     echo %CHECKMARK% CMake is installed and found.
 ) else (
-    echo %CROSSMARK% CMake is not installed or not inside Windows PATH. Aborting. Please install CMake from https://cmake.org/download
-    goto end
+    if "%CHOCOLATEY_INSTALLED%" == "y" (
+        echo %LINEBEG% Installing CMake...
+        choco install cmake.install --yes --force --installargs 'ADD_CMAKE_TO_PATH=System'
+        set SCRIPT_INSTALLED_SOMETHING=y
+    ) else (
+        echo %CROSSMARK% CMake is not installed or not inside Windows PATH. Aborting. Please install CMake from https://cmake.org/download
+        goto end
+    )
 )
 
 where /q ninja
 if %errorLevel% == 0 (
     echo %CHECKMARK% Ninja is installed and found.
 ) else (
-    echo %CROSSMARK% Ninja is not installed or not inside Windows PATH. Aborting. Please install Ninja from https://github.com/ninja-build/ninja/releases
-    goto end
+    if "%CHOCOLATEY_INSTALLED%" == "y" (
+        echo %LINEBEG% Installing Ninja...
+        choco install ninja --yes --force
+        set SCRIPT_INSTALLED_SOMETHING=y
+    ) else (
+        echo %CROSSMARK% Ninja is not installed or not inside Windows PATH. Aborting. Please install Ninja from https://github.com/ninja-build/ninja/releases
+        goto end
+    )
 )
 
 where /q nuget
 if %errorLevel% == 0 (
     echo %CHECKMARK% NuGet is installed and found.
 ) else (
-    echo %CROSSMARK% NuGet is not installed or not inside Windows PATH. Aborting. Please install NuGet from https://www.nuget.org/downloads
-    goto end
+    if "%CHOCOLATEY_INSTALLED%" == "y" (
+        echo %LINEBEG% Installing NuGet...
+        choco install nuget.commandline --yes --force
+        set SCRIPT_INSTALLED_SOMETHING=y
+    ) else (
+        echo %CROSSMARK% NuGet is not installed or not inside Windows PATH. Aborting. Please install NuGet from https://www.nuget.org/downloads
+        goto end
+    )
 )
 
 where /q clang-format
 if %errorLevel% == 0 (
     echo %CHECKMARK% Clang-format is installed and found.
 ) else (
-    echo %CROSSMARK% Clang-format is not installed or not inside Windows PATH. Aborting. Please install Clang-format from https://llvm.org/builds
-    goto end
+    if "%CHOCOLATEY_INSTALLED%" == "y" (
+        echo %LINEBEG% Installing Clang-format ^(LLVM^)...
+        choco install llvm --yes --force
+        set SCRIPT_INSTALLED_SOMETHING=y
+    ) else (
+        echo %CROSSMARK% Clang-format is not installed or not inside Windows PATH. Aborting. Please install Clang-format from https://llvm.org/builds
+        goto end
+    )
 )
 
+
+@rem Refresh environmental variables if required
+if "%SCRIPT_INSTALLED_SOMETHING%" == "y" (
+    echo %LINEBEG% Refreshing environmental variables...
+    refreshenv
+)
 
 
 @rem Install required libs...
@@ -97,7 +143,7 @@ if not exist thirdparty\manual-build (
     )
     endlocal
 )
-@rd /s /q thirdparty\manual-build\precompiled
+@rd /s /q thirdparty\manual-build\precompiled 2>nul
 mkdir thirdparty\manual-build\precompiled
 
 
@@ -191,7 +237,7 @@ if not exist thirdparty\manual-build\lib\openal (
     git -C thirdparty\manual-build\lib\openal pull --depth 1
 )
 cd thirdparty\manual-build\lib\openal
-@rd /s /q build
+@rd /s /q build 2>nul
 git reset --hard
 cd build
 cmake -DALSOFT_TESTS=OFF -DALSOFT_UTILS=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja ..
@@ -228,7 +274,7 @@ if not exist thirdparty\manual-build\lib\eigen (
     git -C thirdparty\manual-build\lib\eigen pull --depth 1
 )
 cd thirdparty\manual-build\lib\eigen
-@rd /s /q build
+@rd /s /q build 2>nul
 mkdir build
 cd build
 cmake -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja ..
@@ -236,7 +282,7 @@ ninja
 cd %CWD%
 
 echo %LINEBEG% CGAL...
-@rd /s /q thirdparty\manual-build\lib\cgal
+@rd /s /q thirdparty\manual-build\lib\cgal 2>nul
 rem We need to download the source ZIP because the directory structure is different to the GitHub/development version
 rem See https://www.cgal.org/download/windows.html
 set CGAL_VERSION=4.14
@@ -246,7 +292,7 @@ echo Expanding CGAL v%CGAL_VERSION% ZIP archive...
 powershell -Command "Expand-Archive -Force %CWD%\thirdparty\manual-build\lib\cgal.zip %CWD%\thirdparty\manual-build\lib"
 move "%CWD%\thirdparty\manual-build\lib\CGAL-%CGAL_VERSION%" "%CWD%\thirdparty\manual-build\lib\cgal"
 cd %CWD%\thirdparty\manual-build\lib\cgal
-@rd /s /q build
+@rd /s /q build 2>nul
 mkdir build
 cd build
 set CWD_FS=%CWD:\=/%
@@ -255,7 +301,7 @@ if /I "%CI%" neq "true" (
     ninja
     ninja install
     cd ..
-    @rd /s /q build
+    @rd /s /q build 2>nul
     mkdir build
     cd build
 )
@@ -289,10 +335,10 @@ if "%BUILD_OGRE%" == "y" (
         git -C thirdparty\manual-build\lib\ogre3d pull --depth 1
     )
     cd thirdparty\manual-build\lib\ogre3d
-    @rd /s /q build
+    @rd /s /q build 2>nul
     mkdir build
     cd build
-    set OGRE_CMAKE_PARAMS=-DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES_SOURCE=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_INSTALL_PDB=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=ON -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_STATIC=OFF -DOGRE_COPY_DEPENDENCIES=OFF -DOGRE_INSTALL_DEPENDENCIES=OFF -DZLIB_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\zlib\include" -DZLIB_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\zlib\lib\zlib.lib" -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_MESHLODGENERATOR=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_RTSHADERSYSTEM=ON -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=ON -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON -DOGRE_BUILD_RENDERSYSTEM_D3D9=OFF
+    set OGRE_CMAKE_PARAMS=-DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES_SOURCE=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_INSTALL_PDB=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=OFF -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_STATIC=OFF -DOGRE_COPY_DEPENDENCIES=OFF -DOGRE_INSTALL_DEPENDENCIES=OFF -DZLIB_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\zlib\include" -DZLIB_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\zlib\lib\zlib.lib" -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_MESHLODGENERATOR=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_RTSHADERSYSTEM=ON -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=ON -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON -DOGRE_BUILD_RENDERSYSTEM_D3D9=OFF
     rem Build Release
     cmake %OGRE_CMAKE_PARAMS% -DCMAKE_BUILD_TYPE=Release -G Ninja ..
     ninja
@@ -316,3 +362,5 @@ if "%BUILD_OGRE%" == "y" (
 )
 
 :end
+
+if %0 == "%~0" pause
