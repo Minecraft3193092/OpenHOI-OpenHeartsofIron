@@ -4,7 +4,15 @@
 
 #include "state.hpp"
 
+#include <hoibase/helper/os.hpp>
+
+#ifdef OPENHOI_OS_WINDOWS
+#  define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+#endif
 #include <OgreRectangle2D.h>
+#ifdef OPENHOI_OS_WINDOWS
+#  undef _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+#endif
 
 namespace openhoi {
 

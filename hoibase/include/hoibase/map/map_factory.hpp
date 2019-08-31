@@ -7,8 +7,8 @@
 #include "hoibase/map/map.hpp"
 
 #define RAPIDJSON_HAS_STDSTRING 1
-
 #include <rapidjson/document.h>
+
 #include <memory>
 
 namespace openhoi {
@@ -20,7 +20,7 @@ class MapFactory {
 
  private:
   // Get coordinates out of object
-  static std::vector<OPENHOI_PROVINCE_POINT> GetCoordinates(
+  static std::vector<Ogre::Vector2> GetCoordinates(
       rapidjson::Value& value);
 };
 

@@ -90,7 +90,7 @@ struct ImguiInputListener : public OgreBites::InputListener
     bool mouseWheelRolled(const OgreBites::MouseWheelEvent& arg)
     {
         ImGuiIO& io = ImGui::GetIO();
-        io.MouseWheel = Ogre::Math::Sign(arg.y);
+        io.MouseWheel = Ogre::Math::Sign((Ogre::Real) arg.y);
         return io.WantCaptureMouse;
     }
 
@@ -99,8 +99,8 @@ struct ImguiInputListener : public OgreBites::InputListener
 
         ImGuiIO& io = ImGui::GetIO();
 
-        io.MousePos.x = arg.x;
-        io.MousePos.y = arg.y;
+        io.MousePos.x = (float) arg.x;
+        io.MousePos.y = (float) arg.y;
 
         return io.WantCaptureMouse;
     }
@@ -373,8 +373,15 @@ ImFont* ImguiManager::addFont(const String& name, const String& group)
     }
 
     ImFontConfig cfg;
+    #ifdef _WIN32
+    #  pragma warning(push)
+    #  pragma warning(disable:4996)
+    #endif
     strncpy(cfg.Name, name.c_str(), 40);
-    return io.Fonts->AddFontFromMemoryTTF(ttfchunk.getPtr(), ttfchunk.size(),
+    #ifdef _WIN32
+    #  pragma warning(pop)
+    #endif
+    return io.Fonts->AddFontFromMemoryTTF(ttfchunk.getPtr(), (int) ttfchunk.size(),
                                           font->getTrueTypeSize(), &cfg, cprangePtr);
 #else
     OGRE_EXCEPT(Exception::ERR_INVALID_CALL, "Ogre Overlay Component required");

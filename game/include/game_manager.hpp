@@ -5,10 +5,16 @@
 #include "options.hpp"
 #include "state/state_manager.hpp"
 
+#ifdef OPENHOI_OS_WINDOWS
+#  define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+#endif
 #include <OgreApplicationContext.h>
 #include <OgreInput.h>
 #include <OgrePrerequisites.h>
 #include <OgreSceneManager.h>
+#ifdef OPENHOI_OS_WINDOWS
+#  undef _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+#endif
 #include <hoibase/file/filesystem.hpp>
 #include <hoibase/helper/os.hpp>
 

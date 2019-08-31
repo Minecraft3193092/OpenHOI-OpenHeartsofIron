@@ -2,7 +2,7 @@
 
 #include "hoibase/map/map_factory.hpp"
 
-#include <assert.h>
+#include <cassert>
 #include <boost/algorithm/string.hpp>
 #include <unordered_set>
 
@@ -112,10 +112,10 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
       continue;
     }
     auto& coords = coordinatesField->value;
-    std::vector<std::vector<OPENHOI_PROVINCE_POINT>> coordinates;
+    std::vector<std::vector<Ogre::Vector2>> coordinates;
     if (coords.IsArray()) {
       if (!multipolygon) {
-        // Get coordinates of out geometry
+        // Get coordinates of our geometry
         auto tmp = MapFactory::GetCoordinates(coords);
         if (!tmp.empty()) coordinates.push_back(tmp);
       } else {
@@ -123,7 +123,7 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
           if (git1->IsArray()) {
             auto coords2 = git1->GetArray();
             for (auto git2 = coords2.Begin(); git2 != coords2.End(); ++git2) {
-              // Get coordinates of out geometry
+              // Get coordinates of our geometry
               auto tmp = MapFactory::GetCoordinates(git2[0]);
               if (!tmp.empty()) coordinates.push_back(tmp);
             }
@@ -134,8 +134,7 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
 
     if (!coordinates.empty()) {
       // Build province and add it to map
-      Province province(id, coordinates,
-                        OPENHOI_PROVINCE_POINT(0, 0));  // TODO: Center point
+      Province province(id, coordinates, Ogre::Vector2(0, 0));  // TODO: Center point
       map->AddProvince(province);
     }
   }
@@ -145,9 +144,9 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
 }
 
 // Get the coordinates for one single way
-std::vector<OPENHOI_PROVINCE_POINT> MapFactory::GetCoordinates(
+std::vector<Ogre::Vector2> MapFactory::GetCoordinates(
     rapidjson::Value& value) {
-  std::vector<OPENHOI_PROVINCE_POINT> coords;
+  std::vector<Ogre::Vector2> coords;
 
   if (value.IsArray()) {
     for (auto it = value.Begin(); it != std::prev(value.End()); ++it) {
@@ -157,8 +156,7 @@ std::vector<OPENHOI_PROVINCE_POINT> MapFactory::GetCoordinates(
           auto& lat = coordArray[0];
           auto& lon = coordArray[1];
           if (lat.IsDouble() && lon.IsDouble())
-            coords.push_back(OPENHOI_PROVINCE_POINT(
-                (Ogre::Real)lat.GetDouble(), (Ogre::Real)lon.GetDouble()));
+            coords.push_back(Ogre::Vector2((Ogre::Real)lat.GetDouble(), (Ogre::Real)lon.GetDouble()));
         }
       }
     }

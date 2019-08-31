@@ -2,7 +2,7 @@
 
 #include "hoibase/map/map.hpp"
 
-#include <assert.h>
+#include <cassert>
 
 namespace openhoi {
 

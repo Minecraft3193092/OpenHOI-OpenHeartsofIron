@@ -23,8 +23,8 @@ typedef CDT::Point Point;
 
 // Province constructor
 Province::Province(std::string id,
-                   std::vector<std::vector<OPENHOI_PROVINCE_POINT>> coordinates,
-                   OPENHOI_PROVINCE_POINT center) {
+                   std::vector<std::vector<Ogre::Vector2>> coordinates,
+                   Ogre::Vector2 center) {
   this->id = id;
   this->coordinates = coordinates;
   this->center = center;
@@ -34,9 +34,8 @@ Province::Province(std::string id,
 std::string const& Province::GetID() const { return this->id; }
 
 // Gets the province coordinates
-std::vector<std::vector<OPENHOI_PROVINCE_POINT>> const&
-Province::GetCoordinates() const {
-  return this->coordinates;
+std::vector<std::vector<Ogre::Vector2>> const& Province::GetCoordinates() const {
+  return coordinates;
 }
 
 // Gets the vertices of the triangulated province
@@ -93,8 +92,8 @@ std::vector<Ogre::Real> const Province::GetTriangulatedVertices() const {
 }
 
 // Gets the province center point
-OPENHOI_PROVINCE_POINT const& Province::GetCenter() const {
-  return this->center;
+Ogre::Vector2 const& Province::GetCenter() const {
+  return center;
 }
 
 }  // namespace openhoi

@@ -4,6 +4,9 @@
 #include "gui/gui_manager.hpp"
 #include "state/menu_state.hpp"
 
+#ifdef OPENHOI_OS_WINDOWS
+#  define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+#endif
 #include <Ogre.h>
 #include <OgreLogManager.h>
 #include <OgreOverlaySystem.h>
@@ -11,6 +14,9 @@
 #include <OgreRoot.h>
 #include <OgreSTBICodec.h>
 #include <OgreTextureManager.h>
+#ifdef OPENHOI_OS_WINDOWS
+# undef _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+#endif
 #include <SDL.h>
 #include <hoibase/file/file_access.hpp>
 

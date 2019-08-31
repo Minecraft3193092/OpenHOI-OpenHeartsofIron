@@ -73,13 +73,13 @@ void MenuState::createBackground() {
     if (backgroundRatio >= 1) {
       // Width of BG image is greater or equal than height
       xRatio =
-          (OPENHOI_OGRE_ABS(1 - (Ogre::Real)texture->getWidth() / windowWidth) /
+          (Ogre::Math::Abs(1 - (Ogre::Real)texture->getWidth() / windowWidth) /
            2) +
           1;
     } else {
       // Height of BG image is greater than width
-      yRatio = (OPENHOI_OGRE_ABS(1 - (Ogre::Real)texture->getHeight() /
-                                         windowHeight) /
+      yRatio = (Ogre::Math::Abs(1 - (Ogre::Real)texture->getHeight() /
+                                        windowHeight) /
                 2) +
                1;
     }

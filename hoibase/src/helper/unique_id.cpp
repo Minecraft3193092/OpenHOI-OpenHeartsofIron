@@ -6,6 +6,7 @@
 #include <array>
 #if defined(OPENHOI_OS_WINDOWS)
 #  include <rpc.h>
+#  include <codecvt>
 #  pragma comment(lib, "rpcrt4.lib")
 #elif defined(OPENHOI_OS_APPLE)
 #  include <CoreFoundation/CFUUID.h>
@@ -17,28 +18,41 @@ namespace openhoi {
 
 // Generate a Universally Unique Identifier (UUID)
 std::string generateUUID() {
-  std::string uuidString;
-
 #ifdef OPENHOI_OS_WINDOWS
   UUID uuid;
   ZeroMemory(&uuid, sizeof(UUID));
-  UuidCreate(&uuid);
+
+  RPC_STATUS result;
+  result = UuidCreate(&uuid);
+  if (result != RPC_S_OK && result != RPC_S_UUID_LOCAL_ONLY)
+    throw "UUID could not be created";  // TODO: Proper error handling
+
   WCHAR* wszUuid = NULL;
-  UuidToStringW(&uuid, (RPC_WSTR*)&wszUuid);
+  result = UuidToStringW(&uuid, (RPC_WSTR*)&wszUuid);
+  if (result != RPC_S_OK)
+    throw "UUID could not be converted to string";  // TODO: Proper error
+                                                    // handling
+
   std::wstring uuidWString(wszUuid);
-  uuidString = std::string(uuidWString.begin(), uuidWString.end());
+  int len = WideCharToMultiByte(CP_UTF8, 0, &uuidWString[0],
+                                (int)uuidWString.size(), NULL, 0, NULL, NULL);
+  std::string uuidString(len, 0);
+  WideCharToMultiByte(CP_UTF8, 0, &uuidWString[0], (int)uuidWString.size(),
+                      &uuidString[0], len, NULL, NULL);
   RpcStringFreeW((RPC_WSTR*)&wszUuid);
 #elif OPENHOI_OS_APPLE
   CFUUIDRef uuid = CFUUIDCreate(NULL);
   NSString* uuidNsString = (NSString*)CFUUIDCreateString(NULL, uuid);
-  uuidString = std::string([uuidNsString UTF8String]);
+  std::string uuidString = std::string([uuidNsString UTF8String]);
   CFRelease(uuid);
 #else
   uuid_t uuid;
-  uuid_generate_time_safe(uuid);
+  if (uuid_generate_time_safe(uuid) < 0)
+    throw "UUID could not be created";  // TODO: Proper error handling
+
   char uuidChr[37];
   uuid_unparse_lower(uuid, uuidChr);
-  uuidString = std::string(uuidChr);
+  std::string uuidString = std::string(uuidChr);
 #endif
 
   return uuidString;
