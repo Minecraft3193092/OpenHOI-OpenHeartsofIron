@@ -3,8 +3,6 @@
 #include "gui/debug_console.hpp"
 #include "gui/gui_manager.hpp"
 
-#include <imgui.h>
-
 namespace openhoi {
 
 // Creates the debug console

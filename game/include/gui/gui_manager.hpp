@@ -4,16 +4,9 @@
 
 #include "gui/debug_console.hpp"
 
-#ifdef OPENHOI_OS_WINDOWS
-#  define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
-#endif
 #include <ImguiManager.h>
 #include <OgrePrerequisites.h>
 #include <OgreSceneManager.h>
-#ifdef OPENHOI_OS_WINDOWS
-#  undef _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
-#endif
-#include <imgui.h>
 
 namespace openhoi {
 

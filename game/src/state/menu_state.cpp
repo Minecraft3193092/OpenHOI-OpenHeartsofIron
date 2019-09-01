@@ -12,7 +12,6 @@
 #include <OgreOverlayManager.h>
 #include <OgrePrerequisites.h>
 #include <OgreTextureManager.h>
-#include <imgui.h>
 
 #include <algorithm>
 #include <cassert>
