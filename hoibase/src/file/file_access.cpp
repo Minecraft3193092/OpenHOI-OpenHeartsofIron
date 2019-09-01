@@ -19,6 +19,7 @@
 #      define _GNU_SOURCE
 #    endif
 #    include <dlfcn.h>
+#    include <OgreLogManager.h>
 #  endif
 #endif
 #include <array>
