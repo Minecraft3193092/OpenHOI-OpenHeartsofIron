@@ -5,8 +5,6 @@
 #include "helper/os.hpp"
 #include "version.hpp"
 
-#include <stdlib.h>
-
 // The game name
 #define OPENHOI_GAME_NAME "openhoi"
 
@@ -30,3 +28,5 @@
 // built by code)
 #define OPENHOI_BUILD_DYNAMIC_OBJECT_NAME(materialName) \
   (OPENHOI_GAME_NAME "__dyn__" materialName)
+
+// EOF

@@ -15,7 +15,8 @@ namespace openhoi {
 class Province final {
  public:
   // Province constructor
-  Province(std::string id, std::vector<std::vector<Ogre::Vector2>> coordinates, Ogre::Vector2 center);
+  Province(std::string id, std::vector<std::vector<Ogre::Vector2>> coordinates,
+           Ogre::Vector2 center);
 
   // Gets the province ID
   OPENHOI_LIB_EXPORT std::string const& GetID() const;

@@ -76,10 +76,9 @@ source_group("Header Files\\thirdparty\\imgui" FILES ${IMGUI_INCLUDES})
 set(THIRDPARTY_INCLUDES ${THIRDPARTY_INCLUDES} ${IMGUI_INCLUDES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/imgui)
 
-list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_demo.cpp
+list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui.cpp
                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_draw.cpp
-                          ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_widgets.cpp
-                          ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui.cpp)
+                          ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_widgets.cpp)
 source_group("Source Files\\thirdparty\\imgui" FILES ${IMGUI_SOURCES})
 set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${IMGUI_SOURCES})
 

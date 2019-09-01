@@ -8,7 +8,7 @@
 #include <OgreTexture.h>
 #include <OgreTextureManager.h>
 #ifdef OPENHOI_OS_WINDOWS
-# undef  _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+#  undef _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 #endif
 
 namespace openhoi {

@@ -222,7 +222,7 @@ OgreBites::InputListener* ImguiManager::getInputListener()
 }
 
 //-----------------------------------------------------------------------------------
-void ImguiManager::renderQueueEnded(uint8 queueGroupId, const String& invocation,bool& repeatThisInvocation)
+void ImguiManager::renderQueueEnded(uint8 queueGroupId, const String& invocation,bool& /*repeatThisInvocation*/)
 {
     if((queueGroupId != Ogre::RENDER_QUEUE_OVERLAY) || (invocation == "SHADOWS"))
     {
@@ -477,11 +477,11 @@ void ImguiManager::ImGUIRenderable::updateVertexData(const ImVector<ImDrawVert>&
 {
     Ogre::VertexBufferBinding* bind = mRenderOp.vertexData->vertexBufferBinding;
 
-    if (bind->getBindings().empty() || bind->getBuffer(0)->getNumVertices() != vtxBuf.size())
+    if (bind->getBindings().empty() || bind->getBuffer(0)->getNumVertices() != (size_t) vtxBuf.size())
     {
         bind->setBinding(0, HardwareBufferManager::getSingleton().createVertexBuffer(sizeof(ImDrawVert), vtxBuf.size(), HardwareBuffer::HBU_WRITE_ONLY));
     }
-    if (!mRenderOp.indexData->indexBuffer || mRenderOp.indexData->indexBuffer->getNumIndexes() != idxBuf.size())
+    if (!mRenderOp.indexData->indexBuffer || mRenderOp.indexData->indexBuffer->getNumIndexes() != (size_t) idxBuf.size())
     {
         mRenderOp.indexData->indexBuffer =
             HardwareBufferManager::getSingleton().createIndexBuffer(HardwareIndexBuffer::IT_16BIT, idxBuf.size(), HardwareBuffer::HBU_WRITE_ONLY);

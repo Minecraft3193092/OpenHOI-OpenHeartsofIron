@@ -2,8 +2,8 @@
 
 #include "hoibase/map/map_factory.hpp"
 
-#include <cassert>
 #include <boost/algorithm/string.hpp>
+#include <cassert>
 #include <unordered_set>
 
 namespace openhoi {
@@ -134,7 +134,8 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
 
     if (!coordinates.empty()) {
       // Build province and add it to map
-      Province province(id, coordinates, Ogre::Vector2(0, 0));  // TODO: Center point
+      Province province(id, coordinates,
+                        Ogre::Vector2(0, 0));  // TODO: Center point
       map->AddProvince(province);
     }
   }
@@ -144,8 +145,7 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
 }
 
 // Get the coordinates for one single way
-std::vector<Ogre::Vector2> MapFactory::GetCoordinates(
-    rapidjson::Value& value) {
+std::vector<Ogre::Vector2> MapFactory::GetCoordinates(rapidjson::Value& value) {
   std::vector<Ogre::Vector2> coords;
 
   if (value.IsArray()) {
@@ -156,7 +156,8 @@ std::vector<Ogre::Vector2> MapFactory::GetCoordinates(
           auto& lat = coordArray[0];
           auto& lon = coordArray[1];
           if (lat.IsDouble() && lon.IsDouble())
-            coords.push_back(Ogre::Vector2((Ogre::Real)lat.GetDouble(), (Ogre::Real)lon.GetDouble()));
+            coords.push_back(Ogre::Vector2((Ogre::Real)lat.GetDouble(),
+                                           (Ogre::Real)lon.GetDouble()));
         }
       }
     }

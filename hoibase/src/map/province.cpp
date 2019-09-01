@@ -34,7 +34,8 @@ Province::Province(std::string id,
 std::string const& Province::GetID() const { return this->id; }
 
 // Gets the province coordinates
-std::vector<std::vector<Ogre::Vector2>> const& Province::GetCoordinates() const {
+std::vector<std::vector<Ogre::Vector2>> const& Province::GetCoordinates()
+    const {
   return coordinates;
 }
 
@@ -92,8 +93,6 @@ std::vector<Ogre::Real> const Province::GetTriangulatedVertices() const {
 }
 
 // Gets the province center point
-Ogre::Vector2 const& Province::GetCenter() const {
-  return center;
-}
+Ogre::Vector2 const& Province::GetCenter() const { return center; }
 
 }  // namespace openhoi

@@ -20,8 +20,7 @@ class MapFactory {
 
  private:
   // Get coordinates out of object
-  static std::vector<Ogre::Vector2> GetCoordinates(
-      rapidjson::Value& value);
+  static std::vector<Ogre::Vector2> GetCoordinates(rapidjson::Value& value);
 };
 
 }  // namespace openhoi

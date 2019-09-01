@@ -36,7 +36,7 @@ namespace Ogre
         virtual void newFrame(float deltaTime,const Ogre::Rect & windowRect);
 
         //inherited from RenderQueueListener
-        virtual void renderQueueEnded(uint8 queueGroupId, const String& invocation,bool& repeatThisInvocation);
+        virtual void renderQueueEnded(uint8 queueGroupId, const String& invocation,bool& /*repeatThisInvocation*/);
 
         OgreBites::InputListener* getInputListener();
 
