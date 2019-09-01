@@ -98,7 +98,7 @@ filesystem::path FileAccess::getUserGameConfigDirectory() {
              configDirectory.u8string())
                 .str());
 
-#if OPENHOI_OS_WINDOWS
+#ifdef OPENHOI_OS_WINDOWS
       // Convert config directory path to LPSTR
       const int size = WideCharToMultiByte(CP_UTF8, 0, configDirectory.c_str(),
                                            -1, NULL, 0, 0, NULL);
