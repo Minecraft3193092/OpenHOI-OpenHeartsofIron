@@ -3,7 +3,6 @@
 #include "hoibase/file/file_access.hpp"
 #include "hoibase/helper/os.hpp"
 
-#include <OgreLogManager.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 
