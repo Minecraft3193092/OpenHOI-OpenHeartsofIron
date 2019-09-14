@@ -18,8 +18,8 @@
 #    ifndef _GNU_SOURCE
 #      define _GNU_SOURCE
 #    endif
-#    include <dlfcn.h>
 #    include <OgreLogManager.h>
+#    include <dlfcn.h>
 #  endif
 #endif
 #include <array>

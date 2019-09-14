@@ -8,7 +8,10 @@
 
 namespace openhoi {
 
-// Generate a Universally Unique Identifier (UUID) as string
-OPENHOI_LIB_EXPORT std::string generateUUID();
+class OPENHOI_LIB_EXPORT UniqueID final {
+ public:
+  // Generate a Universally Unique Identifier (UUID) as string
+  static std::string generate();
+};
 
 }  // namespace openhoi

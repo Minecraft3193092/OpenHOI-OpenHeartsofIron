@@ -38,6 +38,14 @@
 
 using namespace Ogre;
 
+// Define keys not already defined by OGRE
+enum {
+  SDLK_RSHIFT = (1 << 30) | 229,
+  KMOD_LSHIFT = 0x0001,
+  KMOD_RSHIFT = 0x0002,
+  KMOD_SHIFT = KMOD_LSHIFT | KMOD_RSHIFT
+};
+
 #ifdef HAVE_OGRE_BITES
 // map sdl2 mouse buttons to imgui
 static int sdl2imgui(int b)
@@ -132,22 +140,21 @@ struct ImguiInputListener : public OgreBites::InputListener
         ImGuiIO& io = ImGui::GetIO();
         
         // ignore
-        if(arg.keysym.sym == SDLK_LSHIFT) return io.WantCaptureKeyboard;
+        if(arg.keysym.sym == SDLK_LSHIFT || arg.keysym.sym == SDLK_RSHIFT)
+            return io.WantCaptureKeyboard;
 
         io.KeyCtrl = arg.keysym.mod & KMOD_CTRL;
-        io.KeyShift = arg.keysym.mod & SDLK_LSHIFT;
+        io.KeyShift = arg.keysym.mod & KMOD_SHIFT;
 
         int key = kc2sc(arg.keysym.sym);
 
         if(key > 0 && key < 512)
-        {
             io.KeysDown[key] = true;
-            
-            uint16_t sym = arg.keysym.sym;
-            if (io.KeyShift) sym -= 32;
-            io.AddInputCharacter(sym);
-        }
+   
+        Keycode sym = arg.keysym.sym;
 
+        io.AddInputCharacter(sym);
+   
         return io.WantCaptureKeyboard;
     }
     bool keyReleased( const OgreBites::KeyboardEvent &arg )
@@ -161,7 +168,7 @@ struct ImguiInputListener : public OgreBites::InputListener
         ImGuiIO& io = ImGui::GetIO();
 
         io.KeyCtrl = arg.keysym.mod & KMOD_CTRL;
-        io.KeyShift = arg.keysym.mod & SDLK_LSHIFT;
+        io.KeyShift = arg.keysym.mod & KMOD_SHIFT;
 
         io.KeysDown[key] = false;
         return io.WantCaptureKeyboard;

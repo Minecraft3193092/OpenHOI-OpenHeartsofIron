@@ -48,24 +48,24 @@ class GameManager final : public OgreBites::ApplicationContext,
   Ogre::Camera* const& getCamera() const;
 
   // Creates the OGRE root (overrides OGRE Bites)
-  virtual void createRoot();
+  virtual void createRoot() override;
 
   // Create a new render window (overrides OGRE Bites)
   virtual OgreBites::NativeWindowPair createWindow(
       const Ogre::String& name, uint32_t w = 0, uint32_t h = 0,
-      Ogre::NameValuePairList miscParams = Ogre::NameValuePairList());
+      Ogre::NameValuePairList miscParams = Ogre::NameValuePairList()) override;
 
   // Locate resources (overrides OGRE Bites)
-  virtual void locateResources();
+  virtual void locateResources() override;
 
   // Load resources (overrides OGRE Bites)
-  virtual void loadResources();
+  virtual void loadResources() override;
 
   // Frame started event (override OGRE Bites)
-  virtual bool frameStarted(const Ogre::FrameEvent& evt);
+  virtual bool frameStarted(const Ogre::FrameEvent& evt) override;
 
   // Frame rendering queued event (overrides OGRE Bites)
-  virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+  virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt) override;
 
   // Key released event
   virtual bool keyReleased(const OgreBites::KeyboardEvent& arg);
