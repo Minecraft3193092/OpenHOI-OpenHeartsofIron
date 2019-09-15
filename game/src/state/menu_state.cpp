@@ -155,7 +155,7 @@ void MenuState::updateGui() {
 
   // Render menu buttons
   ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
-  ImVec2 buttonAreaSize = ImVec2((float) windowWidth, windowHeight * 0.1f);
+  ImVec2 buttonAreaSize = ImVec2((float)windowWidth, windowHeight * 0.1f);
   ImGui::SetNextWindowSize(buttonAreaSize, ImGuiCond_Always);
   ImGui::SetNextWindowContentSize(buttonAreaSize);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));

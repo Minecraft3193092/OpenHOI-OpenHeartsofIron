@@ -333,7 +333,10 @@ bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 // Key released event
 bool GameManager::keyReleased(const OgreBites::KeyboardEvent& arg) {
   // Tilde key will toggle console everywhere
-  if (arg.keysym.sym == '^') GuiManager::getInstance().toggleDebugConsole();
+  Ogre::LogManager::getSingletonPtr()->logMessage(
+      "RELASE: " + std::to_string(arg.keysym.sym));
+  if (arg.keysym.sym == '^' || arg.keysym.sym == 0x40000000)
+    GuiManager::getInstance().toggleDebugConsole();
 
   return true;
 }
