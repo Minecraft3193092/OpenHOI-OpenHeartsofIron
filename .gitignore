@@ -4,6 +4,8 @@ build*/
 # Visual Studio and VS Code
 .vscode/
 .vs/
+*.cpp-*
+*.hpp-*
 
 # Eclipse
 .project

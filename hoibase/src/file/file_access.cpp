@@ -125,7 +125,7 @@ filesystem::path FileAccess::getAssetRootDirectory() {
   if (FileAccess::gameAssetRootDirectory.empty()) {
     // Yeah, this is not thread-safe..
 
-#ifdef OPENHOI_OS_APPLE
+#ifdef OPENHOI_OS_MACOS
     char path[1024];
 
     // Get main bundle

@@ -49,9 +49,9 @@ GuiManager::~GuiManager() {
   // Destroy debug console
   delete debugConsole;
 
-  // Destroy ImGui context
-  auto imGuiContext = ImGui::GetCurrentContext();
-  if (imGuiContext) ImGui::DestroyContext();
+  // Destroy ImGui references
+  ImGui_ImplSDL2_Shutdown();
+  ImGui::DestroyContext();
 }
 
 // Render queue ended event
@@ -148,31 +148,28 @@ void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
 // Initialize GUI manager
 void GuiManager::initialize(Ogre::SceneManager* sceneManager,
                             Ogre::RenderSystem* renderSystem,
-                            std::vector<OgreBites::NativeWindowPair> windows) {
+                            std::vector<NativeWindowPair> windows) {
   // Set scene manager reference
   this->sceneManager = sceneManager;
 
   // Get SDL window out of first window in window list
-  OgreBites::NativeWindowType* nativeWindowType = windows[0].native;
-  bool isSdlWindow = std::is_same<OgreBites::NativeWindowType, SDL_Window>::value;
-  assert(isSdlWindow && "Only SDL windows are supported");
-  window = static_cast<SDL_Window*>(nativeWindowType);
+  window = windows[0].sdl;
 
 // Initialize ImGui SDL implementation
 #ifdef OPENHOI_OS_WINDOWS
-    if (Ogre::D3D11RenderSystem* d3d11RenderSystem =
-            dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem)) {
-      ImGui_ImplSDL2_InitForD3D(window);
-    } else {
+  if (Ogre::D3D11RenderSystem* d3d11RenderSystem =
+          dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem)) {
+    ImGui_ImplSDL2_InitForD3D(window);
+  } else {
 #endif
-      Ogre::GLContext* glContext = nullptr;
-      if (Ogre::GLRenderSystemCommon* glRenderSystem =
-              dynamic_cast<Ogre::GLRenderSystemCommon*>(renderSystem)) {
-        glContext = glRenderSystem->_getCurrentContext();
-      }
-      ImGui_ImplSDL2_InitForOpenGL(window, glContext);
-#ifdef OPENHOI_OS_WINDOWS
+    Ogre::GLContext* glContext = nullptr;
+    if (Ogre::GLRenderSystemCommon* glRenderSystem =
+            dynamic_cast<Ogre::GLRenderSystemCommon*>(renderSystem)) {
+      glContext = glRenderSystem->_getCurrentContext();
     }
+    ImGui_ImplSDL2_InitForOpenGL(window, glContext);
+#ifdef OPENHOI_OS_WINDOWS
+  }
 #endif
 }
 
@@ -250,12 +247,12 @@ ImFont* GuiManager::loadFont(std::string name) {
   }
 
   ImFontConfig cfg;
-#ifdef _WIN32
+#ifdef OPENHOI_OS_WINDOWS
 #  pragma warning(push)
 #  pragma warning(disable : 4996)
 #endif
   strncpy(cfg.Name, name.c_str(), 40);
-#ifdef _WIN32
+#ifdef OPENHOI_OS_WINDOWS
 #  pragma warning(pop)
 #endif
   return io.Fonts->AddFontFromMemoryTTF(ttfChunk.getPtr(), (int)ttfChunk.size(),
@@ -277,6 +274,11 @@ ImFont* GuiManager::getBigFont() {
 
 // Toggle debug console
 void GuiManager::toggleDebugConsole() { debugConsole->toggle(); }
+
+// Handle SDL event
+void GuiManager::handleEvent(SDL_Event event) {
+  ImGui_ImplSDL2_ProcessEvent(&event);
+}
 
 // Render new GUI frame
 void GuiManager::newFrame() {

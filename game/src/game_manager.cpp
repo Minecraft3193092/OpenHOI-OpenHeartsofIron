@@ -17,6 +17,11 @@
 #  include <OgreD3D11RenderSystem.h>
 #endif
 #include <SDL.h>
+#include <SDL_syswm.h>
+#include <SDL_video.h>
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+#  include <X11/Xlib.h>
+#endif
 
 #include <exception>
 
@@ -27,29 +32,61 @@
 namespace openhoi {
 
 // Initializes the game manager
-GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
+GameManager::GameManager() {
   // Create options instance
   options = new Options();
 
-  // Initialize render system and resources
-  initApp();
+  // Create root object of OGRE system
+  std::string logFile = (FileAccess::getUserGameConfigDirectory() /
+                         filesystem::path(OPENHOI_GAME_NAME ".log"))
+                            .u8string();
+  root = OGRE_NEW Ogre::Root("", "", logFile);
 
-  // Add ourself as an input listener
-  addInputListener(this);
+  // Create the overlay system
+  overlaySystem = OGRE_NEW Ogre::OverlaySystem();
+
+  // Load the render system
+  loadRenderSystem();
+
+  // Load the STBI codec plugin for image processing
+  root->loadPlugin(getPluginPath(OGRE_PLUGIN_STBI));
+
+  // Initialize root
+  root->initialise(false);
+
+  // Create window
+  createWindow();
+
+  // Locate resources
+  locateResources();
+
+  // Initialize real-time shader system
+  if (Ogre::RTShader::ShaderGenerator::initialize()) {
+    // Get shader generator
+    shaderGenerator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+    // Add ourself as a material manager listener
+    Ogre::MaterialManager::getSingleton().addListener(this);
+  }
+
+  // Load resources
+  loadResources();
+
+  // Add ourself as an frame listener
+  root->addFrameListener(this);
 
   // Create GUI manager instance
   guiManager = new GuiManager();
 
   // Create a generic scene manager
-  sceneManager = mRoot->createSceneManager();
-  sceneManager->addRenderQueueListener(mOverlaySystem);
+  sceneManager = root->createSceneManager();
+  sceneManager->addRenderQueueListener(overlaySystem);
   sceneManager->addRenderQueueListener(guiManager);
 
   // Register our scene with the RTSS
   Ogre::RTShader::ShaderGenerator::getSingleton().addSceneManager(sceneManager);
 
   // Initialize GUI manager
-  guiManager->initialize(sceneManager, mRoot->getRenderSystem(), mWindows);
+  guiManager->initialize(sceneManager, root->getRenderSystem(), windows);
 
   // Create camera
   createCamera();
@@ -70,8 +107,19 @@ GameManager::~GameManager() {
   // Destroy GUI manager
   if (guiManager) delete guiManager;
 
-  // Close down the game
-  closeApp();
+  // Unregister the material manager listener
+  Ogre::MaterialManager::getSingleton().setActiveScheme(
+      Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
+  Ogre::MaterialManager::getSingleton().removeListener(this);
+  Ogre::RTShader::ShaderGenerator::destroy();
+
+  // Destroy windows
+  for (const auto& win : windows) {
+    root->destroyRenderTarget(win.ogre);
+  }
+
+  // Destroy overlay system
+  if (overlaySystem) delete overlaySystem;
 
   // Destroy options
   if (options) delete options;
@@ -96,15 +144,20 @@ Ogre::SceneManager* const& GameManager::getSceneManager() const {
 // Gets the OGRE camera
 Ogre::Camera* const& GameManager::getCamera() const { return camera; }
 
+// Get the OGRE render window
+Ogre::RenderWindow* const& GameManager::getRenderWindow() const {
+  return windows.empty() ? nullptr : windows[0].ogre;
+}
+
 // Start the main loop
 void GameManager::run() {
   // Start rendering. This will call the main game loop and block here until the
   // game ends
-  mRoot->startRendering();
+  root->startRendering();
 }
 
 // Request game exit
-void GameManager::requestExit() { mRoot->queueEndRendering(true); }
+void GameManager::requestExit() { root->queueEndRendering(true); }
 
 // Gets the full path to the provided OGRE plugin
 std::string GameManager::getPluginPath(std::string pluginName) {
@@ -116,47 +169,24 @@ std::string GameManager::getPluginPath(std::string pluginName) {
   }
 }
 
-// Creates the OGRE root (overrides OGRE Bites)
-void GameManager::createRoot() {
-  // Create root object of OGRE system
-  std::string logFile = (FileAccess::getUserGameConfigDirectory() /
-                         filesystem::path("client.log"))
-                            .u8string();
-  mRoot = OGRE_NEW Ogre::Root("", "", logFile);
-
-#ifdef OGRE_STATIC_LIB
-  // Load static plugins
-  mStaticPluginLoader.load();
-#endif
-
-  // Create the overlay system
-  mOverlaySystem = OGRE_NEW Ogre::OverlaySystem();
-
-  // Load the render system
-  loadRenderSystem();
-
-  // Load the STBI codec plugin for image processing
-  mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_STBI));
-}
-
 // Load and configure the render system
 void GameManager::loadRenderSystem() {
 #if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
   // Prefer DirectX11 on Windows
   try {
-    mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_D3D11));
+    root->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_D3D11));
   } catch (const std::exception&) {
     // do nothing
   }
 
-  if (mRoot->getAvailableRenderers().empty()) {
+  if (root->getAvailableRenderers().empty()) {
 #endif
     // Check if we can use OpenGL3+
     // We also try to detect if we are running inside a VM because VM's OpenGL
     // support is very bad and it will most likely crash with GL3+
     if (!OS::isRunningInVirtualMachine()) {
       try {
-        mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_GL3PLUS));
+        root->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_GL3PLUS));
       } catch (const std::exception&) {
         // do nothing
       }
@@ -165,13 +195,13 @@ void GameManager::loadRenderSystem() {
   }
 #endif
 
-  if (mRoot->getAvailableRenderers().empty()) {
+  if (root->getAvailableRenderers().empty()) {
     // Use legacy OpenGL as a fallback
-    mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_GL));
+    root->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_GL));
   }
 
   // Get loaded render system
-  Ogre::RenderSystem* renderSystem = mRoot->getAvailableRenderers().front();
+  Ogre::RenderSystem* renderSystem = root->getAvailableRenderers().front();
 
   // Configure render system
   bool d3d11 = false;
@@ -240,28 +270,60 @@ void GameManager::loadRenderSystem() {
 #endif
 
   // Set active render system
-  mRoot->setRenderSystem(renderSystem);
+  root->setRenderSystem(renderSystem);
 }
 
-// Create a new render window (overrides OGRE Bites)
-OgreBites::NativeWindowPair GameManager::createWindow(
-    const Ogre::String& name, uint32_t w /* = 0*/, uint32_t h /* = 0*/,
-    Ogre::NameValuePairList miscParams /* = Ogre::NameValuePairList() */) {
-  OgreBites::NativeWindowPair nwp =
-      OgreBites::ApplicationContext::createWindow(name, w, h, miscParams);
+// Create a new render window
+void GameManager::createWindow() {
+  NativeWindowPair ret = {nullptr, nullptr};
+  Ogre::NameValuePairList miscParams = Ogre::NameValuePairList();
+
+  if (!SDL_WasInit(SDL_INIT_VIDEO)) SDL_InitSubSystem(SDL_INIT_VIDEO);
+
+  auto windowDesc = root->getRenderSystem()->getRenderWindowDescription();
+  miscParams.insert(windowDesc.miscParams.begin(), windowDesc.miscParams.end());
+  windowDesc.miscParams = miscParams;
+  windowDesc.name = OPENHOI_GAME_NAME;
+
+  // Create SDL window
+  int flags =
+      windowDesc.useFullScreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE;
+  ret.sdl = SDL_CreateWindow(windowDesc.name.c_str(), SDL_WINDOWPOS_UNDEFINED,
+                             SDL_WINDOWPOS_UNDEFINED, windowDesc.width,
+                             windowDesc.height, flags);
 
   // Adjust window style
   if (options->GetWindowMode() != WindowMode::FULLSCREEN) {
-    OgreBites::NativeWindowType* windowHnd = nwp.native;
-    SDL_SetWindowResizable(windowHnd, SDL_FALSE);
+    SDL_SetWindowResizable(ret.sdl, SDL_FALSE);
     if (options->GetWindowMode() == WindowMode::BORDERLESS)
-      SDL_SetWindowBordered(windowHnd, SDL_FALSE);
+      SDL_SetWindowBordered(ret.sdl, SDL_FALSE);
   }
 
-  return nwp;
+  // Set window manager information
+  SDL_SysWMinfo wmInfo;
+  SDL_VERSION(&wmInfo.version);
+  SDL_GetWindowWMInfo(ret.sdl, &wmInfo);
+#ifdef OPENHOI_OS_WINDOWS
+  windowDesc.miscParams["externalWindowHandle"] =
+      Ogre::StringConverter::toString(size_t(wmInfo.info.win.window));
+#elif defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+  windowDesc.miscParams["parentWindowHandle"] =
+      Ogre::StringConverter::toString(size_t(wmInfo.info.x11.window));
+#elif defined(OPENHOI_OS_MACOS)
+  windowDesc.miscParams["externalWindowHandle"] =
+      Ogre::StringConverter::toString(size_t(wmInfo.info.cocoa.window));
+#endif
+
+  if (!windows.empty()) {
+    // additional windows should reuse the context
+    miscParams["currentGLContext"] = "true";
+  }
+
+  ret.ogre = root->createRenderWindow(windowDesc);
+  windows.push_back(ret);
 }
 
-// Locate resources (overrides OGRE Bites)
+// Locate resources
 void GameManager::locateResources() {
   filesystem::path assetRoot = FileAccess::getAssetRootDirectory();
 
@@ -298,7 +360,7 @@ void GameManager::locateResources() {
   }
 }
 
-// Load resources (overrides OGRE Bites)
+// Load resources
 void GameManager::loadResources() {
   // Disable mipmapping
   Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(0);
@@ -313,38 +375,111 @@ void GameManager::loadResources() {
   }
 }
 
-// Frame started event (override OGRE Bites)
-bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
-  bool continueRendering = OgreBites::ApplicationContext::frameStarted(evt);
-  if (continueRendering) {
-    // Start new GUI frame
-    guiManager->newFrame();
-
-    // Update GUI in current state
-    stateManager->updateGui();
+// Poll for events
+void GameManager::pollEvents() {
+// Avoid "Window not responding" message
+#ifdef OPENHOI_OS_WINDOWS
+  // Windows Message Loop (NULL means check all HWNDs belonging to this context)
+  MSG msg;
+  while (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) {
+    TranslateMessage(&msg);
+    DispatchMessage(&msg);
   }
-  return continueRendering;
+#elif defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+  // GLX Message Pump
+  Display* xDisplay = 0;  // Same for all windows
+
+  for (const auto& win : windows) {
+    XID xid;
+    XEvent event;
+
+    if (!xDisplay) (*win.ogre)->getCustomAttribute("XDISPLAY", &xDisplay);
+
+    while (XCheckWindowEvent(
+        xDisplay, xid,
+        StructureNotifyMask | VisibilityChangeMask | FocusChangeMask, &event)) {
+      GLXProc(*win.ogre, event);
+    }
+
+    // The ClientMessage event does not appear under any Event Mask
+    while (XCheckTypedWindowEvent(xDisplay, xid, ClientMessage, &event)) {
+      GLXProc(*win, event);
+    }
+  }
+#endif
+
+  if (windows.empty()) {
+    // SDL events not initialized
+    return;
+  }
+
+  SDL_Event event;
+  while (SDL_PollEvent(&event)) {
+    // Handle event in GUI
+    guiManager->handleEvent(event);
+
+    // Handle event for the rest of the game
+    switch (event.type) {
+      case SDL_QUIT:
+        root->queueEndRendering();
+        break;
+      case SDL_WINDOWEVENT:
+        if (event.window.event != SDL_WINDOWEVENT_RESIZED) continue;
+
+        for (const auto& win : windows) {
+          if (event.window.windowID != SDL_GetWindowID(win.sdl)) continue;
+
+          Ogre::RenderWindow* ogreWindow = win.ogre;
+          ogreWindow->windowMovedOrResized();
+        }
+        break;
+      default:
+        //_fireInputEvent(convert(event), event.window.windowID);
+        break;
+    }
+  }
+
+#ifdef OPENHOI_OS_MACOS
+  // Hacky workaround for black window on macOS
+  for (const auto& win : windows) {
+    SDL_SetWindowSize(win.sdl, win.ogre->getWidth(), win.ogre->getHeight());
+    win.ogre->windowMovedOrResized();
+  }
+#endif
+}
+
+// Frame started event
+bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
+  // Poll for events
+  pollEvents();
+
+  // Start new GUI frame
+  guiManager->newFrame();
+
+  // Update GUI in current state
+  stateManager->updateGui();
+
+  return true;
 }
 
 // Frame rendering queued event (overrides OGRE Bites)
 bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
-  bool continueRendering =
-      OgreBites::ApplicationContext::frameRenderingQueued(evt);
-  if (continueRendering) {
-    // Update state
-    stateManager->updateState();
-  }
-  return continueRendering;
+  // Update state
+  stateManager->updateState();
+
+  return true;
 }
 
 // Key released event
-bool GameManager::keyReleased(const OgreBites::KeyboardEvent& arg) {
+/*
+bool GameManager::keyReleased(const KeyboardEvent& arg) {
   // Tilde key will toggle console everywhere
   if (arg.keysym.sym == '^' || arg.keysym.sym == 0x40000000)
     guiManager->toggleDebugConsole();
 
   return true;
 }
+*/
 
 // Create camera
 void GameManager::createCamera() {
@@ -358,8 +493,8 @@ void GameManager::createCamera() {
 
   // Set clip distances
   camera->setNearClipDistance(0.1f);
-  camera->setFarClipDistance(500000);
-  if (mRoot->getRenderSystem()->getCapabilities()->hasCapability(
+  camera->setFarClipDistance(500000); // Some very high value..
+  if (root->getRenderSystem()->getCapabilities()->hasCapability(
           Ogre::RSC_INFINITE_FAR_PLANE)) {
     // If possible, set infinite far clip distance
     camera->setFarClipDistance(0);
@@ -373,6 +508,62 @@ void GameManager::createCamera() {
   camera->setAspectRatio(Ogre::Real(vp->getActualWidth()) /
                          Ogre::Real(vp->getActualHeight()));
   camera->setAutoAspectRatio(true);
+}
+
+// Hook point where shader based technique will be created. Will be called
+// whenever the material manager won't find appropriate technique to satisfy
+// the target scheme name. If the scheme name is out target RT Shader System
+// scheme name we will try to create shader generated technique for it
+Ogre::Technique* GameManager::handleSchemeNotFound(
+    unsigned short schemeIndex, const Ogre::String& schemeName,
+    Ogre::Material* originalMaterial, unsigned short lodIndex,
+    const Ogre::Renderable* rend) {
+  if (!shaderGenerator->hasRenderState(schemeName)) return nullptr;
+
+  // Create shader generated technique for this material
+  if (!shaderGenerator->createShaderBasedTechnique(
+          *originalMaterial, Ogre::MaterialManager::DEFAULT_SCHEME_NAME,
+          schemeName))
+    return nullptr;
+
+  // Force creating the shaders for the generated technique
+  shaderGenerator->validateMaterial(schemeName, originalMaterial->getName(),
+                                    originalMaterial->getGroup());
+
+  // Grab the generated technique
+  Ogre::Material::Techniques::const_iterator it;
+  for (it = originalMaterial->getTechniques().begin();
+       it != originalMaterial->getTechniques().end(); ++it) {
+    Ogre::Technique* curTech = *it;
+
+    if (curTech->getSchemeName() == schemeName) return curTech;
+  }
+
+  return nullptr;
+}
+
+// Called right before illuminated passes were created, so that owner of
+// runtime generated technique can handle this
+bool GameManager::beforeIlluminationPassesCleared(Ogre::Technique* tech) {
+  if (shaderGenerator->hasRenderState(tech->getSchemeName())) {
+    Ogre::Material* mat = tech->getParent();
+    shaderGenerator->invalidateMaterialIlluminationPasses(
+        tech->getSchemeName(), mat->getName(), mat->getGroup());
+    return true;
+  }
+  return false;
+}
+
+// Called right after illuminated passes were created, so that owner of
+// runtime generated technique can handle this
+bool GameManager::afterIlluminationPassesCreated(Ogre::Technique* tech) {
+  if (shaderGenerator->hasRenderState(tech->getSchemeName())) {
+    Ogre::Material* mat = tech->getParent();
+    shaderGenerator->validateMaterialIlluminationPasses(
+        tech->getSchemeName(), mat->getName(), mat->getGroup());
+    return true;
+  }
+  return false;
 }
 
 }  // namespace openhoi

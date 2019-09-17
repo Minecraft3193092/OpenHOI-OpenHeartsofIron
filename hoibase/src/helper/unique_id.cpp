@@ -8,7 +8,7 @@
 #  include <rpc.h>
 #  include <codecvt>
 #  pragma comment(lib, "rpcrt4.lib")
-#elif defined(OPENHOI_OS_APPLE)
+#elif defined(OPENHOI_OS_MACOS)
 #  include <CoreFoundation/CFUUID.h>
 #else
 #  include <uuid/uuid.h>
@@ -40,7 +40,7 @@ std::string UniqueID::generate() {
   WideCharToMultiByte(CP_UTF8, 0, &uuidWString[0], (int)uuidWString.size(),
                       &uuidString[0], len, NULL, NULL);
   RpcStringFreeW((RPC_WSTR*)&wszUuid);
-#elif OPENHOI_OS_APPLE
+#elif OPENHOI_OS_MACOS
   CFUUIDRef uuid = CFUUIDCreate(NULL);
   NSString* uuidNsString = (NSString*)CFUUIDCreateString(NULL, uuid);
   std::string uuidString = std::string([uuidNsString UTF8String]);

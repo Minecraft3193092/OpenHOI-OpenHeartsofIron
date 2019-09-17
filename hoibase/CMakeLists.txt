@@ -183,7 +183,6 @@ if(WIN32)
     add_custom_command(TARGET hoibase POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreBites$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMain$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreOverlay$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"

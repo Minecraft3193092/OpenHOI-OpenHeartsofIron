@@ -9,9 +9,11 @@
 #include <hoibase/file/filesystem.hpp>
 #include <hoibase/helper/os.hpp>
 
-#include <OgreApplicationContext.h>
-#include <OgreInput.h>
+#include <OgreFrameListener.h>
+#include <OgreMaterialManager.h>
+#include <OgreOverlaySystem.h>
 #include <OgrePrerequisites.h>
+#include <OgreRTShaderSystem.h>
 #include <OgreSceneManager.h>
 
 #include <array>
@@ -22,8 +24,8 @@ namespace openhoi {
 
 // Manager used to handle the main game loop and the basic logic required to run
 // the game
-class GameManager final : public OgreBites::ApplicationContext,
-                          public OgreBites::InputListener {
+class GameManager final : public Ogre::FrameListener,
+                          public Ogre::MaterialManager::Listener {
  public:
   static GameManager& getInstance() {
     // Thread-safe C++11 singleton
@@ -52,28 +54,35 @@ class GameManager final : public OgreBites::ApplicationContext,
   // Gets the OGRE camera
   Ogre::Camera* const& getCamera() const;
 
-  // Creates the OGRE root (overrides OGRE Bites)
-  virtual void createRoot() override;
+  // Get the OGRE render window
+  Ogre::RenderWindow* const& getRenderWindow() const;
 
-  // Create a new render window (overrides OGRE Bites)
-  virtual OgreBites::NativeWindowPair createWindow(
-      const Ogre::String& name, uint32_t w = 0, uint32_t h = 0,
-      Ogre::NameValuePairList miscParams = Ogre::NameValuePairList()) override;
+  // Frame started event
+  virtual bool frameStarted(const Ogre::FrameEvent& evt);
 
-  // Locate resources (overrides OGRE Bites)
-  virtual void locateResources() override;
-
-  // Load resources (overrides OGRE Bites)
-  virtual void loadResources() override;
-
-  // Frame started event (override OGRE Bites)
-  virtual bool frameStarted(const Ogre::FrameEvent& evt) override;
-
-  // Frame rendering queued event (overrides OGRE Bites)
-  virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt) override;
+  // Frame rendering queued event
+  virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
   // Key released event
-  virtual bool keyReleased(const OgreBites::KeyboardEvent& arg);
+  //bool keyReleased(const KeyboardEvent& arg);
+
+  // Hook point where shader based technique will be created. Will be called
+  // whenever the material manager won't find appropriate technique to satisfy
+  // the target scheme name. If the scheme name is out target RT Shader System
+  // scheme name we will try to create shader generated technique for it
+  Ogre::Technique* handleSchemeNotFound(unsigned short schemeIndex,
+                                        const Ogre::String& schemeName,
+                                        Ogre::Material* originalMaterial,
+                                        unsigned short lodIndex,
+                                        const Ogre::Renderable* rend);
+
+  // Called right before illuminated passes were created, so that owner of
+  // runtime generated technique can handle this
+  bool beforeIlluminationPassesCleared(Ogre::Technique* tech);
+
+  // Called right after illuminated passes were created, so that owner of
+  // runtime generated technique can handle this
+  bool afterIlluminationPassesCreated(Ogre::Technique* tech);
 
  protected:
   // Initializes the game manager
@@ -83,11 +92,23 @@ class GameManager final : public OgreBites::ApplicationContext,
   ~GameManager();
 
  private:
+  // Create a new render window
+  void createWindow();
+
   // Load and configure the render system
   void loadRenderSystem();
 
   // Create camera
   void createCamera();
+
+  // Poll for events
+  void pollEvents();
+
+  // Locate resources
+  void locateResources();
+
+  // Load resources
+  void loadResources();
 
   // Gets the full path to the provided OGRE plugin
   std::string getPluginPath(std::string pluginName);
@@ -95,8 +116,12 @@ class GameManager final : public OgreBites::ApplicationContext,
   Options* options;
   StateManager* stateManager;
   GuiManager* guiManager;
+  Ogre::Root* root;
+  Ogre::OverlaySystem* overlaySystem;
   Ogre::SceneManager* sceneManager;
+  std::vector<NativeWindowPair> windows;
   Ogre::Camera* camera;
+  Ogre::RTShader::ShaderGenerator* shaderGenerator;
 };
 
 }  // namespace openhoi

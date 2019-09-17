@@ -33,19 +33,13 @@
 
 ////////////////////////////////////////////////////////////////////////////
 //
-//   DETECT APPLE
+//   DETECT MACOS
 //
 ////////////////////////////////////////////////////////////////////////////
 #if defined(__APPLE__) && defined(__MACH__)
-#  define OPENHOI_OS_APPLE
 #  include <TargetConditionals.h>
-#  if TARGET_IPHONE_SIMULATOR
-#    define OPENHOI_OS_APPLE_IOS
-#    define OPENHOI_OS_APPLE_IOS_SIMULATOR
-#  elif TARGET_OS_IPHONE
-#    define OPENHOI_OS_APPLE_IOS
-#  elif TARGET_OS_MAC
-#    define OPENHOI_OS_APPLE_MACOS
+#  if TARGET_OS_MAC
+#    define OPENHOI_OS_MACOS
 #  endif
 #endif
 

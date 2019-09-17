@@ -7,13 +7,18 @@
 
 #include <hoibase/helper/os.hpp>
 
-#include <OgreApplicationContextBase.h>
 #include <OgrePrerequisites.h>
 #include <OgreRenderQueueListener.h>
 #include <OgreSceneManager.h>
 #include <SDL.h>
 
 namespace openhoi {
+
+// Link between a OGRE render window and a SDL window
+struct NativeWindowPair {
+  Ogre::RenderWindow* ogre;
+  SDL_Window* sdl;
+};
 
 // GUI manager for openhoi
 class GuiManager final : public Ogre::RenderQueueListener {
@@ -27,12 +32,15 @@ class GuiManager final : public Ogre::RenderQueueListener {
   // Initialize GUI manager
   void initialize(Ogre::SceneManager* sceneManager,
                   Ogre::RenderSystem* renderSystem,
-                  std::vector<OgreBites::NativeWindowPair> windows);
+                  std::vector<NativeWindowPair> windows);
 
   // Render queue ended event
   virtual void renderQueueEnded(Ogre::uint8 queueGroupId,
                                 const Ogre::String& invocation,
                                 bool& /*repeatThisInvocation*/);
+
+  // Handle SDL event
+  void handleEvent(SDL_Event event);
 
   // Render new GUI frame
   void newFrame();
