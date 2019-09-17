@@ -15,9 +15,6 @@
 #include <OgrePrerequisites.h>
 #include <OgreRTShaderSystem.h>
 #include <OgreSceneManager.h>
-#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
-#  include <X11/Xlib.h>
-#endif
 
 #include <array>
 #include <map>
@@ -115,11 +112,6 @@ class GameManager final : public Ogre::FrameListener,
 
   // Gets the full path to the provided OGRE plugin
   std::string getPluginPath(std::string pluginName);
-
-#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
-  // Handle XWindow event
-  void handleXWindowEvent(Ogre::RenderWindow* window, const XEvent& event);
-#endif
 
   Options* options;
   StateManager* stateManager;

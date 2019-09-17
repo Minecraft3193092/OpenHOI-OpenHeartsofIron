@@ -373,37 +373,6 @@ void GameManager::loadResources() {
 
 // Poll for events
 void GameManager::pollEvents() {
-// Avoid "Window not responding" message
-#ifdef OPENHOI_OS_WINDOWS
-  // Windows Message Loop (NULL means check all HWNDs belonging to this context)
-  MSG msg;
-  while (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) {
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
-  }
-#elif defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
-  // GLX Message Pump
-  Display* xDisplay = 0;  // Same for all windows
-
-  for (const auto& win : windows) {
-    XID xid;
-    XEvent event;
-
-    if (!xDisplay) win.ogre->getCustomAttribute("XDISPLAY", &xDisplay);
-
-    while (XCheckWindowEvent(
-        xDisplay, xid,
-        StructureNotifyMask | VisibilityChangeMask | FocusChangeMask, &event)) {
-      handleXWindowEvent(win.ogre, event);
-    }
-
-    // The ClientMessage event does not appear under any Event Mask
-    while (XCheckTypedWindowEvent(xDisplay, xid, ClientMessage, &event)) {
-      handleXWindowEvent(win.ogre, event);
-    }
-  }
-#endif
-
   if (windows.empty()) {
     // SDL events not initialized
     return;
@@ -443,55 +412,6 @@ void GameManager::pollEvents() {
   }
 #endif
 }
-
-#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
-// Handle XWindow event
-void GameManager::handleXWindowEvent(Ogre::RenderWindow* window,
-                                     const XEvent& event) {
-  switch (event.type) {
-    case ClientMessage: {
-      ::Atom atom;
-      window->getCustomAttribute("ATOM", &atom);
-      if (event.xclient.format == 32 && event.xclient.data.l[0] == (long)atom) {
-        // Window closed by window manager
-        for (const auto& win : windows) {
-          win.ogre->destroy();
-        }
-      }
-      break;
-    }
-    case DestroyNotify: {
-      if (!window->isClosed()) {
-        // Window closed without window manager warning
-        window->destroy();
-      }
-      break;
-    }
-    case ConfigureNotify: {
-      window->windowMovedOrResized();
-      break;
-    }
-    case VisibilityNotify:
-      switch (event.xvisibility.state) {
-        case VisibilityUnobscured:
-          window->setActive(true);
-          window->setVisible(true);
-          break;
-        case VisibilityPartiallyObscured:
-          window->setActive(true);
-          window->setVisible(true);
-          break;
-        case VisibilityFullyObscured:
-          window->setActive(false);
-          window->setVisible(false);
-          break;
-      }
-      break;
-    default:
-      break;
-  }
-}
-#endif
 
 // Frame started event
 bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
