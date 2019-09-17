@@ -58,10 +58,10 @@ class GameManager final : public Ogre::FrameListener,
   Ogre::RenderWindow* const& getRenderWindow() const;
 
   // Frame started event
-  virtual bool frameStarted(const Ogre::FrameEvent& evt);
+  virtual bool frameStarted(const Ogre::FrameEvent& /*evt*/);
 
   // Frame rendering queued event
-  virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+  virtual bool frameRenderingQueued(const Ogre::FrameEvent& /*evt*/);
 
   // Key released event
   // bool keyReleased(const KeyboardEvent& arg);
@@ -70,11 +70,11 @@ class GameManager final : public Ogre::FrameListener,
   // whenever the material manager won't find appropriate technique to satisfy
   // the target scheme name. If the scheme name is out target RT Shader System
   // scheme name we will try to create shader generated technique for it
-  Ogre::Technique* handleSchemeNotFound(unsigned short schemeIndex,
+  Ogre::Technique* handleSchemeNotFound(unsigned short /*schemeIndex*/,
                                         const Ogre::String& schemeName,
                                         Ogre::Material* originalMaterial,
-                                        unsigned short lodIndex,
-                                        const Ogre::Renderable* rend);
+                                        unsigned short /*lodIndex*/,
+                                        const Ogre::Renderable* /*rend*/);
 
   // Called right before illuminated passes were created, so that owner of
   // runtime generated technique can handle this

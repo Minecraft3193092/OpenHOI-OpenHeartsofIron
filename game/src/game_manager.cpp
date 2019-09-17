@@ -414,7 +414,7 @@ void GameManager::pollEvents() {
 }
 
 // Frame started event
-bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
+bool GameManager::frameStarted(const Ogre::FrameEvent& /*evt*/) {
   // Poll for events
   pollEvents();
 
@@ -428,7 +428,7 @@ bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
 }
 
 // Frame rendering queued event (overrides OGRE Bites)
-bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
+bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& /*evt*/) {
   // Update state
   stateManager->updateState();
 
@@ -480,9 +480,9 @@ void GameManager::createCamera() {
 // the target scheme name. If the scheme name is out target RT Shader System
 // scheme name we will try to create shader generated technique for it
 Ogre::Technique* GameManager::handleSchemeNotFound(
-    unsigned short schemeIndex, const Ogre::String& schemeName,
-    Ogre::Material* originalMaterial, unsigned short lodIndex,
-    const Ogre::Renderable* rend) {
+    unsigned short /*schemeIndex*/, const Ogre::String& schemeName,
+    Ogre::Material* originalMaterial, unsigned short /*lodIndex*/,
+    const Ogre::Renderable* /*rend*/) {
   if (!shaderGenerator->hasRenderState(schemeName)) return nullptr;
 
   // Create shader generated technique for this material
