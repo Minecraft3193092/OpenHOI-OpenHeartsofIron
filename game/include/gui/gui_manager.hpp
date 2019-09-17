@@ -64,7 +64,7 @@ class GuiManager final : public Ogre::RenderQueueListener {
   Ogre::SceneManager* sceneManager;
   Ogre::TexturePtr fontTexture;
   std::vector<std::vector<ImWchar>> codePointRanges;
-  ImGuiRenderable* renderable;
+  ImGuiRenderable renderable;
   bool frameEnded;
   DebugConsole* debugConsole;
   ImFont* defaultFont;
