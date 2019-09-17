@@ -50,8 +50,6 @@ void DebugConsole::clearLog() {
 void DebugConsole::draw() {
   if (!showConsole) return;
 
-  GuiManager& guiManager = GuiManager::getInstance();
-
   ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
   if (!ImGui::Begin("Debug console", &showConsole,
                     ImGuiWindowFlags_NoDocking)) {

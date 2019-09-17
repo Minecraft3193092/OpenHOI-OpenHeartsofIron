@@ -14,11 +14,11 @@ namespace openhoi {
 // GUI manager for openhoi
 class GuiManager final : public Ogre::RenderQueueListener {
  public:
-  static GuiManager& getInstance() {
-    // Thread-safe C++11 singleton
-    static GuiManager instance;
-    return instance;
-  }
+  // Initializes the GUI manager
+  GuiManager();
+
+  // Destroys the GUI manager
+  ~GuiManager();
 
   // Initialize GUI manager
   void initialize(Ogre::SceneManager* sceneManager);
@@ -41,13 +41,6 @@ class GuiManager final : public Ogre::RenderQueueListener {
   // Toggle debug console
   void toggleDebugConsole();
 
- protected:
-  // Initializes the GUI manager
-  GuiManager();
-
-  // Destroys the GUI manager
-  ~GuiManager();
-
  private:
   // Configure GUI
   void configureGui();
@@ -64,7 +57,7 @@ class GuiManager final : public Ogre::RenderQueueListener {
   Ogre::SceneManager* sceneManager;
   Ogre::TexturePtr fontTexture;
   std::vector<std::vector<ImWchar>> codePointRanges;
-  ImGuiRenderable* renderable;
+  ImGuiRenderable renderable;
   bool frameEnded;
   DebugConsole* debugConsole;
   ImFont* defaultFont;

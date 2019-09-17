@@ -175,7 +175,7 @@ void MenuState::updateGui() {
       (windowWidth - widthOfAllButtons - widthOfAllSpacings) / 2;
   float buttonTopPos = (buttonAreaSize.y - buttonSize.y) / 2;
 
-  ImGui::PushFont(GuiManager::getInstance().getBigFont());
+  ImGui::PushFont(gameManager.getGuiManager()->getBigFont());
   ImVec4 originalButtonStyle = ImGui::GetStyle().Colors[ImGuiCol_Button];
   ImGui::GetStyle().Colors[ImGuiCol_Button] =
       ImVec4(originalButtonStyle.x, originalButtonStyle.y,

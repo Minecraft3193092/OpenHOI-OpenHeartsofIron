@@ -23,9 +23,6 @@ namespace openhoi {
 
 // Initializes the GUI manager
 GuiManager::GuiManager() {
-  // Create ImGui renderable
-  renderable = OGRE_NEW ImGuiRenderable();
-
   // Create ImGui context
   ImGui::CreateContext();
 
@@ -50,8 +47,6 @@ GuiManager::~GuiManager() {
   // Destroy ImGui context
   auto imGuiContext = ImGui::GetCurrentContext();
   if (imGuiContext) ImGui::DestroyContext();
-
-  OGRE_DELETE renderable;
 }
 
 // Render queue ended event
@@ -78,7 +73,7 @@ void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
   const float T = texelOffsetY;
   const float B = io.DisplaySize.y + texelOffsetY;
 
-  renderable->xform = Ogre::Matrix4(
+  renderable.xform = Ogre::Matrix4(
       2.0f / (R - L), 0.0f, 0.0f, (L + R) / (L - R), 0.0f, -2.0f / (B - T),
       0.0f, (T + B) / (B - T), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -91,7 +86,7 @@ void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
 
   for (int i = 0; i < drawData->CmdListsCount; ++i) {
     const ImDrawList* drawList = drawData->CmdLists[i];
-    renderable->updateVertexData(drawList->VtxBuffer, drawList->IdxBuffer);
+    renderable.updateVertexData(drawList->VtxBuffer, drawList->IdxBuffer);
 
     unsigned int startIdx = 0;
 
@@ -114,10 +109,10 @@ void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
       scTop = scTop < 0 ? 0 : (scTop > vpHeight ? vpHeight : scTop);
       scBottom = scBottom < 0 ? 0 : (scBottom > vpHeight ? vpHeight : scBottom);
 
-      if (renderable->material->getSupportedTechniques().empty())
-        renderable->material->load();  // Support for adding lights run time
+      if (renderable.material->getSupportedTechniques().empty())
+        renderable.material->load();  // Support for adding lights run time
 
-      Ogre::Pass* pass = renderable->material->getBestTechnique()->getPass(0);
+      Ogre::Pass* pass = renderable.material->getBestTechnique()->getPass(0);
       Ogre::TextureUnitState* st = pass->getTextureUnitState(0);
       if (drawCmd->TextureId != 0) {
         Ogre::ResourceHandle handle = (Ogre::ResourceHandle)drawCmd->TextureId;
@@ -134,9 +129,9 @@ void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
       renderSystem->setScissorTest(true, scLeft, scTop, scRight, scBottom);
 
       // Render
-      renderable->renderOperation.indexData->indexStart = startIdx;
-      renderable->renderOperation.indexData->indexCount = drawCmd->ElemCount;
-      sceneManager->_injectRenderWithPass(pass, renderable, false);
+      renderable.renderOperation.indexData->indexStart = startIdx;
+      renderable.renderOperation.indexData->indexCount = drawCmd->ElemCount;
+      sceneManager->_injectRenderWithPass(pass, &renderable, false);
 
       // Update counts
       startIdx += drawCmd->ElemCount;
@@ -173,13 +168,13 @@ void GuiManager::createFontTexture() {
 
 // Create GUI material
 void GuiManager::createMaterial() {
-  renderable->material = std::dynamic_pointer_cast<Ogre::Material>(
+  renderable.material = std::dynamic_pointer_cast<Ogre::Material>(
       Ogre::MaterialManager::getSingleton()
           .createOrRetrieve(
               "imgui/material",
               Ogre::ResourceGroupManager::INTERNAL_RESOURCE_GROUP_NAME)
           .first);
-  Ogre::Pass* pass = renderable->material->getTechnique(0)->getPass(0);
+  Ogre::Pass* pass = renderable.material->getTechnique(0)->getPass(0);
   pass->setCullingMode(Ogre::CULL_NONE);
   pass->setDepthFunction(Ogre::CMPF_ALWAYS_PASS);
   pass->setLightingEnabled(false);
@@ -194,7 +189,7 @@ void GuiManager::createMaterial() {
   texUnit->setTexture(fontTexture);
   texUnit->setTextureFiltering(Ogre::TFO_NONE);
 
-  renderable->material->load();
+  renderable.material->load();
 }
 
 // Load a single font

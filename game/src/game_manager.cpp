@@ -33,19 +33,19 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
   // Add ourself as an input listener
   addInputListener(this);
 
-  // Create GUI manager
-  GuiManager& guiManager = GuiManager::getInstance();
+  // Create GUI manager instance
+  guiManager = new GuiManager();
 
   // Create a generic scene manager
   sceneManager = mRoot->createSceneManager();
   sceneManager->addRenderQueueListener(mOverlaySystem);
-  sceneManager->addRenderQueueListener(&guiManager);
+  sceneManager->addRenderQueueListener(guiManager);
 
   // Register our scene with the RTSS
   Ogre::RTShader::ShaderGenerator::getSingleton().addSceneManager(sceneManager);
   
   // Initialize GUI manager
-  guiManager.initialize(sceneManager);
+  guiManager->initialize(sceneManager);
 
   // Create camera
   createCamera();
@@ -63,6 +63,9 @@ GameManager::~GameManager() {
     delete stateManager;
   }
 
+  // Destroy GUI manager
+  if (guiManager) delete guiManager;
+
   // Close down the game
   closeApp();
 
@@ -76,6 +79,11 @@ Options* const& GameManager::getOptions() const { return options; }
 // Gets the state manager
 StateManager* const& GameManager::getStateManager() const {
   return stateManager;
+}
+
+// Gets the GUI manager
+GuiManager* const& GameManager::getGuiManager() const {
+  return guiManager;
 }
 
 // Gets the OGRE scene manager
@@ -309,8 +317,7 @@ bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
   if (continueRendering) {
     // Start new ImGui frame
     Ogre::RenderWindow* renderWindow = getRenderWindow();
-    GuiManager::getInstance().newFrame(evt, renderWindow->getWidth(),
-                                       renderWindow->getHeight());
+    guiManager->newFrame(evt, renderWindow->getWidth(), renderWindow->getHeight());
 
     // Update GUI in current state
     stateManager->updateGui();
@@ -333,7 +340,7 @@ bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 bool GameManager::keyReleased(const OgreBites::KeyboardEvent& arg) {
   // Tilde key will toggle console everywhere
   if (arg.keysym.sym == '^' || arg.keysym.sym == 0x40000000)
-    GuiManager::getInstance().toggleDebugConsole();
+    guiManager->toggleDebugConsole();
 
   return true;
 }

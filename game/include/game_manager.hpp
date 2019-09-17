@@ -3,6 +3,7 @@
 #pragma once
 
 #include "options.hpp"
+#include "gui/gui_manager.hpp"
 #include "state/state_manager.hpp"
 
 #include <OgreApplicationContext.h>
@@ -40,6 +41,9 @@ class GameManager final : public OgreBites::ApplicationContext,
 
   // Gets the state manager
   StateManager* const& getStateManager() const;
+
+  // Gets the GUI manager
+  GuiManager* const& getGuiManager() const;
 
   // Gets the OGRE scene manager
   Ogre::SceneManager* const& getSceneManager() const;
@@ -89,6 +93,7 @@ class GameManager final : public OgreBites::ApplicationContext,
 
   Options* options;
   StateManager* stateManager;
+  GuiManager* guiManager;
   Ogre::SceneManager* sceneManager;
   Ogre::Camera* camera;
 };
