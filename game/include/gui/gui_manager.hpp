@@ -11,6 +11,7 @@
 #include <OgreRenderQueueListener.h>
 #include <OgreSceneManager.h>
 #include <SDL.h>
+#include <imgui.h>
 
 namespace openhoi {
 

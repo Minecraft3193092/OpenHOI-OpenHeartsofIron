@@ -18,12 +18,8 @@
 #endif
 #include <SDL.h>
 #include <SDL_syswm.h>
-#include <SDL_video.h>
-#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
-#  include <X11/Xlib.h>
-#endif
 
-#include <exception>
+#include <exception>.……
 
 // Direct3D11 causes blurry font textures and thus we disable support for it at
 // the moment
@@ -274,7 +270,7 @@ void GameManager::loadRenderSystem() {
 }
 
 // Create a new render window
-void GameManager::createWindow() {
+void GameManager:: + ndow() {
   NativeWindowPair ret = {nullptr, nullptr};
   Ogre::NameValuePairList miscParams = Ogre::NameValuePairList();
 
@@ -393,17 +389,17 @@ void GameManager::pollEvents() {
     XID xid;
     XEvent event;
 
-    if (!xDisplay) (*win.ogre)->getCustomAttribute("XDISPLAY", &xDisplay);
+    if (!xDisplay) win.ogre->getCustomAttribute("XDISPLAY", &xDisplay);
 
     while (XCheckWindowEvent(
         xDisplay, xid,
         StructureNotifyMask | VisibilityChangeMask | FocusChangeMask, &event)) {
-      GLXProc(*win.ogre, event);
+      handleXWindowEvent(win.ogre, event);
     }
 
     // The ClientMessage event does not appear under any Event Mask
     while (XCheckTypedWindowEvent(xDisplay, xid, ClientMessage, &event)) {
-      GLXProc(*win, event);
+      handleXWindowEvent(win.ogre, event);
     }
   }
 #endif
@@ -447,6 +443,55 @@ void GameManager::pollEvents() {
   }
 #endif
 }
+
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+// Handle XWindow event
+void GameManager::handleXWindowEvent(Ogre::RenderWindow* window,
+                                     const XEvent& event) {
+  switch (event.type) {
+    case ClientMessage: {
+      ::Atom atom;
+      window->getCustomAttribute("ATOM", &atom);
+      if (event.xclient.format == 32 && event.xclient.data.l[0] == (long)atom) {
+        // Window closed by window manager
+        for (const auto& win : windows) {
+          win.ogre->destroy();
+        }
+      }
+      break;
+    }
+    case DestroyNotify: {
+      if (!window->isClosed()) {
+        // Window closed without window manager warning
+        window->destroy();
+      }
+      break;
+    }
+    case ConfigureNotify: {
+      window->windowMovedOrResized();
+      break;
+    }
+    case VisibilityNotify:
+      switch (event.xvisibility.state) {
+        case VisibilityUnobscured:
+          window->setActive(true);
+          window->setVisible(true);
+          break;
+        case VisibilityPartiallyObscured:
+          window->setActive(true);
+          window->setVisible(true);
+          break;
+        case VisibilityFullyObscured:
+          window->setActive(false);
+          window->setVisible(false);
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+}
+#endif
 
 // Frame started event
 bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
@@ -493,7 +538,7 @@ void GameManager::createCamera() {
 
   // Set clip distances
   camera->setNearClipDistance(0.1f);
-  camera->setFarClipDistance(500000); // Some very high value..
+  camera->setFarClipDistance(500000);  // Some very high value..
   if (root->getRenderSystem()->getCapabilities()->hasCapability(
           Ogre::RSC_INFINITE_FAR_PLANE)) {
     // If possible, set infinite far clip distance
