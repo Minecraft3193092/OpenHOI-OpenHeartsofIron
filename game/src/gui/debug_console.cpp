@@ -81,7 +81,9 @@ void DebugConsole::draw() {
   ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing,
                       ImVec2(4, 1));  // Tighten spacing
 
-  for (int i = 0; static_cast<std::vector<std::string>::size_type>(i) < items.size(); i++) {
+  for (int i = 0;
+       static_cast<std::vector<std::string>::size_type>(i) < items.size();
+       i++) {
     const char* item = items[i].c_str();
     if (!filter.PassFilter(item)) continue;
 
@@ -203,8 +205,10 @@ int DebugConsole::textEditCallback(ImGuiInputTextCallbackData* data) {
           historyPos = history.size() - 1;
         else if (historyPos > 0)
           historyPos--;
-      } else if (data->EventKey == ImGuiKey_DownArrow && historyPos != -1 && static_cast<std::vector<std::string>::size_type>(++historyPos) >= history.size()) {
-          historyPos = -1;
+      } else if (data->EventKey == ImGuiKey_DownArrow && historyPos != -1 &&
+                 static_cast<std::vector<std::string>::size_type>(
+                     ++historyPos) >= history.size()) {
+        historyPos = -1;
       }
 
       if (prevHistoryPos != historyPos) {

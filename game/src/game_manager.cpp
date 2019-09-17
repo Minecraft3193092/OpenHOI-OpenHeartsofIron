@@ -43,7 +43,7 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
 
   // Register our scene with the RTSS
   Ogre::RTShader::ShaderGenerator::getSingleton().addSceneManager(sceneManager);
-  
+
   // Initialize GUI manager
   guiManager->initialize(sceneManager);
 
@@ -82,9 +82,7 @@ StateManager* const& GameManager::getStateManager() const {
 }
 
 // Gets the GUI manager
-GuiManager* const& GameManager::getGuiManager() const {
-  return guiManager;
-}
+GuiManager* const& GameManager::getGuiManager() const { return guiManager; }
 
 // Gets the OGRE scene manager
 Ogre::SceneManager* const& GameManager::getSceneManager() const {
@@ -317,7 +315,8 @@ bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
   if (continueRendering) {
     // Start new ImGui frame
     Ogre::RenderWindow* renderWindow = getRenderWindow();
-    guiManager->newFrame(evt, renderWindow->getWidth(), renderWindow->getHeight());
+    guiManager->newFrame(evt, renderWindow->getWidth(),
+                         renderWindow->getHeight());
 
     // Update GUI in current state
     stateManager->updateGui();

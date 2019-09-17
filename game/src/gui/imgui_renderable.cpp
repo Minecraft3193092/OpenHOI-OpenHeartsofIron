@@ -41,8 +41,8 @@ ImGuiRenderable::ImGuiRenderable() {
 
 // ImGui renderable destructor
 ImGuiRenderable::~ImGuiRenderable() {
-    OGRE_DELETE renderOperation.vertexData;
-    OGRE_DELETE renderOperation.indexData;
+  OGRE_DELETE renderOperation.vertexData;
+  OGRE_DELETE renderOperation.indexData;
 }
 
 // Update vertex data

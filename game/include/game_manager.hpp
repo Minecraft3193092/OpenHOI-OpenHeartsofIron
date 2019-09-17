@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "options.hpp"
 #include "gui/gui_manager.hpp"
+#include "options.hpp"
 #include "state/state_manager.hpp"
 
 #include <OgreApplicationContext.h>
