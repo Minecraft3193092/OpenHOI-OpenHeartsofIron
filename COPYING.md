@@ -35,8 +35,10 @@ List of all 3rd-party files in openhoi:
 Source files
  - `thirdparty/imgui/*` → [MIT](/legal/mit-imgui)
  *<sub><sup>(taken from [ocornut/imgui](https://github.com/ocornut/imgui))</sup></sub>*
- - `thirdparty/ogre-imgui/*` → [MIT](/legal/mit-ogre-imgui)
- *<sub><sup>(originally taken from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui)))</sup></sub>*
+ 
+openhoi source files heavily influenced by 3rd-party code:
+ - `game/include/gui/gui_manager.hpp`, `game/src/gui/gui_manager.cpp`, `game/include/gui/imgui_renderable.hpp`, `game/src/gui/imgui_renderable.cpp` → [MIT](/legal/mit-ogre-imgui)
+ *<sub><sup>(original code extracted from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui)))</sup></sub>*
 
 Graphic files
  - `dist/graphics/coat_of_arms/de.png` / `dev-assets/coat_of_arms/de.svg` → free for any use but with copyright holder attribution

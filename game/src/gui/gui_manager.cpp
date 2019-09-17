@@ -16,6 +16,11 @@
 #include <OgreTexture.h>
 #include <OgreTextureManager.h>
 #include <OgreViewport.h>
+#ifdef OPENHOI_OS_WINDOWS
+#  include <OgreD3D11RenderSystem.h>
+#endif
+#include <OgreGLRenderSystemCommon.h>
+#include <imgui_impl_sdl.h>
 
 #include <cassert>
 
@@ -141,9 +146,34 @@ void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
 }
 
 // Initialize GUI manager
-void GuiManager::initialize(Ogre::SceneManager* sceneManager) {
+void GuiManager::initialize(Ogre::SceneManager* sceneManager,
+                            Ogre::RenderSystem* renderSystem,
+                            std::vector<OgreBites::NativeWindowPair> windows) {
   // Set scene manager reference
   this->sceneManager = sceneManager;
+
+  // Get SDL window out of first window in window list
+  OgreBites::NativeWindowType* nativeWindowType = windows[0].native;
+  bool isSdlWindow = std::is_same<OgreBites::NativeWindowType, SDL_Window>::value;
+  assert(isSdlWindow && "Only SDL windows are supported");
+  window = static_cast<SDL_Window*>(nativeWindowType);
+
+// Initialize ImGui SDL implementation
+#ifdef OPENHOI_OS_WINDOWS
+    if (Ogre::D3D11RenderSystem* d3d11RenderSystem =
+            dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem)) {
+      ImGui_ImplSDL2_InitForD3D(window);
+    } else {
+#endif
+      Ogre::GLContext* glContext = nullptr;
+      if (Ogre::GLRenderSystemCommon* glRenderSystem =
+              dynamic_cast<Ogre::GLRenderSystemCommon*>(renderSystem)) {
+        glContext = glRenderSystem->_getCurrentContext();
+      }
+      ImGui_ImplSDL2_InitForOpenGL(window, glContext);
+#ifdef OPENHOI_OS_WINDOWS
+    }
+#endif
 }
 
 // Create font texture
@@ -249,21 +279,10 @@ ImFont* GuiManager::getBigFont() {
 void GuiManager::toggleDebugConsole() { debugConsole->toggle(); }
 
 // Render new GUI frame
-void GuiManager::newFrame(const Ogre::FrameEvent& evt, Ogre::uint32 windowWidth,
-                          Ogre::uint32 windowHeight) {
-  // Start new ImGui frame
-  frameEnded = false;
-  ImGuiIO& io = ImGui::GetIO();
-  io.DeltaTime = std::max(evt.timeSinceLastFrame, 1e-4f);
-
-  // Read keyboard modifiers inputs
-  io.KeyAlt = false;
-  io.KeySuper = false;
-
-  // Setup display size (every frame to accommodate for window resizing)
-  io.DisplaySize = ImVec2((float)windowWidth, (float)windowHeight);
-
+void GuiManager::newFrame() {
   // Start the ImGui frame
+  frameEnded = false;
+  ImGui_ImplSDL2_NewFrame(window);
   ImGui::NewFrame();
 
   // Draw debug console

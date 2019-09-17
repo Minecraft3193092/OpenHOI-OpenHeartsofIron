@@ -5,9 +5,13 @@
 #include "gui/debug_console.hpp"
 #include "gui/imgui_renderable.hpp"
 
+#include <hoibase/helper/os.hpp>
+
+#include <OgreApplicationContextBase.h>
 #include <OgrePrerequisites.h>
 #include <OgreRenderQueueListener.h>
 #include <OgreSceneManager.h>
+#include <SDL.h>
 
 namespace openhoi {
 
@@ -21,7 +25,9 @@ class GuiManager final : public Ogre::RenderQueueListener {
   ~GuiManager();
 
   // Initialize GUI manager
-  void initialize(Ogre::SceneManager* sceneManager);
+  void initialize(Ogre::SceneManager* sceneManager,
+                  Ogre::RenderSystem* renderSystem,
+                  std::vector<OgreBites::NativeWindowPair> windows);
 
   // Render queue ended event
   virtual void renderQueueEnded(Ogre::uint8 queueGroupId,
@@ -29,8 +35,7 @@ class GuiManager final : public Ogre::RenderQueueListener {
                                 bool& /*repeatThisInvocation*/);
 
   // Render new GUI frame
-  void newFrame(const Ogre::FrameEvent& evt, Ogre::uint32 windowWidth,
-                Ogre::uint32 windowHeight);
+  void newFrame();
 
   // Gets the default font
   ImFont* getDefaultFont();
@@ -62,6 +67,7 @@ class GuiManager final : public Ogre::RenderQueueListener {
   DebugConsole* debugConsole;
   ImFont* defaultFont;
   ImFont* bigFont;
+  SDL_Window* window;
 };
 
 }  // namespace openhoi

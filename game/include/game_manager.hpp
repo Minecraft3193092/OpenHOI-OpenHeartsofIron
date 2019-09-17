@@ -6,12 +6,13 @@
 #include "options.hpp"
 #include "state/state_manager.hpp"
 
+#include <hoibase/file/filesystem.hpp>
+#include <hoibase/helper/os.hpp>
+
 #include <OgreApplicationContext.h>
 #include <OgreInput.h>
 #include <OgrePrerequisites.h>
 #include <OgreSceneManager.h>
-#include <hoibase/file/filesystem.hpp>
-#include <hoibase/helper/os.hpp>
 
 #include <array>
 #include <map>

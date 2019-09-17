@@ -4,8 +4,9 @@
 
 #include "state.hpp"
 
-#include <OgreRectangle2D.h>
 #include <hoibase/helper/os.hpp>
+
+#include <OgreRectangle2D.h>
 
 namespace openhoi {
 

@@ -69,6 +69,7 @@ list(APPEND GAME_SOURCES ${STATE_SOURCES})
 
 # Add third-party library ImGui
 list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imconfig.h
+                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_impl_sdl.h
                            ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_internal.h
                            ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui.h
                            ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imstb_rectpack.h
@@ -80,6 +81,7 @@ list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/imgui)
 
 list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui.cpp
                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_draw.cpp
+                          ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_impl_sdl.cpp
                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_widgets.cpp)
 source_group("Source Files\\thirdparty\\imgui" FILES ${IMGUI_SOURCES})
 set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${IMGUI_SOURCES})

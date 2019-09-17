@@ -4,6 +4,8 @@
 #include "gui/gui_manager.hpp"
 #include "state/menu_state.hpp"
 
+#include <hoibase/file/file_access.hpp>
+
 #include <Ogre.h>
 #include <OgreLogManager.h>
 #include <OgreOverlaySystem.h>
@@ -11,8 +13,10 @@
 #include <OgreRoot.h>
 #include <OgreSTBICodec.h>
 #include <OgreTextureManager.h>
+#ifdef OPENHOI_OS_WINDOWS
+#  include <OgreD3D11RenderSystem.h>
+#endif
 #include <SDL.h>
-#include <hoibase/file/file_access.hpp>
 
 #include <exception>
 
@@ -45,7 +49,7 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
   Ogre::RTShader::ShaderGenerator::getSingleton().addSceneManager(sceneManager);
 
   // Initialize GUI manager
-  guiManager->initialize(sceneManager);
+  guiManager->initialize(sceneManager, mRoot->getRenderSystem(), mWindows);
 
   // Create camera
   createCamera();
@@ -137,12 +141,10 @@ void GameManager::createRoot() {
 
 // Load and configure the render system
 void GameManager::loadRenderSystem() {
-  bool directX = false;
 #if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
   // Prefer DirectX11 on Windows
   try {
     mRoot->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_D3D11));
-    directX = true;
   } catch (const std::exception&) {
     // do nothing
   }
@@ -172,8 +174,10 @@ void GameManager::loadRenderSystem() {
   Ogre::RenderSystem* renderSystem = mRoot->getAvailableRenderers().front();
 
   // Configure render system
+  bool d3d11 = false;
 #if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
-  if (directX) {
+  d3d11 = Ogre::D3D11RenderSystem* d3d11rs = dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem));
+  if (d3d11) {
     // Set driver type to hardware
     renderSystem->setConfigOption("Driver type", "Hardware");
 
@@ -188,7 +192,7 @@ void GameManager::loadRenderSystem() {
     renderSystem->setConfigOption("Max Requested Feature Levels", "11.0");
   }
 #endif
-  if (!directX) {
+  if (!d3d11) {
     // Set RTT Preferred Mode to FBO
     renderSystem->setConfigOption("RTT Preferred Mode", "FBO");
   }
@@ -239,7 +243,7 @@ void GameManager::loadRenderSystem() {
   mRoot->setRenderSystem(renderSystem);
 }
 
-// Create a new render window  (overrides OGRE Bites)
+// Create a new render window (overrides OGRE Bites)
 OgreBites::NativeWindowPair GameManager::createWindow(
     const Ogre::String& name, uint32_t w /* = 0*/, uint32_t h /* = 0*/,
     Ogre::NameValuePairList miscParams /* = Ogre::NameValuePairList() */) {
@@ -313,10 +317,8 @@ void GameManager::loadResources() {
 bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
   bool continueRendering = OgreBites::ApplicationContext::frameStarted(evt);
   if (continueRendering) {
-    // Start new ImGui frame
-    Ogre::RenderWindow* renderWindow = getRenderWindow();
-    guiManager->newFrame(evt, renderWindow->getWidth(),
-                         renderWindow->getHeight());
+    // Start new GUI frame
+    guiManager->newFrame();
 
     // Update GUI in current state
     stateManager->updateGui();
