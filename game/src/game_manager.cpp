@@ -19,7 +19,7 @@
 #include <SDL.h>
 #include <SDL_syswm.h>
 
-#include <exception>.……
+#include <exception>
 
 // Direct3D11 causes blurry font textures and thus we disable support for it at
 // the moment
@@ -270,7 +270,7 @@ void GameManager::loadRenderSystem() {
 }
 
 // Create a new render window
-void GameManager:: + ndow() {
+void GameManager::createWindow() {
   NativeWindowPair ret = {nullptr, nullptr};
   Ogre::NameValuePairList miscParams = Ogre::NameValuePairList();
 
