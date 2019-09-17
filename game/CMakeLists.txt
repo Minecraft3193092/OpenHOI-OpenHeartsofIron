@@ -43,12 +43,14 @@ list(APPEND GAME_SOURCES ${GRAPHIC_SOURCES})
 # Add gui code
 list(APPEND GUI_INCLUDES include/gui/debug_console.hpp
                          include/gui/gui_element.hpp
-                         include/gui/gui_manager.hpp)
+                         include/gui/gui_manager.hpp
+                         include/gui/imgui_renderable.hpp)
 source_group("Header Files\\gui" FILES ${GUI_INCLUDES})
 list(APPEND GAME_INCLUDES ${GUI_INCLUDES})
 
 list(APPEND GUI_SOURCES src/gui/debug_console.cpp
-                        src/gui/gui_manager.cpp)
+                        src/gui/gui_manager.cpp
+                        src/gui/imgui_renderable.cpp)
 source_group("Source Files\\gui" FILES ${GUI_SOURCES})
 list(APPEND GAME_SOURCES ${GUI_SOURCES})
 
@@ -82,15 +84,6 @@ list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui.cpp
 source_group("Source Files\\thirdparty\\imgui" FILES ${IMGUI_SOURCES})
 set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${IMGUI_SOURCES})
 
-# Add third-party OGRE ImGui binding
-list(APPEND OGRE_IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/ogre-imgui/ImguiManager.h)
-source_group("Header Files\\thirdparty\\ogre-imgui" FILES ${OGRE_IMGUI_INCLUDES})
-set(THIRDPARTY_INCLUDES ${THIRDPARTY_INCLUDES} ${OGRE_IMGUI_INCLUDES})
-list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/ogre-imgui)
-
-list(APPEND OGRE_IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/ogre-imgui/ImguiManager.cpp)
-source_group("Source Files\\thirdparty\\ogre-imgui" FILES ${OGRE_IMGUI_SOURCES})
-set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${OGRE_IMGUI_SOURCES})
 
 
 # Create executable

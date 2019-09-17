@@ -199,7 +199,7 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
 
     // Create filesystem::path from dlInfo.dli_fname.
     // dlInfo.dli_fname can be something like:
-    //  - /usr/local/lib/libOgreMain.so.1.12.1
+    //  - /usr/local/lib/libOgreMain.so.1.12.2
     //  - /usr/lib/x86_64-linux-gnu/libOgreMain.so
     //  - etc.
     filesystem::path libFilePath = filesystem::path(dlInfo.dli_fname);
@@ -208,7 +208,7 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
     filesystem::path libDir = libFilePath.parent_path();
 
     // Build the expected file name based on the dlInfo.dli_fname. We want to
-    // use the same extension (e.g. ".so.1.12.1")
+    // use the same extension (e.g. ".so.1.12.2")
     filesystem::path fileNameOnly = libFilePath.filename();
     size_t dotIndex = fileNameOnly.u8string().find(".");
     std::string extension;

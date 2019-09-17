@@ -3,15 +3,16 @@
 #pragma once
 
 #include "gui/debug_console.hpp"
+#include "gui/imgui_renderable.hpp"
 
-#include <ImguiManager.h>
 #include <OgrePrerequisites.h>
+#include <OgreRenderQueueListener.h>
 #include <OgreSceneManager.h>
 
 namespace openhoi {
 
 // GUI manager for openhoi
-class GuiManager final {
+class GuiManager final : public Ogre::RenderQueueListener {
  public:
   static GuiManager& getInstance() {
     // Thread-safe C++11 singleton
@@ -22,11 +23,10 @@ class GuiManager final {
   // Initialize GUI manager
   void initialize(Ogre::SceneManager* sceneManager);
 
-  // Load and create fonts
-  void loadFonts();
-
-  // Get input listener
-  OgreBites::InputListener* getInputListener();
+  // Render queue ended event
+  virtual void renderQueueEnded(Ogre::uint8 queueGroupId,
+                                const Ogre::String& invocation,
+                                bool& /*repeatThisInvocation*/);
 
   // Render new GUI frame
   void newFrame(const Ogre::FrameEvent& evt, Ogre::uint32 windowWidth,
@@ -52,7 +52,20 @@ class GuiManager final {
   // Configure GUI
   void configureGui();
 
-  Ogre::ImguiManager* imGuiManager;
+  // Load a single font
+  ImFont* loadFont(std::string name);
+
+  // Create font texture
+  void createFontTexture();
+
+  // Create GUI material
+  void createMaterial();
+
+  Ogre::SceneManager* sceneManager;
+  Ogre::TexturePtr fontTexture;
+  std::vector<std::vector<ImWchar>> codePointRanges;
+  ImGuiRenderable* renderable;
+  bool frameEnded;
   DebugConsole* debugConsole;
   ImFont* defaultFont;
   ImFont* bigFont;

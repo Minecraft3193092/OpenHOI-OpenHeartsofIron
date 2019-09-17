@@ -30,20 +30,22 @@ GameManager::GameManager() : OgreBites::ApplicationContext(OPENHOI_GAME_NAME) {
   // Initialize render system and resources
   initApp();
 
+  // Add ourself as an input listener
+  addInputListener(this);
+
   // Create GUI manager
   GuiManager& guiManager = GuiManager::getInstance();
-
-  // Add input listeners
-  addInputListener(this);
-  addInputListener(guiManager.getInputListener());
 
   // Create a generic scene manager
   sceneManager = mRoot->createSceneManager();
   sceneManager->addRenderQueueListener(mOverlaySystem);
-  guiManager.initialize(sceneManager);
+  sceneManager->addRenderQueueListener(&guiManager);
 
   // Register our scene with the RTSS
   Ogre::RTShader::ShaderGenerator::getSingleton().addSceneManager(sceneManager);
+  
+  // Initialize GUI manager
+  guiManager.initialize(sceneManager);
 
   // Create camera
   createCamera();
@@ -299,9 +301,6 @@ void GameManager::loadResources() {
         resourceGroup);
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(resourceGroup);
   }
-
-  // Load and create fonts
-  GuiManager::getInstance().loadFonts();
 }
 
 // Frame started event (override OGRE Bites)
@@ -333,8 +332,6 @@ bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 // Key released event
 bool GameManager::keyReleased(const OgreBites::KeyboardEvent& arg) {
   // Tilde key will toggle console everywhere
-  Ogre::LogManager::getSingletonPtr()->logMessage(
-      "RELASE: " + std::to_string(arg.keysym.sym));
   if (arg.keysym.sym == '^' || arg.keysym.sym == 0x40000000)
     GuiManager::getInstance().toggleDebugConsole();
 

@@ -29,8 +29,9 @@ find_path(
     DOC "The directory where Ogre.h resides")
 
 
+set (FINDOGRE_VERSION 1.12.1)
 if(${OGRE_NIX_MANUAL_BUILD})
-    set(NON_PREFIX_SUFFIX .so.1.12.1)
+    set(NON_PREFIX_SUFFIX .so.${FINDOGRE_VERSION})
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BAK ${CMAKE_FIND_LIBRARY_SUFFIXES})
     list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ${NON_PREFIX_SUFFIX})
 endif()
@@ -49,7 +50,7 @@ find_library(
     /usr/local/lib
     /sw/lib
     /opt/local/lib
-    PATH_SUFFIXES .so.1.12.1
+    PATH_SUFFIXES .so.${FINDOGRE_VERSION}
     DOC "The OGRE OgreMain library")
 
 find_library(
