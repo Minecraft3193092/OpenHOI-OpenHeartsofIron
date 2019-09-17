@@ -196,9 +196,7 @@ void GuiManager::createMaterial() {
 ImFont* GuiManager::loadFont(std::string name) {
   Ogre::FontPtr font =
       Ogre::FontManager::getSingleton().getByName(name, Ogre::RGN_DEFAULT);
-  assert(font, "Font " + name + " does not exist");
-  assert(font->getType() == Ogre::FT_TRUETYPE,
-         "Font " + name + " must be of FT_TRUETYPE");
+  assert(font && font->getType() == Ogre::FT_TRUETYPE);
   Ogre::DataStreamPtr dataStreamPtr =
       Ogre::ResourceGroupManager::getSingleton().openResource(font->getSource(),
                                                               font->getGroup());
