@@ -72,9 +72,6 @@ class GameManager final : public Ogre::FrameListener,
   // Frame rendering queued event
   virtual bool frameRenderingQueued(const Ogre::FrameEvent& /*evt*/);
 
-  // Key released event
-  // bool keyReleased(const KeyboardEvent& arg);
-
   // Hook point where shader based technique will be created. Will be called
   // whenever the material manager won't find appropriate technique to satisfy
   // the target scheme name. If the scheme name is out target RT Shader System
@@ -121,6 +118,33 @@ class GameManager final : public Ogre::FrameListener,
 
   // Load resources
   void loadResources();
+
+  // Key down event
+  void keyDown(const SDL_Event evt);
+
+  // Key up event
+  void keyUp(const SDL_Event evt);
+
+  // Mouse button down event
+  void mouseDown(const SDL_Event evt);
+
+  // Mouse button up event
+  void mouseUp(const SDL_Event evt);
+
+  // Mouse wheel rolled event
+  void mouseWheelRolled(const SDL_Event evt);
+
+  // Mouse moved event
+  void mouseMoved(const SDL_Event evt);
+
+  // Finger down  event
+  void fingerDown(const SDL_Event evt);
+
+  // Finger up event
+  void fingerUp(const SDL_Event evt);
+
+  // Finger moved event
+  void fingerMoved(const SDL_Event evt);
 
   // Gets the full path to the provided OGRE plugin
   std::string getPluginPath(std::string pluginName);

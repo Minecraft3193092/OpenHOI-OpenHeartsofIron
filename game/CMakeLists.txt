@@ -24,7 +24,7 @@ endif()
 
 # Add main code
 list(APPEND GAME_INCLUDES include/game_manager.hpp
-                            include/options.hpp)
+                          include/options.hpp)
 source_group("Header Files" FILES ${GAME_INCLUDES})
 list(APPEND GAME_SOURCES src/game_manager.cpp
                          src/openhoi.cpp

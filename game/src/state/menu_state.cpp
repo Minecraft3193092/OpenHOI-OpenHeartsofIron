@@ -35,7 +35,8 @@ void MenuState::shutdown() {
 // Used to create the scene
 void MenuState::createScene() {
   // Set ambient light
-  GameManager::getInstance().getSceneManager()->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+  GameManager::getInstance().getSceneManager()->setAmbientLight(
+      Ogre::ColourValue(1.0f, 1.0f, 1.0f));
 
   // Create background image
   createBackground();
@@ -44,7 +45,8 @@ void MenuState::createScene() {
   createLogo();
 
   // Move camera
-  GameManager::getInstance().getCamera()->setPosition((Ogre::Real)0, (Ogre::Real)240, (Ogre::Real)350);
+  GameManager::getInstance().getCamera()->setPosition(
+      (Ogre::Real)0, (Ogre::Real)240, (Ogre::Real)350);
 }
 
 // Create background image
@@ -142,9 +144,7 @@ void MenuState::createLogo() {
 }
 
 // Used to update the scene
-void MenuState::updateScene(const Ogre::FrameEvent& evt) {
-
-}
+void MenuState::updateScene(const Ogre::FrameEvent& evt) {}
 
 // Used to update the GUI of the scene
 void MenuState::updateGui() {
@@ -163,6 +163,7 @@ void MenuState::updateGui() {
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
   ImGui::Begin("Game Menu Buttons", NULL,
                ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+                   ImGuiWindowFlags_NoBringToFrontOnFocus |
                    ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |
                    ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
 

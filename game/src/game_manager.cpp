@@ -93,8 +93,6 @@ GameManager::GameManager() {
   // Create state manager and startup with menu state
   stateManager = new StateManager();
   stateManager->startup(new MenuState());
-
-    guiManager->toggleDebugConsole();
 }
 
 // Destroys the game manager
@@ -402,17 +400,42 @@ void GameManager::pollEvents() {
 
     // Handle event for the rest of the game
     switch (event.type) {
-      case SDL_QUIT:
-        root->queueEndRendering();
+      case SDL_KEYDOWN:
+        keyDown(event);
+        break;
+      case SDL_KEYUP:
+        keyUp(event);
+        break;
+      case SDL_MOUSEBUTTONDOWN:
+        mouseDown(event);
+        break;
+      case SDL_MOUSEBUTTONUP:
+        mouseUp(event);
+        break;
+      case SDL_MOUSEWHEEL:
+        mouseWheelRolled(event);
+        break;
+      case SDL_MOUSEMOTION:
+        mouseMoved(event);
+        break;
+      case SDL_FINGERDOWN:
+        fingerDown(event);
+        break;
+      case SDL_FINGERUP:
+        fingerUp(event);
+        break;
+      case SDL_FINGERMOTION:
+        fingerMoved(event);
         break;
       case SDL_WINDOWEVENT:
         if (event.window.event != SDL_WINDOWEVENT_RESIZED) continue;
         if (event.window.windowID != SDL_GetWindowID(window.sdl)) continue;
-
         window.ogre->windowMovedOrResized();
         break;
+      case SDL_QUIT:
+        root->queueEndRendering();
+        break;
       default:
-        //_fireInputEvent(convert(event), event.window.windowID);
         break;
     }
   }
@@ -425,6 +448,38 @@ void GameManager::pollEvents() {
   }
 #endif
 }
+
+// Key down event
+void GameManager::keyDown(const SDL_Event evt) {}
+
+// Key up event
+void GameManager::keyUp(const SDL_Event evt) {
+  if (evt.key.keysym.sym == SDLK_CARET) {
+    // Show debug console on caret button click
+    guiManager->toggleDebugConsole();
+  }
+}
+
+// Mouse button down event
+void GameManager::mouseDown(const SDL_Event evt) {}
+
+// Mouse button up event
+void GameManager::mouseUp(const SDL_Event evt) {}
+
+// Mouse wheel rolled event
+void GameManager::mouseWheelRolled(const SDL_Event evt) {}
+
+// Mouse moved event
+void GameManager::mouseMoved(const SDL_Event evt) {}
+
+// Finger down  event
+void GameManager::fingerDown(const SDL_Event evt) {}
+
+// Finger up event
+void GameManager::fingerUp(const SDL_Event evt) {}
+
+// Finger moved event
+void GameManager::fingerMoved(const SDL_Event evt) {}
 
 // Frame started event
 bool GameManager::frameStarted(const Ogre::FrameEvent& /*evt*/) {
@@ -447,17 +502,6 @@ bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
   return true;
 }
-
-// Key released event
-/*
-bool GameManager::keyReleased(const KeyboardEvent& arg) {
-  // Tilde key will toggle console everywhere
-  if (arg.keysym.sym == '^' || arg.keysym.sym == 0x40000000)
-    guiManager->toggleDebugConsole();
-
-  return true;
-}
-*/
 
 // Create camera
 void GameManager::createCamera() {

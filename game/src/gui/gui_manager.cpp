@@ -145,12 +145,12 @@ void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
 
   renderSystem->setScissorTest(false);
 
-   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-      SDL_Window* backupCurrentWindow = SDL_GL_GetCurrentWindow();
-      SDL_GLContext backupCurrentContext = SDL_GL_GetCurrentContext();
-      ImGui::UpdatePlatformWindows();
-      ImGui::RenderPlatformWindowsDefault();
-      SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
+  if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    SDL_Window* backupCurrentWindow = SDL_GL_GetCurrentWindow();
+    SDL_GLContext backupCurrentContext = SDL_GL_GetCurrentContext();
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
+    SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
   }
 }
 
@@ -317,7 +317,7 @@ void GuiManager::configureGui() {
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
   // Enable viewports
-  //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+  // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
   // Set GUI style
   ImGuiStyle& style = ImGui::GetStyle();
