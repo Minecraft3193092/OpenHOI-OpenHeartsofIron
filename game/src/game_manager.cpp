@@ -90,6 +90,8 @@ GameManager::GameManager() {
   // Create state manager and startup with menu state
   stateManager = new StateManager();
   stateManager->startup(new MenuState());
+
+    guiManager->toggleDebugConsole();
 }
 
 // Destroys the game manager

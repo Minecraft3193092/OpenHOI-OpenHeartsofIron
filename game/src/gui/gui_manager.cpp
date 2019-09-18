@@ -142,7 +142,16 @@ void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
       startIdx += drawCmd->ElemCount;
     }
   }
+
   renderSystem->setScissorTest(false);
+
+   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+      SDL_Window* backupCurrentWindow = SDL_GL_GetCurrentWindow();
+      SDL_GLContext backupCurrentContext = SDL_GL_GetCurrentContext();
+      ImGui::UpdatePlatformWindows();
+      ImGui::RenderPlatformWindowsDefault();
+      SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
+  }
 }
 
 // Initialize GUI manager
@@ -307,6 +316,9 @@ void GuiManager::configureGui() {
   // Enable docking
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+  // Enable viewports
+  //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
   // Set GUI style
   ImGuiStyle& style = ImGui::GetStyle();
   style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
@@ -387,6 +399,11 @@ void GuiManager::configureGui() {
   style.ScrollbarRounding = 2;
   style.GrabRounding = 3;
   style.TabRounding = 3;
+
+  if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    style.WindowRounding = 0.0f;
+    style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+  }
 }
 
 }  // namespace openhoi
