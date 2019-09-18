@@ -15,12 +15,6 @@
 
 namespace openhoi {
 
-// Link between a OGRE render window and a SDL window
-struct NativeWindowPair {
-  Ogre::RenderWindow* ogre;
-  SDL_Window* sdl;
-};
-
 // GUI manager for openhoi
 class GuiManager final : public Ogre::RenderQueueListener {
  public:
@@ -32,8 +26,7 @@ class GuiManager final : public Ogre::RenderQueueListener {
 
   // Initialize GUI manager
   void initialize(Ogre::SceneManager* sceneManager,
-                  Ogre::RenderSystem* renderSystem,
-                  std::vector<NativeWindowPair> windows);
+                  Ogre::RenderSystem* renderSystem, SDL_Window* window);
 
   // Render queue ended event
   virtual void renderQueueEnded(Ogre::uint8 queueGroupId,

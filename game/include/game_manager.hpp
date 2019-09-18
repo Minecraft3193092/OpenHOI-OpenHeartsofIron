@@ -22,6 +22,12 @@
 
 namespace openhoi {
 
+// Link between a OGRE render window and a SDL window
+struct NativeWindowPair {
+  Ogre::RenderWindow* ogre;
+  SDL_Window* sdl;
+};
+
 // Manager used to handle the main game loop and the basic logic required to run
 // the game
 class GameManager final : public Ogre::FrameListener,
@@ -95,6 +101,9 @@ class GameManager final : public Ogre::FrameListener,
   // Create a new render window
   void createWindow();
 
+  // Destroy the render window
+  void destroyWindow();
+
   // Load and configure the render system
   void loadRenderSystem();
 
@@ -119,7 +128,7 @@ class GameManager final : public Ogre::FrameListener,
   Ogre::Root* root;
   Ogre::OverlaySystem* overlaySystem;
   Ogre::SceneManager* sceneManager;
-  std::vector<NativeWindowPair> windows;
+  NativeWindowPair window;
   Ogre::Camera* camera;
   Ogre::RTShader::ShaderGenerator* shaderGenerator;
 };

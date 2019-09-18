@@ -82,7 +82,7 @@ GameManager::GameManager() {
   Ogre::RTShader::ShaderGenerator::getSingleton().addSceneManager(sceneManager);
 
   // Initialize GUI manager
-  guiManager->initialize(sceneManager, root->getRenderSystem(), windows);
+  guiManager->initialize(sceneManager, root->getRenderSystem(), window.sdl);
 
   // Create camera
   createCamera();
@@ -109,10 +109,8 @@ GameManager::~GameManager() {
   Ogre::MaterialManager::getSingleton().removeListener(this);
   Ogre::RTShader::ShaderGenerator::destroy();
 
-  // Destroy windows
-  for (const auto& win : windows) {
-    root->destroyRenderTarget(win.ogre);
-  }
+  // Destroy window
+  destroyWindow();
 
   // Destroy overlay system
   if (overlaySystem) delete overlaySystem;
@@ -142,7 +140,7 @@ Ogre::Camera* const& GameManager::getCamera() const { return camera; }
 
 // Get the OGRE render window
 Ogre::RenderWindow* const& GameManager::getRenderWindow() const {
-  return windows.empty() ? nullptr : windows[0].ogre;
+  return window.ogre;
 }
 
 // Start the main loop
@@ -271,7 +269,7 @@ void GameManager::loadRenderSystem() {
 
 // Create a new render window
 void GameManager::createWindow() {
-  NativeWindowPair ret = {nullptr, nullptr};
+  window = {nullptr, nullptr};
   Ogre::NameValuePairList miscParams = Ogre::NameValuePairList();
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -284,21 +282,21 @@ void GameManager::createWindow() {
   // Create SDL window
   int flags =
       windowDesc.useFullScreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE;
-  ret.sdl = SDL_CreateWindow(windowDesc.name.c_str(), SDL_WINDOWPOS_UNDEFINED,
-                             SDL_WINDOWPOS_UNDEFINED, windowDesc.width,
-                             windowDesc.height, flags);
+  window.sdl = SDL_CreateWindow(
+      windowDesc.name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      windowDesc.width, windowDesc.height, flags);
 
   // Adjust window style
   if (options->GetWindowMode() != WindowMode::FULLSCREEN) {
-    SDL_SetWindowResizable(ret.sdl, SDL_FALSE);
+    SDL_SetWindowResizable(window.sdl, SDL_FALSE);
     if (options->GetWindowMode() == WindowMode::BORDERLESS)
-      SDL_SetWindowBordered(ret.sdl, SDL_FALSE);
+      SDL_SetWindowBordered(window.sdl, SDL_FALSE);
   }
 
   // Set window manager information
   SDL_SysWMinfo wmInfo;
   SDL_VERSION(&wmInfo.version);
-  SDL_GetWindowWMInfo(ret.sdl, &wmInfo);
+  SDL_GetWindowWMInfo(window.sdl, &wmInfo);
 #ifdef OPENHOI_OS_WINDOWS
   windowDesc.miscParams["externalWindowHandle"] =
       Ogre::StringConverter::toString(size_t(wmInfo.info.win.window));
@@ -310,13 +308,16 @@ void GameManager::createWindow() {
       Ogre::StringConverter::toString(size_t(wmInfo.info.cocoa.window));
 #endif
 
-  if (!windows.empty()) {
-    // additional windows should reuse the context
-    miscParams["currentGLContext"] = "true";
-  }
+  window.ogre = root->createRenderWindow(windowDesc);
+}
 
-  ret.ogre = root->createRenderWindow(windowDesc);
-  windows.push_back(ret);
+// Destroy the render window
+void GameManager::destroyWindow() {
+  if (window.ogre) root->destroyRenderTarget(window.ogre);
+
+  if (window.sdl) SDL_DestroyWindow(window.sdl);
+
+  SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 // Locate resources
@@ -373,7 +374,7 @@ void GameManager::loadResources() {
 
 // Poll for events
 void GameManager::pollEvents() {
-  if (windows.empty()) {
+  if (!window.sdl) {
     // SDL events not initialized
     return;
   }
@@ -390,13 +391,9 @@ void GameManager::pollEvents() {
         break;
       case SDL_WINDOWEVENT:
         if (event.window.event != SDL_WINDOWEVENT_RESIZED) continue;
+        if (event.window.windowID != SDL_GetWindowID(window.sdl)) continue;
 
-        for (const auto& win : windows) {
-          if (event.window.windowID != SDL_GetWindowID(win.sdl)) continue;
-
-          Ogre::RenderWindow* ogreWindow = win.ogre;
-          ogreWindow->windowMovedOrResized();
-        }
+        window.ogre->windowMovedOrResized();
         break;
       default:
         //_fireInputEvent(convert(event), event.window.windowID);

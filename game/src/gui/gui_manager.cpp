@@ -148,12 +148,12 @@ void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
 // Initialize GUI manager
 void GuiManager::initialize(Ogre::SceneManager* sceneManager,
                             Ogre::RenderSystem* renderSystem,
-                            std::vector<NativeWindowPair> windows) {
+                            SDL_Window* window) {
   // Set scene manager reference
   this->sceneManager = sceneManager;
 
-  // Get SDL window out of first window in window list
-  window = windows[0].sdl;
+  // Set window reference
+  this->window = window;
 
 // Initialize ImGui SDL implementation
 #ifdef OPENHOI_OS_WINDOWS
