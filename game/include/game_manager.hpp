@@ -54,6 +54,9 @@ class GameManager final : public Ogre::FrameListener,
   // Gets the GUI manager
   GuiManager* const& getGuiManager() const;
 
+  // Gets the OGRE root
+  Ogre::Root* const& getRoot() const;
+
   // Gets the OGRE scene manager
   Ogre::SceneManager* const& getSceneManager() const;
 

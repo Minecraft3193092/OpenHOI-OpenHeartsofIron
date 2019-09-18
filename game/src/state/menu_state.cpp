@@ -35,14 +35,16 @@ void MenuState::shutdown() {
 // Used to create the scene
 void MenuState::createScene() {
   // Set ambient light
-  GameManager::getInstance().getSceneManager()->setAmbientLight(
-      Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+  GameManager::getInstance().getSceneManager()->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
 
   // Create background image
   createBackground();
 
   // Create logo
   createLogo();
+
+  // Move camera
+  GameManager::getInstance().getCamera()->setPosition((Ogre::Real)0, (Ogre::Real)240, (Ogre::Real)350);
 }
 
 // Create background image
@@ -140,8 +142,8 @@ void MenuState::createLogo() {
 }
 
 // Used to update the scene
-void MenuState::updateScene() {
-  // xxxx
+void MenuState::updateScene(const Ogre::FrameEvent& evt) {
+
 }
 
 // Used to update the GUI of the scene

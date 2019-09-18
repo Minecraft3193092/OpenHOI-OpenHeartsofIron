@@ -15,6 +15,9 @@
 #  ifndef WIN32_LEAN_AND_MEAN
 #    define WIN32_LEAN_AND_MEAN
 #  endif
+#  if !defined(NOMINMAX) && defined(_MSC_VER)
+#    define NOMINMAX
+#  endif
 #  include <windows.h>
 #  define OPENHOI_OS_WINDOWS
 #  ifdef _WIN64

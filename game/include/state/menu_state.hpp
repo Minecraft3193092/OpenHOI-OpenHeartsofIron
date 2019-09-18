@@ -4,8 +4,6 @@
 
 #include "state.hpp"
 
-#include <hoibase/helper/os.hpp>
-
 #include <OgreRectangle2D.h>
 
 namespace openhoi {
@@ -26,7 +24,7 @@ class MenuState final : public State {
   void createScene();
 
   // Used to update the scene
-  void updateScene();
+  void updateScene(const Ogre::FrameEvent& evt);
 
   // Used to update the GUI of the scene
   void updateGui();

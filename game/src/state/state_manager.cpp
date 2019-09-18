@@ -26,12 +26,12 @@ void StateManager::startup(State* firstState) {
 }
 
 // Update the current state
-void StateManager::updateState() {
+void StateManager::updateState(const Ogre::FrameEvent& evt) {
   // Check if a state change was requested. If yes, switch to the new state
   if (newState != nullptr) switchToNewState(newState);
 
   // If a state is active, update it
-  if (currentState != nullptr) currentState->updateScene();
+  if (currentState != nullptr) currentState->updateScene(evt);
 }
 
 // Update the GUI of the current state

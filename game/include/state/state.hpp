@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <OgrePrerequisites.h>
+
 namespace openhoi {
 
 // Abstract State base class
@@ -20,7 +22,7 @@ class State {
   virtual void createScene() = 0;
 
   // Used to update the scene
-  virtual void updateScene() = 0;
+  virtual void updateScene(const Ogre::FrameEvent& evt) = 0;
 
   // Used to update the GUI of the scene
   virtual void updateGui() = 0;

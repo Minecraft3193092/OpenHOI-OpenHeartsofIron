@@ -6,7 +6,7 @@ material checker/1x1
         {
             texture_unit
             {
-                texture checker-pattern-1x1.png
+                texture checker_pattern_1x1.png
             }
         }   
     }
@@ -20,7 +20,7 @@ material checker/2x1
         {
             texture_unit
             {
-                texture checker-pattern-2x1.png
+                texture checker_pattern_2x1.png
             }
         }   
     }

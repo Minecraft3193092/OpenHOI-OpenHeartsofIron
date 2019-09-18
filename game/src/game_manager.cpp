@@ -47,6 +47,9 @@ GameManager::GameManager() {
   // Load the STBI codec plugin for image processing
   root->loadPlugin(getPluginPath(OGRE_PLUGIN_STBI));
 
+  // Load the ParticleFX plugin
+  root->loadPlugin(getPluginPath(OGRE_PLUGIN_PARTICLEFX));
+
   // Initialize root
   root->initialise(false);
 
@@ -131,6 +134,9 @@ StateManager* const& GameManager::getStateManager() const {
 
 // Gets the GUI manager
 GuiManager* const& GameManager::getGuiManager() const { return guiManager; }
+
+// Gets the OGRE root
+Ogre::Root* const& GameManager::getRoot() const { return root; }
 
 // Gets the OGRE scene manager
 Ogre::SceneManager* const& GameManager::getSceneManager() const {
@@ -357,6 +363,14 @@ void GameManager::locateResources() {
         (assetRoot / "materials" / "hlsl").u8string(), "FileSystem",
         Ogre::RGN_DEFAULT);
   }
+
+  // Declare all particle resources
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "particles").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
+
+  // Declare all mesh resources
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "meshes").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
 }
 
 // Load resources
@@ -427,9 +441,9 @@ bool GameManager::frameStarted(const Ogre::FrameEvent& /*evt*/) {
 }
 
 // Frame rendering queued event (overrides OGRE Bites)
-bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& /*evt*/) {
+bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
   // Update state
-  stateManager->updateState();
+  stateManager->updateState(evt);
 
   return true;
 }

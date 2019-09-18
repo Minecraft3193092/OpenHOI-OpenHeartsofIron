@@ -27,6 +27,6 @@
 // Macro the build a dynamic object name (=dynamic objects are e.g. materials
 // built by code)
 #define OPENHOI_BUILD_DYNAMIC_OBJECT_NAME(objectName) \
-  (OPENHOI_GAME_NAME "__dyn__" objectName)
+  (std::string(OPENHOI_GAME_NAME "__dyn__") + objectName)
 
 // EOF

@@ -11,6 +11,9 @@
 // The OGRE STBI codec plugin name
 #define OGRE_PLUGIN_STBI "Codec_STBI"
 
+// The OGRE ParticleFX plugin name
+#define OGRE_PLUGIN_PARTICLEFX "Plugin_ParticleFX"
+
 // The OGRE Direct3D 11 render system plugin name
 #define OGRE_PLUGIN_RS_D3D11 "RenderSystem_Direct3D11"
 

@@ -4,6 +4,8 @@
 
 #include "state.hpp"
 
+#include <OgrePrerequisites.h>
+
 namespace openhoi {
 
 // State manager class
@@ -16,7 +18,7 @@ class StateManager final {
   void startup(State* firstState);
 
   // Update the current state
-  void updateState();
+  void updateState(const Ogre::FrameEvent& evt);
 
   // Update the GUI of the current state
   void updateGui();
