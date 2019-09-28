@@ -2,7 +2,6 @@
 
 #include "audio/audio_manager.hpp"
 
-
 #include <OgreLogManager.h>
 
 namespace openhoi {
@@ -37,7 +36,8 @@ AudioManager::AudioManager() {
         std::shared_ptr<AudioDevice> dev = addAudioDevice(deviceName);
 
 #ifdef _DEBUG
-        Ogre::LogManager::getSingletonPtr()->logMessage(" [*] " + dev->getFriendlyName());
+        Ogre::LogManager::getSingletonPtr()->logMessage(" [*] " +
+                                                        dev->getFriendlyName());
 #endif
 
         // Set the default device
@@ -94,8 +94,7 @@ AudioManager::~AudioManager() {
     alcMakeContextCurrent(NULL);
     alcDestroyContext(context);
   }
-  if (device)
-    alcCloseDevice(device);
+  if (device) alcCloseDevice(device);
 }
 
 // Add audio device to list of possible devices. Returns the newly added device
@@ -137,20 +136,24 @@ bool AudioManager::createContext() {
 
 // Sets the current/active device
 void AudioManager::setDevice(std::shared_ptr<AudioDevice> device) {
-  Ogre::LogManager::getSingletonPtr()->logMessage("*** Changing audio device ***");
+  Ogre::LogManager::getSingletonPtr()->logMessage(
+      "*** Changing audio device ***");
 
   if (this->device) {
     // Destroy previous device
-    Ogre::LogManager::getSingletonPtr()->logMessage("Destroying current device");
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        "Destroying current device");
     alcCloseDevice(this->device);
     this->device = nullptr;
   }
 
   if (device) {
     // Open device
-    Ogre::LogManager::getSingletonPtr()->logMessage( "Opening new audio device \"" + device->getFriendlyName() + "\"");
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        "Opening new audio device \"" + device->getFriendlyName() + "\"");
 
-    this->device = alcOpenDevice((const ALCchar*)selectedDevice->getName().c_str());
+    this->device =
+        alcOpenDevice((const ALCchar*)selectedDevice->getName().c_str());
     if (this->device) {
       // Create context
       if (!createContext()) {

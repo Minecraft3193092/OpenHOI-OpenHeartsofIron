@@ -19,7 +19,8 @@ class Map final {
   OPENHOI_LIB_EXPORT void addProvince(Province province);
 
   // Gets the map's provinces
-  OPENHOI_LIB_EXPORT std::unordered_map<std::string, Province> const& getProvinces() const;
+  OPENHOI_LIB_EXPORT std::unordered_map<std::string, Province> const&
+  getProvinces() const;
 
   // Gets the map's radius
   OPENHOI_LIB_EXPORT int const& getRadius() const;

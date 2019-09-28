@@ -6,7 +6,8 @@
 
 namespace openhoi {
 
-// Audio device which is just a wrapper of OpenAL's audio device name string for convinence reasons
+// Audio device which is just a wrapper of OpenAL's audio device name string for
+// convinence reasons
 class AudioDevice final {
  public:
   // Creates the audio device
@@ -16,7 +17,7 @@ class AudioDevice final {
   std::string const& getName() const;
 
   // Gets the friendly device name
-  std::string const& getFriendlyName() const;
+  std::string getFriendlyName() const;
 
  private:
   std::string name;

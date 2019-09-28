@@ -22,7 +22,8 @@ class Province final {
   OPENHOI_LIB_EXPORT std::string const& getID() const;
 
   // Gets the province coordinates
-  OPENHOI_LIB_EXPORT std::vector<std::vector<Ogre::Vector2>> const& getCoordinates() const;
+  OPENHOI_LIB_EXPORT std::vector<std::vector<Ogre::Vector2>> const&
+  getCoordinates() const;
 
   // Gets the vertices of the triangulated province
   OPENHOI_LIB_EXPORT std::vector<Ogre::Real> const getTriangulatedVertices()

@@ -11,7 +11,7 @@ AudioDevice::AudioDevice(std::string name) { this->name = name; }
 std::string const& AudioDevice::getName() const { return name; }
 
 // Gets the friendly device name
-std::string const& AudioDevice::getFriendlyName() const {
+std::string AudioDevice::getFriendlyName() const {
   // Remove the possible "OpenAL Soft on " prefix
   std::string prefix("OpenAL Soft on ");
   size_t pos = name.find(prefix);
