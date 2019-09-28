@@ -16,11 +16,11 @@ namespace openhoi {
 class MapFactory {
  public:
   // Loads the map file and returns the map data
-  OPENHOI_LIB_EXPORT static std::unique_ptr<Map> LoadMap(std::string path);
+  OPENHOI_LIB_EXPORT static std::unique_ptr<Map> loadMap(std::string path);
 
  private:
   // Get coordinates out of object
-  static std::vector<Ogre::Vector2> GetCoordinates(rapidjson::Value& value);
+  static std::vector<Ogre::Vector2> getCoordinates(rapidjson::Value& value);
 };
 
 }  // namespace openhoi

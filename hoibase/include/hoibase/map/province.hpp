@@ -19,18 +19,17 @@ class Province final {
            Ogre::Vector2 center);
 
   // Gets the province ID
-  OPENHOI_LIB_EXPORT std::string const& GetID() const;
+  OPENHOI_LIB_EXPORT std::string const& getID() const;
 
   // Gets the province coordinates
-  OPENHOI_LIB_EXPORT std::vector<std::vector<Ogre::Vector2>> const&
-  GetCoordinates() const;
+  OPENHOI_LIB_EXPORT std::vector<std::vector<Ogre::Vector2>> const& getCoordinates() const;
 
   // Gets the vertices of the triangulated province
-  OPENHOI_LIB_EXPORT std::vector<Ogre::Real> const GetTriangulatedVertices()
+  OPENHOI_LIB_EXPORT std::vector<Ogre::Real> const getTriangulatedVertices()
       const;
 
   // Gets the province center point
-  OPENHOI_LIB_EXPORT Ogre::Vector2 const& GetCenter() const;
+  OPENHOI_LIB_EXPORT Ogre::Vector2 const& getCenter() const;
 
  private:
   std::string id;

@@ -9,7 +9,7 @@
 namespace openhoi {
 
 // Pretty print exception with stacktrace
-std::string Debug::PrettyPrintException(const std::exception* ex) {
+std::string Debug::prettyPrintException(const std::exception* ex) {
   std::stringstream message;
 
   // Add exception message

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "audio/audio_manager.hpp"
 #include "gui/gui_manager.hpp"
 #include "options.hpp"
 #include "state/state_manager.hpp"
@@ -21,12 +22,6 @@
 #include <string>
 
 namespace openhoi {
-
-// Link between a OGRE render window and a SDL window
-struct NativeWindowPair {
-  Ogre::RenderWindow* ogre;
-  SDL_Window* sdl;
-};
 
 // Manager used to handle the main game loop and the basic logic required to run
 // the game
@@ -149,8 +144,15 @@ class GameManager final : public Ogre::FrameListener,
   // Gets the full path to the provided OGRE plugin
   std::string getPluginPath(std::string pluginName);
 
+  // Link between a OGRE render window and a SDL window
+  struct NativeWindowPair {
+    Ogre::RenderWindow* ogre;
+    SDL_Window* sdl;
+  };
+
   Options* options;
   StateManager* stateManager;
+  AudioManager* audioManager;
   GuiManager* guiManager;
   Ogre::Root* root;
   Ogre::OverlaySystem* overlaySystem;

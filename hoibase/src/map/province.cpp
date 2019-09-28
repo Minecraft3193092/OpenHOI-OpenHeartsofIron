@@ -31,16 +31,16 @@ Province::Province(std::string id,
 }
 
 // Gets the resource's byte data
-std::string const& Province::GetID() const { return this->id; }
+std::string const& Province::getID() const { return this->id; }
 
 // Gets the province coordinates
-std::vector<std::vector<Ogre::Vector2>> const& Province::GetCoordinates()
+std::vector<std::vector<Ogre::Vector2>> const& Province::getCoordinates()
     const {
   return coordinates;
 }
 
 // Gets the vertices of the triangulated province
-std::vector<Ogre::Real> const Province::GetTriangulatedVertices() const {
+std::vector<Ogre::Real> const Province::getTriangulatedVertices() const {
   // Create province vertex handles and insert contraints
   CDT cdt;
   std::vector<Vertex_handle> handles;
@@ -93,6 +93,6 @@ std::vector<Ogre::Real> const Province::GetTriangulatedVertices() const {
 }
 
 // Gets the province center point
-Ogre::Vector2 const& Province::GetCenter() const { return center; }
+Ogre::Vector2 const& Province::getCenter() const { return center; }
 
 }  // namespace openhoi

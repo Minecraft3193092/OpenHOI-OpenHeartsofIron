@@ -362,5 +362,3 @@ if "%BUILD_OGRE%" == "y" (
 )
 
 :end
-
-if %0 == "%~0" pause

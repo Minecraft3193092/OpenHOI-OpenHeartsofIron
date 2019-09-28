@@ -10,20 +10,20 @@ namespace openhoi {
 Map::Map(int radius) { this->radius = radius; }
 
 // Add province to map
-void Map::AddProvince(Province province) {
+void Map::addProvince(Province province) {
   // Check for duplicate provinces
-  assert(this->provinces.find(province.GetID()) == this->provinces.end());
+  assert(provinces.find(province.getID()) == provinces.end());
 
   // Add the province
-  this->provinces.insert({province.GetID(), province});
+  provinces.insert({province.getID(), province});
 }
 
 // Gets the map's provinces
-std::unordered_map<std::string, Province> const& Map::GetProvinces() const {
-  return this->provinces;
+std::unordered_map<std::string, Province> const& Map::getProvinces() const {
+  return provinces;
 }
 
 // Gets the map's radius
-int const& Map::GetRadius() const { return this->radius; }
+int const& Map::getRadius() const { return radius; }
 
 }  // namespace openhoi

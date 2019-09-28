@@ -90,6 +90,10 @@ GameManager::GameManager() {
   // Create camera
   createCamera();
 
+  // Create audio manager instance
+  audioManager = new AudioManager();
+  // audioManager->playAudio("tannhaeuser.ogg");
+
   // Create state manager and startup with menu state
   stateManager = new StateManager();
   stateManager->startup(new MenuState());
@@ -120,6 +124,9 @@ GameManager::~GameManager() {
 
   // Destroy options
   if (options) delete options;
+
+  // Destroy audio manager
+  if (audioManager) delete audioManager;
 }
 
 // Gets the game options
@@ -330,10 +337,6 @@ void GameManager::destroyWindow() {
 void GameManager::locateResources() {
   filesystem::path assetRoot = FileAccess::getAssetRootDirectory();
 
-  // Declare all audio resources
-  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-      (assetRoot / "audio").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
-
   // Declare all font resources
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
       (assetRoot / "fonts").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
@@ -506,7 +509,8 @@ bool GameManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 // Create camera
 void GameManager::createCamera() {
   // Create the camera
-  camera = sceneManager->createCamera("PlayerCam");
+  camera = sceneManager->createCamera(
+      OPENHOI_BUILD_DYNAMIC_OBJECT_NAME("Player_Cam"));
 
   // Position it at 100 in Z direction
   camera->setPosition(Ogre::Vector3(0, 0, 100));

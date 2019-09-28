@@ -12,7 +12,7 @@ namespace openhoi {
 class OPENHOI_LIB_EXPORT Debug final {
  public:
   // Pretty print exception with stacktrace
-  static std::string PrettyPrintException(const std::exception* ex);
+  static std::string prettyPrintException(const std::exception* ex);
 };
 
 }  // namespace openhoi

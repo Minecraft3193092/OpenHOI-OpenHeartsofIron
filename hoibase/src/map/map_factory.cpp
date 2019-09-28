@@ -9,7 +9,7 @@
 namespace openhoi {
 
 // Loads the map file and returns the map data
-std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
+std::unique_ptr<Map> MapFactory::loadMap(std::string path) {
   // Generate map object
   std::unique_ptr<Map> map =
       std::make_unique<Map>(6378137 /* TODO: Add to feature collection */);
@@ -116,7 +116,7 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
     if (coords.IsArray()) {
       if (!multipolygon) {
         // Get coordinates of our geometry
-        auto tmp = MapFactory::GetCoordinates(coords);
+        auto tmp = MapFactory::getCoordinates(coords);
         if (!tmp.empty()) coordinates.push_back(tmp);
       } else {
         for (auto git1 = coords.Begin(); git1 != coords.End(); ++git1) {
@@ -124,7 +124,7 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
             auto coords2 = git1->GetArray();
             for (auto git2 = coords2.Begin(); git2 != coords2.End(); ++git2) {
               // Get coordinates of our geometry
-              auto tmp = MapFactory::GetCoordinates(git2[0]);
+              auto tmp = MapFactory::getCoordinates(git2[0]);
               if (!tmp.empty()) coordinates.push_back(tmp);
             }
           }
@@ -136,7 +136,7 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
       // Build province and add it to map
       Province province(id, coordinates,
                         Ogre::Vector2(0, 0));  // TODO: Center point
-      map->AddProvince(province);
+      map->addProvince(province);
     }
   }
 
@@ -145,7 +145,7 @@ std::unique_ptr<Map> MapFactory::LoadMap(std::string path) {
 }
 
 // Get the coordinates for one single way
-std::vector<Ogre::Vector2> MapFactory::GetCoordinates(rapidjson::Value& value) {
+std::vector<Ogre::Vector2> MapFactory::getCoordinates(rapidjson::Value& value) {
   std::vector<Ogre::Vector2> coords;
 
   if (value.IsArray()) {

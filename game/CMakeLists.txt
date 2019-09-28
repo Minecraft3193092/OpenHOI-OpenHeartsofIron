@@ -31,6 +31,17 @@ list(APPEND GAME_SOURCES src/game_manager.cpp
                          src/options.cpp)
 source_group("Source Files" FILES ${GAME_SOURCES})
 
+# Add audio code
+list(APPEND AUDIO_INCLUDES include/audio/audio_device.hpp
+                           include/audio/audio_manager.hpp)
+source_group("Header Files\\audio" FILES ${AUDIO_INCLUDES})
+list(APPEND GAME_INCLUDES ${AUDIO_INCLUDES})
+
+list(APPEND AUDIO_SOURCES src/audio/audio_device.cpp
+                          src/audio/audio_manager.cpp)
+source_group("Source Files\\audio" FILES ${AUDIO_SOURCES})
+list(APPEND GAME_SOURCES ${AUDIO_SOURCES})
+
 # Add graphic code
 list(APPEND GRAPHIC_INCLUDES include/graphic/texture_helper.hpp)
 source_group("Header Files\\graphic" FILES ${GRAPHIC_INCLUDES})
@@ -66,6 +77,12 @@ list(APPEND STATE_SOURCES src/state/menu_state.cpp
                           src/state/state.cpp)
 source_group("Source Files\\state" FILES ${STATE_SOURCES})
 list(APPEND GAME_SOURCES ${STATE_SOURCES})
+
+# Add third-party library stb_vorbis
+list(APPEND STBVORBIS_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis/stb_vorbis.c)
+source_group("Source Files\\thirdparty\\stb_vorbis" FILES ${STBVORBIS_SOURCES})
+set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${STBVORBIS_SOURCES})
+list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis)
 
 # Add third-party library ImGui
 list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imconfig.h
