@@ -99,7 +99,7 @@ elif [[ $OSTYPE == "freebsd"* ]]; then
     printf " $CHECKMARK FreeBSD is supported\n"
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$PKG]}
-    PACKAGES="cmake git llvm-devel boost-all openssl"
+    PACKAGES="cmake git llvm-devel boost-all openssl libX11 libXaw libXext libXrandr libXt libSM libICE freetype2 sdl20 mesa-libs libGLU"
     OGRE_MANUAL_BUILD=true
 : '
 elif [[ $OSTYPE == "openbsd"* ]]; then
