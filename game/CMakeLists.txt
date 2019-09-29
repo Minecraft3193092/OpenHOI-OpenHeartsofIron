@@ -33,12 +33,14 @@ source_group("Source Files" FILES ${GAME_SOURCES})
 
 # Add audio code
 list(APPEND AUDIO_INCLUDES include/audio/audio_device.hpp
-                           include/audio/audio_manager.hpp)
+                           include/audio/audio_manager.hpp
+                           include/audio/sound.hpp)
 source_group("Header Files\\audio" FILES ${AUDIO_INCLUDES})
 list(APPEND GAME_INCLUDES ${AUDIO_INCLUDES})
 
 list(APPEND AUDIO_SOURCES src/audio/audio_device.cpp
-                          src/audio/audio_manager.cpp)
+                          src/audio/audio_manager.cpp
+                          src/audio/sound.cpp)
 source_group("Source Files\\audio" FILES ${AUDIO_SOURCES})
 list(APPEND GAME_SOURCES ${AUDIO_SOURCES})
 

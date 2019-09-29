@@ -3,7 +3,6 @@
 #include "hoibase/file/file_access.hpp"
 #include "hoibase/helper/os.hpp"
 
-#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 
 #ifdef OPENHOI_OS_WINDOWS
@@ -11,6 +10,9 @@
 #  include <ShlObj.h>
 #  include <wchar.h>
 #else
+#  include <boost/algorithm/string.hpp>
+#  include <OgreLogManager.h>
+
 #  include <pwd.h>
 #  include <sys/types.h>
 #  include <unistd.h>
@@ -18,7 +20,6 @@
 #    ifndef _GNU_SOURCE
 #      define _GNU_SOURCE
 #    endif
-#    include <OgreLogManager.h>
 #    include <dlfcn.h>
 #  endif
 #endif
@@ -94,7 +95,7 @@ filesystem::path FileAccess::getUserGameConfigDirectory() {
       if (!filesystem::create_directory(configDirectory))
         throw std::runtime_error(
             (boost::format(
-                 "Unable to find create game config directory \"%s\"") %
+                 "Unable to find create game config directory '%s'") %
              configDirectory.u8string())
                 .str());
 
@@ -182,6 +183,61 @@ filesystem::path FileAccess::getAssetRootDirectory() {
   }
 
   return FileAccess::gameAssetRootDirectory;
+}
+
+// Custom fopen override for Windows
+FILE* FileAccess::fopen(char const* fileName, char const* mode) {
+#ifdef OPENHOI_OS_WINDOWS
+  FILE* fp;
+  errno_t err;
+  err = fopen_s(&fp, fileName, mode);
+  if (err == 0) {
+    // No error, return file pointer
+    return fp;
+  } else {
+    // File could not be opened, return nullptr
+    return nullptr;
+  }
+#else
+  return fopen(fileName, mode);
+#endif
+}
+
+// Read the provided file to the provided data pointer. The file length is
+// returned or -1 in case the file could not be read.
+long FileAccess::readFile(filesystem::path file, unsigned char** data) {
+  // Check if it is an regular file
+  if (!filesystem::is_regular_file(file)) return -1;
+
+  // Get file path as char pointer
+  std::string filePathStr = file.string();
+  const char* filePath = filePathStr.c_str();
+
+  // Try to open file
+  auto closeFile = [](FILE* f) { fclose(f); };
+  auto holder = std::unique_ptr<FILE, decltype(closeFile)>(
+      FileAccess::fopen(filePath, "rb"), closeFile);
+  if (!holder) return -1;
+
+  // Get opened file
+  FILE* fp = holder.get();
+
+  // Get file size
+  uintmax_t size;
+  try {
+    size = filesystem::file_size(file);
+  } catch (filesystem::filesystem_error& ex) {
+    return -1;
+  }
+
+  // Allocate memory for file
+  *data = (unsigned char*)malloc(size);
+
+  // Read file into data pointer
+  fread(*data, 1, size, fp);
+
+  // Return the data length
+  return (long)size;
 }
 
 // Gets the OGRE plugin directory. In case the plugins should be located

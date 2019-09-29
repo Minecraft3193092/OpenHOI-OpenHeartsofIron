@@ -6,8 +6,6 @@
 #include "hoibase/helper/library.hpp"
 #include "hoibase/openhoi.hpp"
 
-#include <string>
-
 // The OGRE STBI codec plugin name
 #define OGRE_PLUGIN_STBI "Codec_STBI"
 
@@ -47,6 +45,10 @@ class OPENHOI_LIB_EXPORT FileAccess final {
   // relatively to the executables, an empty path is returned.
   static filesystem::path getOgrePluginDirectory();
 
+  // Read the provided file to the provided data pointer. The file length is
+  // returned or -1 in case the file could not be read.
+  static long readFile(filesystem::path file, unsigned char** data);
+
  private:
   // Get the current user's home directory. If it cannot be found, an exception
   // will be thrown.
@@ -57,6 +59,9 @@ class OPENHOI_LIB_EXPORT FileAccess final {
 
   // Cached game asset root directory
   static filesystem::path gameAssetRootDirectory;
+
+  // Custom fopen function for Windows compatibility
+  static FILE* fopen(char const* fileName, char const* mode);
 
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
   // Cached OGRE plugin directory

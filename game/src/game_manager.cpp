@@ -56,6 +56,9 @@ GameManager::GameManager() {
   // Create window
   createWindow();
 
+  // Create audio manager instance
+  audioManager = new AudioManager();
+
   // Locate resources
   locateResources();
 
@@ -89,10 +92,6 @@ GameManager::GameManager() {
 
   // Create camera
   createCamera();
-
-  // Create audio manager instance
-  audioManager = new AudioManager();
-  // audioManager->playAudio("tannhaeuser.ogg");
 
   // Create state manager and startup with menu state
   stateManager = new StateManager();
@@ -387,6 +386,9 @@ void GameManager::loadResources() {
         resourceGroup);
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(resourceGroup);
   }
+
+  // Load all audio resources
+  audioManager->loadAll(FileAccess::getAssetRootDirectory() / "audio");
 }
 
 // Poll for events

@@ -2,7 +2,12 @@
 
 #include "audio/audio_manager.hpp"
 
+#include <hoibase/file/file_access.hpp>
+
 #include <OgreLogManager.h>
+#include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
+#include <stb_vorbis.c>
 
 namespace openhoi {
 
@@ -95,6 +100,8 @@ AudioManager::~AudioManager() {
     alcDestroyContext(context);
   }
   if (device) alcCloseDevice(device);
+
+  Ogre::LogManager::getSingletonPtr()->logMessage("*** Audio manager unloaded ***");
 }
 
 // Add audio device to list of possible devices. Returns the newly added device
@@ -116,11 +123,11 @@ bool AudioManager::createContext() {
 
   // Validate context
   if (context) {
+    // Make it the current context
+    alcMakeContextCurrent(context);
+
     // Set distance attenuation model
     alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
-
-    // Set listener gain
-    alListenerf(AL_GAIN, (ALfloat)1.0f);
 
     // Log and return success
     Ogre::LogManager::getSingletonPtr()->logMessage("Audio context created");
@@ -150,7 +157,7 @@ void AudioManager::setDevice(std::shared_ptr<AudioDevice> device) {
   if (device) {
     // Open device
     Ogre::LogManager::getSingletonPtr()->logMessage(
-        "Opening new audio device \"" + device->getFriendlyName() + "\"");
+        "Opening new audio device '" + device->getFriendlyName() + "'");
 
     this->device =
         alcOpenDevice((const ALCchar*)selectedDevice->getName().c_str());
@@ -170,6 +177,84 @@ void AudioManager::setDevice(std::shared_ptr<AudioDevice> device) {
 // Gets the current device
 std::shared_ptr<AudioDevice> const& AudioManager::getDevice() const {
   return selectedDevice;
+}
+
+// Loads all sound files in the provided directory into memory and thus makes it
+// playable
+void AudioManager::loadAll(filesystem::path directory) {
+  // Iterate through all files in directory
+  for (const auto& entry : filesystem::directory_iterator(directory)) {
+    filesystem::path file = entry.path();
+    if (!filesystem::is_regular_file(file)) continue;
+
+    // Check for OGG file type
+    std::string extension =
+        boost::algorithm::to_lower_copy(file.extension().u8string());
+    if (extension != ".ogg") continue;
+
+    // Read file and check result
+    unsigned char* data = nullptr;
+    int fileSize = (int)FileAccess::readFile(file, &data);
+    if (fileSize < 1) continue;
+
+    // Clear OpenAL error flag
+    alGetError();
+
+    // Open Vorbis stream and decode data
+    auto* vorbis = stb_vorbis_open_memory(data, fileSize, NULL, NULL);
+    if (!vorbis) {
+      Ogre::LogManager::getSingletonPtr()->logMessage(
+          (boost::format("Audo file '%s' could not be decoded") % file.filename().u8string()).str(),
+          Ogre::LogMessageLevel::LML_CRITICAL);
+
+      // Free the data malloc'd in FileAccess::readFile!
+      free(data);
+
+      continue;
+    }
+
+    // Get audio information
+    auto info = stb_vorbis_get_info(vorbis);
+    ALenum format = info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+    int sampleRate = info.sample_rate;
+    int size = stb_vorbis_stream_length_in_samples(vorbis) * info.channels;
+    short* samples = new short[size];
+    stb_vorbis_get_samples_short_interleaved(vorbis, info.channels, samples,
+                                             size);
+    size *= sizeof(short);
+
+    // Close Vorbis stream
+    stb_vorbis_close(vorbis);
+
+     // Free the data malloc'd in FileAccess::readFile!
+    free(data);
+
+    // Generate buffers
+    ALuint buffer;
+    ALenum error;
+    alGenBuffers(1, &buffer);
+    if ((error = alGetError()) != AL_NO_ERROR) {
+      Ogre::LogManager::getSingletonPtr()->logMessage(
+          (boost::format("Unable to generate OpenAL buffer for file '%s': %d") %
+           file.filename().u8string() % error)
+                  .str(),
+          Ogre::LogMessageLevel::LML_CRITICAL);
+      continue;
+    }
+    alBufferData(buffer, format, samples, size, sampleRate);
+    if ((error = alGetError()) != AL_NO_ERROR) {
+      Ogre::LogManager::getSingletonPtr()->logMessage(
+          (boost::format("Unable to copy data into OpenAL buffer for file '%s': %d") %
+           file.filename().u8string() % error)
+              .str(),
+          Ogre::LogMessageLevel::LML_CRITICAL);
+      alDeleteBuffers(1, &buffer);
+      continue;
+    }
+
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        (boost::format("Audo file '%s' loaded") % file.filename().u8string()).str());
+  }
 }
 
 }  // namespace openhoi

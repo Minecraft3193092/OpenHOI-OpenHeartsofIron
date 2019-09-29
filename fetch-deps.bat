@@ -29,6 +29,7 @@ if "%VERSION%" == "10.0" (
     echo %CHECKMARK% Windows 10 is supported.
 ) else (
     echo %CROSSMARK% Your Windows Version %VERSION% is not supported. Aborting. You may have to install all dependencies manually.
+    goto end
 )
 endlocal
 
@@ -36,8 +37,16 @@ if "%PROGRAMFILES%" == "C:\Program Files" (
     echo %CHECKMARK% 64 bit is supported.
 ) else (
     echo %CROSSMARK% 32 bit is not supported. Aborting. You may have to install all dependencies manually.
+    goto end
 )
 
+where /q MSBuild
+if %errorLevel% == 0 (
+    echo %CHECKMARK% Inside MSVC developer x64 command promt
+) else (
+    echo %CROSSMARK% You must call this batch file from a running MSVC x64 developer command prompt
+    goto end
+)
 
 
 

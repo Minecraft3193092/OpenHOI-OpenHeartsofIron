@@ -54,7 +54,7 @@ bool OS::isRunningInVirtualMachine() {
     if (!virt.empty() && virt != "none") {
       Ogre::LogManager::getSingletonPtr()->logMessage(
           (boost::format(
-               "*** RUNNING INSIDE VIRTUALIZATION PLATFORM \"%s\" ***") %
+               "*** RUNNING INSIDE VIRTUALIZATION PLATFORM '%s' ***") %
            virt)
               .str());
       return true;
@@ -67,31 +67,31 @@ bool OS::isRunningInVirtualMachine() {
     std::string dmesgOutput = OS::executeCommand("dmesg | grep VirtualBox");
     if (!dmesgOutput.empty()) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
-          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM \"VirtualBox\" ***");
+          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM 'VirtualBox' ***");
       return true;
     }
-    dmesgOutput = OS::executeCommand("dmesg | grep \"Virtual CPU\"");
+    dmesgOutput = OS::executeCommand("dmesg | grep 'Virtual CPU'");
     if (!dmesgOutput.empty()) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
-          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM \"Virtual PC\" ***");
+          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM 'Virtual PC' ***");
       return true;
     }
-    dmesgOutput = OS::executeCommand("dmesg | grep \"VMware Virtual\"");
+    dmesgOutput = OS::executeCommand("dmesg | grep 'VMware Virtual'");
     if (!dmesgOutput.empty()) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
-          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM \"VMware\" ***");
+          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM 'VMware' ***");
       return true;
     }
-    dmesgOutput = OS::executeCommand("dmesg | grep \"Xen virtual\"");
+    dmesgOutput = OS::executeCommand("dmesg | grep 'Xen virtual'");
     if (!dmesgOutput.empty()) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
-          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM \"Xen\" ***");
+          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM 'Xen' ***");
       return true;
     }
     dmesgOutput = OS::executeCommand("dmesg | grep QEMU");
     if (!dmesgOutput.empty()) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
-          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM \"QEmu\" ***");
+          "*** RUNNING INSIDE VIRTUALIZATION PLATFORM 'QEmu' ***");
       return true;
     }
   }
