@@ -99,7 +99,7 @@ elif [[ $OSTYPE == "freebsd"* ]]; then
     printf " $CHECKMARK FreeBSD is supported\n"
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$PKG]}
-    PACKAGES="cmake git"
+    PACKAGES="cmake git llvm-devel boost-all openssl"
     OGRE_MANUAL_BUILD=true
 : '
 elif [[ $OSTYPE == "openbsd"* ]]; then
@@ -150,7 +150,7 @@ if [ $INSTALLSYSTEM ]; then
         sudo freebsd-update fetch --not-running-from-cron
         sudo freebsd-update install --not-running-from-cron
         env ASSUME_ALWAYS_YES=YES pkg bootstrap
-        sudo pkg install $PACKAGES
+        sudo pkg -N install $PACKAGES
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$HOMEBREW]} ]; then
         command -v brew >/dev/null 2>&1 || { /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; }
         for i in "${PACKAGES[@]}"
