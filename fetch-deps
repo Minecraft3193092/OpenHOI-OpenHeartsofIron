@@ -150,7 +150,7 @@ if [ $INSTALLSYSTEM ]; then
         sudo freebsd-update fetch --not-running-from-cron
         sudo freebsd-update install --not-running-from-cron
         env ASSUME_ALWAYS_YES=YES pkg bootstrap
-        sudo pkg -y install $PACKAGES
+        sudo pkg install $PACKAGES
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$HOMEBREW]} ]; then
         command -v brew >/dev/null 2>&1 || { /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; }
         for i in "${PACKAGES[@]}"
