@@ -47,7 +47,7 @@ fi
 # If we support it, we can also automatically download all required dependencies
 printf "$LINEBEG Checking for operating system type...\n"
 
-INSTALLSYSTEMS=(PACMAN APTGET HOMEBREW)
+INSTALLSYSTEMS=(PACMAN APTGET HOMEBREW PKG)
 isa=${#INSTALLSYSTEMS[@]}
 for ((i=0; i < $isa; i++)); do
     ISE_NAME=${INSTALLSYSTEMS[i]}
@@ -94,11 +94,14 @@ elif [[ $MACOS == true ]]; then
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
     PACKAGES=(cmake boost cgal v8 zlib openssl openal-soft libogg rapidjson freeimage freetype sdl2 clang-format)
     OGRE_MANUAL_BUILD=true
-: '
 elif [[ $OSTYPE == "freebsd"* ]]; then
     # FreeBSD
     printf " $CHECKMARK FreeBSD is supported\n"
-    # TODO: Add support
+    
+    INSTALLSYSTEM=${INSTALLSYSTEMS[$PKG]}
+    PACKAGES="cmake git"
+    OGRE_MANUAL_BUILD=true
+: '
 elif [[ $OSTYPE == "openbsd"* ]]; then
     # OpenBSD
     printf " $CHECKMARK OpenBSD is supported\n"
@@ -143,6 +146,10 @@ if [ $INSTALLSYSTEM ]; then
         sudo apt-get update
         sudo apt-get upgrade
         sudo apt-get -y install $PACKAGES
+    elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$PKG]} ]; then
+        sudo freebsd-update fetch
+        sudo freebsd-update install
+        sudo pkg install $PACKAGES
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$HOMEBREW]} ]; then
         command -v brew >/dev/null 2>&1 || { /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; }
         for i in "${PACKAGES[@]}"
