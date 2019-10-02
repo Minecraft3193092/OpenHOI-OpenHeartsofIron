@@ -56,8 +56,8 @@ GameManager::GameManager() {
   // Create window
   createWindow();
 
-  // Create audio manager instance
-  audioManager = new AudioManager();
+  // Initialize audio
+  initializeAudio();
 
   // Locate resources
   locateResources();
@@ -118,14 +118,14 @@ GameManager::~GameManager() {
   // Destroy window
   destroyWindow();
 
+  // Destroy audio manager
+  if (audioManager) delete audioManager;
+
   // Destroy overlay system
   if (overlaySystem) delete overlaySystem;
 
   // Destroy options
   if (options) delete options;
-
-  // Destroy audio manager
-  if (audioManager) delete audioManager;
 }
 
 // Gets the game options
@@ -175,6 +175,25 @@ std::string GameManager::getPluginPath(std::string pluginName) {
   }
 }
 
+// Initialize audio
+void GameManager::initializeAudio() {
+  // Create audio manager
+  audioManager = new AudioManager();
+
+  // Try to set pre-defined audio device
+  if (!options->getAudioDevice().empty()) {
+    for (auto const& audioDevice : audioManager->getPossibleDevices()) {
+      if (audioDevice->getFriendlyName() == options->getAudioDevice()) {
+        audioManager->setDevice(audioDevice);
+        break;
+      }
+    }
+  }
+
+  // Update last device in options
+  options->setAudioDevice(audioManager->getDevice()->getFriendlyName());
+}
+
 // Load and configure the render system
 void GameManager::loadRenderSystem() {
 #if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
@@ -212,8 +231,10 @@ void GameManager::loadRenderSystem() {
   // Configure render system
   bool d3d11 = false;
 #if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
-  d3d11 = Ogre::D3D11RenderSystem* d3d11rs = dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem));
-  if (d3d11) {
+  if (Ogre::D3D11RenderSystem* d3d11rs =
+          dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem)) {
+    d3d11 = true;
+
     // Set driver type to hardware
     renderSystem->setConfigOption("Driver type", "Hardware");
 
@@ -233,29 +254,23 @@ void GameManager::loadRenderSystem() {
     renderSystem->setConfigOption("RTT Preferred Mode", "FBO");
   }
 
-  // Set video mode
-  renderSystem->setConfigOption("Video Mode", options->GetVideoMode());
+  // Set best possible video mode
+  setBestPossibleVideoMode(renderSystem);
 
   // Set Full Screen Anti-Aliasing (FSAA)
   renderSystem->setConfigOption(
-      "FSAA", std::to_string(options->GetFullScreenAntiAliasing()));
-
-  if (!options->GetRenderingDevice().empty()) {
-    // Set Rendering device
-    renderSystem->setConfigOption("Rendering Device",
-                                  options->GetRenderingDevice());
-  }
+      "FSAA", std::to_string(options->getFullScreenAntiAliasing()));
 
   // Set window mode
   renderSystem->setConfigOption(
       "Full Screen",
-      options->GetWindowMode() == WindowMode::FULLSCREEN ? "Yes" : "No");
+      options->getWindowMode() == WindowMode::FULLSCREEN ? "Yes" : "No");
 
   // Set VSync (turn always on in windowed screen mode because disabling VSync
   // can cause timing issues at lower frame rates here)
   renderSystem->setConfigOption(
-      "VSync", (options->IsVerticalSync() ||
-                options->GetWindowMode() != WindowMode::FULLSCREEN)
+      "VSync", (options->isVerticalSync() ||
+                options->getWindowMode() != WindowMode::FULLSCREEN)
                    ? "Yes"
                    : "No");
 
@@ -279,6 +294,30 @@ void GameManager::loadRenderSystem() {
   root->setRenderSystem(renderSystem);
 }
 
+// Set best possible video mode
+void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
+  // Get all possible video modes
+  const Ogre::ConfigOption& configValue =
+      renderSystem->getConfigOptions().at("Video Mode");
+  for (auto it = configValue.possibleValues.begin();
+       it != configValue.possibleValues.end(); ++it) {
+    std::string possibleVideoMode = *it;
+    if (std::next(it) == configValue.possibleValues.end() ||
+        (!options->getVideoMode().empty() &&
+         (possibleVideoMode == options->getVideoMode() ||
+          possibleVideoMode.find(options->getVideoMode() + " ", 0) ==
+              0 /* D3D11 adds color depth to video mode */))) {
+      // Set video mode if it is the latest one or if it matches the one stored
+      // in the config
+      options->setVideoMode(possibleVideoMode);
+      break;
+    }
+  }
+
+  // Set video mode
+  renderSystem->setConfigOption("Video Mode", options->getVideoMode());
+}
+
 // Create a new render window
 void GameManager::createWindow() {
   window = {nullptr, nullptr};
@@ -299,9 +338,9 @@ void GameManager::createWindow() {
       windowDesc.width, windowDesc.height, flags);
 
   // Adjust window style
-  if (options->GetWindowMode() != WindowMode::FULLSCREEN) {
+  if (options->getWindowMode() != WindowMode::FULLSCREEN) {
     SDL_SetWindowResizable(window.sdl, SDL_FALSE);
-    if (options->GetWindowMode() == WindowMode::BORDERLESS)
+    if (options->getWindowMode() == WindowMode::BORDERLESS)
       SDL_SetWindowBordered(window.sdl, SDL_FALSE);
   }
 

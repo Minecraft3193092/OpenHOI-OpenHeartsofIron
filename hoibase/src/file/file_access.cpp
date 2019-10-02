@@ -10,8 +10,8 @@
 #  include <ShlObj.h>
 #  include <wchar.h>
 #else
-#  include <boost/algorithm/string.hpp>
 #  include <OgreLogManager.h>
+#  include <boost/algorithm/string.hpp>
 
 #  include <pwd.h>
 #  include <sys/types.h>
@@ -94,8 +94,7 @@ filesystem::path FileAccess::getUserGameConfigDirectory() {
       // Create the directory
       if (!filesystem::create_directory(configDirectory))
         throw std::runtime_error(
-            (boost::format(
-                 "Unable to find create game config directory '%s'") %
+            (boost::format("Unable to find create game config directory '%s'") %
              configDirectory.u8string())
                 .str());
 

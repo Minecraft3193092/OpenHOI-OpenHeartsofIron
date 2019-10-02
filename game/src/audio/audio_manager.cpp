@@ -101,7 +101,8 @@ AudioManager::~AudioManager() {
   }
   if (device) alcCloseDevice(device);
 
-  Ogre::LogManager::getSingletonPtr()->logMessage("*** Audio manager unloaded ***");
+  Ogre::LogManager::getSingletonPtr()->logMessage(
+      "*** Audio manager unloaded ***");
 }
 
 // Add audio device to list of possible devices. Returns the newly added device
@@ -179,6 +180,12 @@ std::shared_ptr<AudioDevice> const& AudioManager::getDevice() const {
   return selectedDevice;
 }
 
+// Gets all possible devices
+std::vector<std::shared_ptr<AudioDevice>> const&
+AudioManager::getPossibleDevices() const {
+  return devices;
+}
+
 // Loads all sound files in the provided directory into memory and thus makes it
 // playable
 void AudioManager::loadAll(filesystem::path directory) {
@@ -204,7 +211,9 @@ void AudioManager::loadAll(filesystem::path directory) {
     auto* vorbis = stb_vorbis_open_memory(data, fileSize, NULL, NULL);
     if (!vorbis) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
-          (boost::format("Audo file '%s' could not be decoded") % file.filename().u8string()).str(),
+          (boost::format("Audio file '%s' could not be decoded") %
+           file.filename().u8string())
+              .str(),
           Ogre::LogMessageLevel::LML_CRITICAL);
 
       // Free the data malloc'd in FileAccess::readFile!
@@ -226,7 +235,7 @@ void AudioManager::loadAll(filesystem::path directory) {
     // Close Vorbis stream
     stb_vorbis_close(vorbis);
 
-     // Free the data malloc'd in FileAccess::readFile!
+    // Free the data malloc'd in FileAccess::readFile!
     free(data);
 
     // Generate buffers
@@ -237,14 +246,15 @@ void AudioManager::loadAll(filesystem::path directory) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
           (boost::format("Unable to generate OpenAL buffer for file '%s': %d") %
            file.filename().u8string() % error)
-                  .str(),
+              .str(),
           Ogre::LogMessageLevel::LML_CRITICAL);
       continue;
     }
     alBufferData(buffer, format, samples, size, sampleRate);
     if ((error = alGetError()) != AL_NO_ERROR) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
-          (boost::format("Unable to copy data into OpenAL buffer for file '%s': %d") %
+          (boost::format(
+               "Unable to copy data into OpenAL buffer for file '%s': %d") %
            file.filename().u8string() % error)
               .str(),
           Ogre::LogMessageLevel::LML_CRITICAL);
@@ -253,7 +263,8 @@ void AudioManager::loadAll(filesystem::path directory) {
     }
 
     Ogre::LogManager::getSingletonPtr()->logMessage(
-        (boost::format("Audo file '%s' loaded") % file.filename().u8string()).str());
+        (boost::format("Audo file '%s' loaded") % file.filename().u8string())
+            .str());
   }
 }
 

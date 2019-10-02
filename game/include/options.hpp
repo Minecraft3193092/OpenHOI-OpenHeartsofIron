@@ -17,42 +17,42 @@ class Options final {
   // Options constructor
   Options();
 
-  // Gets the rendering device name
-  std::string const& GetRenderingDevice() const;
-
-  // Sets the rendering device name
-  void SetRenderingDevice(std::string const& renderingDevice);
-
   // Gets the video mode name
-  std::string const& GetVideoMode() const;
+  std::string const& getVideoMode() const;
 
   // Sets the video mode name
-  void SetVideoMode(std::string const& videoMode);
+  void setVideoMode(std::string const& videoMode);
 
   // Gets the FSAA level
-  byte const& GetFullScreenAntiAliasing() const;
+  byte const& getFullScreenAntiAliasing() const;
 
   // Sets the FSAA level
-  void SetFullScreenAntiAliasing(byte const& fullScreenAntiAliasing);
+  void setFullScreenAntiAliasing(byte const& fullScreenAntiAliasing);
 
   // Gets the window mode
-  WindowMode const& GetWindowMode() const;
+  WindowMode const& getWindowMode() const;
 
   // Sets the window mode
-  void SetWindowMode(WindowMode const& windowMode);
+  void setWindowMode(WindowMode const& windowMode);
 
   // Gets the vertical sync flag
-  bool const& IsVerticalSync() const;
+  bool const& isVerticalSync() const;
 
   // Sets the vertical sync flag
-  void SetVerticalSync(bool const& verticalSync);
+  void setVerticalSync(bool const& verticalSync);
+
+  // Gets the audio device name
+  std::string const& getAudioDevice() const;
+
+  // Sets the audio device name
+  void setAudioDevice(std::string const& soundDevice);
 
  private:
-  std::string renderingDevice;
   std::string videoMode;
   byte fullScreenAntiAliasing;
   WindowMode windowMode;
   bool verticalSync;
+  std::string audioDevice;
 };
 
 }  // namespace openhoi

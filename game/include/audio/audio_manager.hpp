@@ -30,6 +30,9 @@ class AudioManager final {
   // Gets the current device
   std::shared_ptr<AudioDevice> const& getDevice() const;
 
+  // Gets all possible devices
+  std::vector<std::shared_ptr<AudioDevice>> const& getPossibleDevices() const;
+
   // Loads all sound files in the provided directory into memory and thus makes
   // it playable
   void loadAll(filesystem::path directory);

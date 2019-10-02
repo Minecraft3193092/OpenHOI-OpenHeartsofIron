@@ -99,8 +99,14 @@ class GameManager final : public Ogre::FrameListener,
   // Destroy the render window
   void destroyWindow();
 
+  // Initialize audio
+  void initializeAudio();
+
   // Load and configure the render system
   void loadRenderSystem();
+
+  // Set best possible video mode
+  void setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem);
 
   // Create camera
   void createCamera();
