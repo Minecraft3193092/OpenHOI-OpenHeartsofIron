@@ -296,7 +296,7 @@ void GameManager::loadRenderSystem() {
 
 // Set best possible video mode
 void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
-  // Get all possible video modes
+  // Get all possible video modes for the current render system
   const Ogre::ConfigOption& configValue =
       renderSystem->getConfigOptions().at("Video Mode");
   for (auto it = configValue.possibleValues.begin();

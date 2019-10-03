@@ -21,7 +21,7 @@ particle_system smoke
 
 	affector ColourImage
 	{
-		image smoke_colors.png
+		image smoke_colors.dds
 	}
 
    	affector Rotator

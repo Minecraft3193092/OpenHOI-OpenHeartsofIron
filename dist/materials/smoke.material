@@ -11,7 +11,7 @@ material smoke
 
 			texture_unit
 			{
-				texture smoke.png
+				texture smoke.dds
 				tex_address_mode clamp
 			}
 		}

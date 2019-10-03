@@ -7,7 +7,7 @@ material logo
             scene_blend alpha_blend
             texture_unit
             {
-                texture logo.png
+                texture logo.dds
             }
         }   
     }

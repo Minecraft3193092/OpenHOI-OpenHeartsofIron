@@ -1,6 +1,6 @@
 The file name format is the following:
 
-  <country>[-<addition>][-<ideology>].png
+  <country>[-<addition>][-<ideology>].dds
 
 Where
   `country`  is the country code (2 chars) e.g. `de` for Germany ()
@@ -12,8 +12,8 @@ Where
      `dy` for democracy and it's sub-ideologies
 
 Examples for flags (would be same for coat of arms):
-  German Reich with Black-White-Red flag: de.png
-  Nazi Germany with Swastika flag: de-fm.png
-  FRG with White-Red-Gold flag: de-frg.png
-  GDR with White-Red-Gold with a compass and a hammer encircled with rye: de-gdr.png
-  Communist FRG with hammer and sickle: de-frg-cm.png
+  German Reich with Black-White-Red flag: de.dds
+  Nazi Germany with Swastika flag: de-fm.dds
+  FRG with White-Red-Gold flag: de-frg.dds
+  GDR with White-Red-Gold with a compass and a hammer encircled with rye: de-gdr.dds
+  Communist FRG with hammer and sickle: de-frg-cm.dds
