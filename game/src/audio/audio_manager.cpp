@@ -263,7 +263,7 @@ void AudioManager::loadAll(filesystem::path directory) {
     }
 
     Ogre::LogManager::getSingletonPtr()->logMessage(
-        (boost::format("Audo file '%s' loaded") % file.filename().u8string())
+        (boost::format("Audio file '%s' loaded") % file.filename().u8string())
             .str());
   }
 }
