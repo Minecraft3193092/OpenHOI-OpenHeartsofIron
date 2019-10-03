@@ -426,8 +426,11 @@ void GameManager::loadResources() {
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(resourceGroup);
   }
 
-  // Load all audio resources
-  audioManager->loadAll(FileAccess::getAssetRootDirectory() / "audio");
+  // Load background audio and other audio effects
+  filesystem::path audioDirectory =
+      FileAccess::getAssetRootDirectory() / "audio";
+  audioManager->loadBackgroundMusicAsync(audioDirectory / "background");
+  audioManager->loadEffects(audioDirectory);
 }
 
 // Poll for events

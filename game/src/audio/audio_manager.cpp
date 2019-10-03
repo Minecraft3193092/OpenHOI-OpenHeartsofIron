@@ -9,6 +9,10 @@
 #include <boost/format.hpp>
 #include <stb_vorbis.c>
 
+#include <algorithm>
+#include <random>
+#include <thread>
+
 namespace openhoi {
 
 // Initializes the audio manager
@@ -186,86 +190,131 @@ AudioManager::getPossibleDevices() const {
   return devices;
 }
 
-// Loads all sound files in the provided directory into memory and thus makes it
-// playable
-void AudioManager::loadAll(filesystem::path directory) {
+// Loads all background audio tracks in a separate track and starts to play them
+// as soon as the first file was fully loaded (async)
+void AudioManager::loadBackgroundMusicAsync(filesystem::path directory) {
+  // Invoke the function `loadBackgroundMusic` in a separate thread
+  std::thread{&AudioManager::loadBackgroundMusic, this, directory}.detach();
+}
+
+// Loads all background audio tracks in a separate track and starts to play them
+// as soon as the first file was fully loaded (blocking method that should not be called from outside)
+void AudioManager::loadBackgroundMusic(filesystem::path directory) {
+  // Iterate through all files in directory
+  std::vector<filesystem::path> files;
+  for (const auto& entry : filesystem::directory_iterator(directory)) {
+    files.push_back(entry.path());
+  }
+
+  // Shuffle file list
+  std::random_device rd;
+  std::mt19937 twister(rd());
+  std::shuffle(files.begin(), files.end(), twister);
+
+  // Load all music files
+  for (const auto& file : files) {
+    loadSound(file, true /* background music */);
+  } 
+}
+
+// Loads all audio effect files found in the the provided directory into memory
+// and thus makes them playable
+void AudioManager::loadEffects(filesystem::path directory) {
   // Iterate through all files in directory
   for (const auto& entry : filesystem::directory_iterator(directory)) {
-    filesystem::path file = entry.path();
-    if (!filesystem::is_regular_file(file)) continue;
+    loadSound(entry.path(), false /* regular sound */);
+  }
+}
 
-    // Check for OGG file type
-    std::string extension =
-        boost::algorithm::to_lower_copy(file.extension().u8string());
-    if (extension != ".ogg") continue;
+// Loads an sound and adds it to the provided structure. Returns true in case
+// the sound was loaded successfully
+bool AudioManager::loadSound(filesystem::path audioFile,
+                             bool isBackgroundMusic) {
+  if (!filesystem::is_regular_file(audioFile)) return false;
 
-    // Read file and check result
-    unsigned char* data = nullptr;
-    int fileSize = (int)FileAccess::readFile(file, &data);
-    if (fileSize < 1) continue;
+  // Check for OGG file type
+  std::string extension =
+      boost::algorithm::to_lower_copy(audioFile.extension().u8string());
+  if (extension != ".ogg") return false;
 
-    // Clear OpenAL error flag
-    alGetError();
+  // Read file and check result
+  unsigned char* data = nullptr;
+  int fileSize = (int)FileAccess::readFile(audioFile, &data);
+  if (fileSize < 1) return false;
 
-    // Open Vorbis stream and decode data
-    auto* vorbis = stb_vorbis_open_memory(data, fileSize, NULL, NULL);
-    if (!vorbis) {
-      Ogre::LogManager::getSingletonPtr()->logMessage(
-          (boost::format("Audio file '%s' could not be decoded") %
-           file.filename().u8string())
-              .str(),
-          Ogre::LogMessageLevel::LML_CRITICAL);
+  // Clear OpenAL error flag
+  alGetError();
 
-      // Free the data malloc'd in FileAccess::readFile!
-      free(data);
-
-      continue;
-    }
-
-    // Get audio information
-    auto info = stb_vorbis_get_info(vorbis);
-    ALenum format = info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-    int sampleRate = info.sample_rate;
-    int size = stb_vorbis_stream_length_in_samples(vorbis) * info.channels;
-    short* samples = new short[size];
-    stb_vorbis_get_samples_short_interleaved(vorbis, info.channels, samples,
-                                             size);
-    size *= sizeof(short);
-
-    // Close Vorbis stream
-    stb_vorbis_close(vorbis);
+  // Open Vorbis stream and decode data
+  auto* vorbis = stb_vorbis_open_memory(data, fileSize, NULL, NULL);
+  if (!vorbis) {
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        (boost::format("Audio file '%s' could not be decoded") %
+         audioFile.filename().u8string())
+            .str(),
+        Ogre::LogMessageLevel::LML_CRITICAL);
 
     // Free the data malloc'd in FileAccess::readFile!
     free(data);
 
-    // Generate buffers
-    ALuint buffer;
-    ALenum error;
-    alGenBuffers(1, &buffer);
-    if ((error = alGetError()) != AL_NO_ERROR) {
-      Ogre::LogManager::getSingletonPtr()->logMessage(
-          (boost::format("Unable to generate OpenAL buffer for file '%s': %d") %
-           file.filename().u8string() % error)
-              .str(),
-          Ogre::LogMessageLevel::LML_CRITICAL);
-      continue;
-    }
-    alBufferData(buffer, format, samples, size, sampleRate);
-    if ((error = alGetError()) != AL_NO_ERROR) {
-      Ogre::LogManager::getSingletonPtr()->logMessage(
-          (boost::format(
-               "Unable to copy data into OpenAL buffer for file '%s': %d") %
-           file.filename().u8string() % error)
-              .str(),
-          Ogre::LogMessageLevel::LML_CRITICAL);
-      alDeleteBuffers(1, &buffer);
-      continue;
-    }
-
-    Ogre::LogManager::getSingletonPtr()->logMessage(
-        (boost::format("Audio file '%s' loaded") % file.filename().u8string())
-            .str());
+    return false;
   }
+
+  // Get audio information
+  auto info = stb_vorbis_get_info(vorbis);
+  ALenum format = info.channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+  int sampleRate = info.sample_rate;
+  int size = stb_vorbis_stream_length_in_samples(vorbis) * info.channels;
+  short* samples = new short[size];
+  stb_vorbis_get_samples_short_interleaved(vorbis, info.channels, samples,
+                                           size);
+  size *= sizeof(short);
+
+  // Close Vorbis stream
+  stb_vorbis_close(vorbis);
+
+  // Free the data malloc'd in FileAccess::readFile!
+  free(data);
+
+  // Generate buffers
+  ALuint buffer;
+  ALenum error;
+  alGenBuffers(1, &buffer);
+  if ((error = alGetError()) != AL_NO_ERROR) {
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        (boost::format("Unable to generate OpenAL buffer for file '%s': %d") %
+         audioFile.filename().u8string() % error)
+            .str(),
+        Ogre::LogMessageLevel::LML_CRITICAL);
+    return false;
+  }
+  alBufferData(buffer, format, samples, size, sampleRate);
+  if ((error = alGetError()) != AL_NO_ERROR) {
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        (boost::format(
+             "Unable to copy data into OpenAL buffer for file '%s': %d") %
+         audioFile.filename().u8string() % error)
+            .str(),
+        Ogre::LogMessageLevel::LML_CRITICAL);
+    alDeleteBuffers(1, &buffer);
+    return false;
+  }
+
+  // Create sound object
+  std::string fileName = audioFile.stem().u8string();
+  std::shared_ptr<Sound> sound(new Sound(fileName, buffer, samples));
+
+  // Get destination map file and add sound to it
+  SoundMap destMap = isBackgroundMusic ? backgroundMusic : effects;
+  destMap.insert({fileName, sound});
+
+  Ogre::LogManager::getSingletonPtr()->logMessage(
+      (boost::format("Audio file '%s' loaded") %
+       audioFile.filename().u8string())
+          .str());
+
+  // Audio file successfully loaded
+  return true;
 }
 
 }  // namespace openhoi
