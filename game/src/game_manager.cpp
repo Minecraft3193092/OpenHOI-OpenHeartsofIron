@@ -28,9 +28,6 @@
 // Direct3D11 causes blurry font textures and thus we disable support for it at
 // the moment
 //#define ENABLE_DIRECT3D11
-
-// Minimum number of exclusive CPU cores in order to switch to Windows Game Mode
-#  define OPENHOI_GAME_MODE_MIN_CPUS 2
 #endif
 
 namespace openhoi {
