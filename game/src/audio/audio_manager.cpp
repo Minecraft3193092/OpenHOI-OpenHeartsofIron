@@ -87,7 +87,7 @@ AudioManager::AudioManager() {
 
       // Create context
       if (!createContext()) {
-        delete device;
+        alcCloseDevice(device);
         device = nullptr;
       }
     }
@@ -177,7 +177,7 @@ void AudioManager::setDevice(std::shared_ptr<AudioDevice> device) {
     if (this->device) {
       // Create context
       if (!createContext()) {
-        delete this->device;
+        alcCloseDevice(this->device);
         this->device = nullptr;
       }
     }
@@ -271,8 +271,7 @@ ALuint AudioManager::generateSourceAndPlaySound(std::shared_ptr<Sound> sound,
   alSourcei(source, AL_LOOPING, AL_FALSE);
   alSourcei(source, AL_SOURCE_RELATIVE, AL_FALSE);
   alSourcei(source, AL_BUFFER, sound->getBuffer());
-  alSourcef(source, AL_MIN_GAIN, 0.0f);
-  alSourcef(source, AL_MAX_GAIN, 1.0f);  // TODO: Volume
+  alSourcef(source, AL_GAIN, volume);
 
   // Play audio from source
   alSourcePlay(source);

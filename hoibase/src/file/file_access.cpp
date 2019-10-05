@@ -233,7 +233,8 @@ long FileAccess::readFile(filesystem::path file, unsigned char** data) {
   *data = (unsigned char*)malloc(size);
 
   // Read file into data pointer
-  fread(*data, 1, size, fp);
+  size_t result = fread(*data, 1, size, fp);
+  if (result != size) return -1;
 
   // Return the data length
   return (long)size;
