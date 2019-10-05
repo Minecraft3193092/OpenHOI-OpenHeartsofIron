@@ -46,7 +46,7 @@ class Options final {
 
   // Sets the audio device name
   void setAudioDevice(std::string const& soundDevice);
-  
+
   // Gets the music volume
   float const& getMusicVolume() const;
 

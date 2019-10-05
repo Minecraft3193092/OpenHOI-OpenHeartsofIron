@@ -2,7 +2,7 @@
 
 #include "options.hpp"
 
-#include <algorithm> 
+#include <algorithm>
 
 namespace openhoi {
 
@@ -58,7 +58,7 @@ void Options::setAudioDevice(std::string const& audioDevice) {
   this->audioDevice = audioDevice;
 }
 
-  // Gets the music volume
+// Gets the music volume
 float const& Options::getMusicVolume() const { return musicVolume; }
 
 // Sets the music volume
@@ -71,7 +71,8 @@ float const& Options::getEffectsVolume() const { return effectsVolume; }
 
 // Sets the effects volume
 void Options::setEffectsVolume(float const& effectsVolume) {
-  this->effectsVolume = effectsVolume > 1.0f ? 1.0f : std::max(effectsVolume, 0.0f);
+  this->effectsVolume =
+      effectsVolume > 1.0f ? 1.0f : std::max(effectsVolume, 0.0f);
 }
 
 }  // namespace openhoi

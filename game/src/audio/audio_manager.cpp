@@ -314,7 +314,8 @@ void AudioManager::updateStats() {
         backgroundMusicIt = backgroundMusic.begin();
 
       // Play the next track
-      playingBackgroundMusic = generateSourceAndPlaySound(backgroundMusicIt->second, backgroundMusicVolume);
+      playingBackgroundMusic = generateSourceAndPlaySound(
+          backgroundMusicIt->second, backgroundMusicVolume);
     } else {
       alSourcef(playingBackgroundMusic, AL_GAIN, backgroundMusicVolume);
     }
