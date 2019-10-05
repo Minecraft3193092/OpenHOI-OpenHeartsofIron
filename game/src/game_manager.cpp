@@ -18,14 +18,20 @@
 #include <boost/format.hpp>
 #ifdef OPENHOI_OS_WINDOWS
 #  include <OgreD3D11RenderSystem.h>
+#  include <expandedresources.h>
 #  include <shellscalingapi.h>
 #endif
 
 #include <exception>
 
+#ifdef OPENHOI_OS_WINDOWS
 // Direct3D11 causes blurry font textures and thus we disable support for it at
 // the moment
 //#define ENABLE_DIRECT3D11
+
+// Minimum number of exclusive CPU cores in order to switch to Windows Game Mode
+#  define OPENHOI_GAME_MODE_MIN_CPUS 2
+#endif
 
 namespace openhoi {
 
@@ -159,6 +165,25 @@ Ogre::RenderWindow* const& GameManager::getRenderWindow() const {
 
 // Start the main loop
 void GameManager::run() {
+#ifdef OPENHOI_OS_WINDOWS
+  // Gets the expected number of exclusive CPU sets that are available to the
+  // app when in Windows Game Mode
+  ULONG exclusiveCpuCount;
+  HRESULT result = GetExpandedResourceExclusiveCpuCount(&exclusiveCpuCount);
+  if (result == S_OK) {
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        (boost::format(
+             "Windows Game Mode provides usa total of %d exclusive CPU cores") %
+         exclusiveCpuCount)
+            .str());
+  } else {
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        "Unable to get number of exclusive CPU cores provided by Windows Game "
+        "Mode",
+        Ogre::LogMessageLevel::LML_WARNING);
+  }
+#endif
+
   // Start rendering. This will call the main game loop and block here until the
   // game ends
   root->startRendering();
@@ -319,11 +344,10 @@ void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
     // Enable DPI awareness on Windows. Otherwise, openhoi's window size be
     // increased by Windows' desktop scaling factor (e.g. 125%)
     Ogre::LogManager::getSingletonPtr()->logMessage("Enabling DPI awareness");
-    HRESULT result = SetProcessDpiAwareness(
-        PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE);
+    HRESULT result = SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
     if (result != S_OK) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
-          "Unable to High DPI awareness. Checking for monitor scale factor",
+          "Unable to DPI awareness. Checking for monitor scale factor",
           Ogre::LogMessageLevel::LML_WARNING);
 
       // Something did not work. But this may not be an issue if the scale
@@ -340,7 +364,7 @@ void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
             (boost::format("The primary monitor's scale factor is at %d%%") %
              scaleFactor)
                 .str());
-        if (scaleFactor != DEVICE_SCALE_FACTOR::SCALE_100_PERCENT) {
+        if (scaleFactor != SCALE_100_PERCENT) {
           // Scale factor is not 100%. Thus, we have to switch to full screen
           switchToFullscreen = true;
         }

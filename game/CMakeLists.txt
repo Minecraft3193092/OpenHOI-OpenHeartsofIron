@@ -22,7 +22,7 @@ else()
 endif()
 
 if(WIN32)
-    set(OS_LIBRARIES shcore)
+    set(OS_LIBRARIES shcore windowsapp)
 endif()
 
 
