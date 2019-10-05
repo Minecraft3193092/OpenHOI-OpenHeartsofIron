@@ -41,7 +41,7 @@ openhoi source files heavily influenced by 3rd-party code:
  *<sub><sup>(original code extracted from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui)))</sup></sub>*
 
 Graphic files
- - `dist/graphics/coat_of_arms/de.png` / `dev-assets/coat_of_arms/de.svg` → free for any use but with copyright holder attribution
+ - `dist/graphics/coat_of_arms/de.dds` / `dev-assets/coat_of_arms/de.svg` → free for any use but with copyright holder attribution
 *<sub><sup>(taken from [Wikipedia](https://commons.wikimedia.org/wiki/File:Wappen_Deutsches_Reich_-_Reichsadler_1889.svg); Copyright [David Liuzzo](https://commons.wikimedia.org/wiki/User:David_Liuzzo))</sup></sub>*
 
 Audio files
