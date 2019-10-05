@@ -20,10 +20,10 @@ class Sound final {
   // Gets the sound file name
   std::string const& getFileName() const;
 
-  // Gets the OpenAL sound buffer
-  ALuint const& getBuffer() const;
+  // Gets the OpenAL sound source
+  ALuint const& getSource() const;
 
-  private:
+ private:
   std::string fileName;
   ALuint source;
   ALuint buffer;

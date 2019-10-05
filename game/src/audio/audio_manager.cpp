@@ -95,6 +95,9 @@ AudioManager::AudioManager() {
     Ogre::LogManager::getSingletonPtr()->logMessage(
         "*** No audio devices found! ***", Ogre::LogMessageLevel::LML_CRITICAL);
   }
+
+  // Initialize iterators
+  backgroundMusicIt = backgroundMusic.begin();
 }
 
 // Destroys the audio manager
@@ -190,16 +193,16 @@ AudioManager::getPossibleDevices() const {
   return devices;
 }
 
-// Loads all background audio tracks in a separate track and starts to play them
-// as soon as the first file was fully loaded (async)
+// Starts the loading of background music
 void AudioManager::loadBackgroundMusicAsync(filesystem::path directory) {
   // Invoke the function `loadBackgroundMusic` in a separate thread
-  std::thread{&AudioManager::loadBackgroundMusic, this, directory}.detach();
+  std::thread{&AudioManager::loadAndPlayBackgroundMusic, this, directory}
+      .detach();
 }
 
 // Loads all background audio tracks in a separate track and starts to play them
-// as soon as the first file was fully loaded (blocking method that should not be called from outside)
-void AudioManager::loadBackgroundMusic(filesystem::path directory) {
+// as soon as the first file was fully loaded
+void AudioManager::loadAndPlayBackgroundMusic(filesystem::path directory) {
   // Iterate through all files in directory
   std::vector<filesystem::path> files;
   for (const auto& entry : filesystem::directory_iterator(directory)) {
@@ -213,8 +216,9 @@ void AudioManager::loadBackgroundMusic(filesystem::path directory) {
 
   // Load all music files
   for (const auto& file : files) {
-    loadSound(file, true /* background music */);
-  } 
+    auto soundPtr = loadSound(file);
+    if (soundPtr) backgroundMusic.insert({soundPtr->getFileName(), soundPtr});
+  }
 }
 
 // Loads all audio effect files found in the the provided directory into memory
@@ -222,25 +226,79 @@ void AudioManager::loadBackgroundMusic(filesystem::path directory) {
 void AudioManager::loadEffects(filesystem::path directory) {
   // Iterate through all files in directory
   for (const auto& entry : filesystem::directory_iterator(directory)) {
-    loadSound(entry.path(), false /* regular sound */);
+    auto soundPtr = loadSound(entry.path());
+    if (soundPtr) effects.insert({soundPtr->getFileName(), soundPtr});
   }
 }
 
-// Loads an sound and adds it to the provided structure. Returns true in case
-// the sound was loaded successfully
-bool AudioManager::loadSound(filesystem::path audioFile,
-                             bool isBackgroundMusic) {
-  if (!filesystem::is_regular_file(audioFile)) return false;
+// Play the provided sound with the given volume
+void AudioManager::playSound(std::shared_ptr<Sound> sound, float volume) {
+#ifdef _DEBUG
+  Ogre::LogManager::getSingletonPtr()->logMessage(
+      (boost::format("Playing sound '%s'") % sound->getFileName()).str());
+#endif
+
+  alSourcePlay(sound->getSource());
+  // TODO: Volume
+}
+
+// Play the sound effect (no background music) identified by it's name with the
+// given volume
+void AudioManager::playSound(std::string sound, float volume) {
+  auto soundPtr = effects[sound];
+  if (soundPtr) {
+    playSound(soundPtr, volume);
+  } else {
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        (boost::format("Unable to play sound effect '%s' as it was not found") %
+         soundPtr->getFileName())
+            .str());
+  }
+}
+
+// Update audio stats (e.g. progress of background music)
+void AudioManager::updateStats() {
+  // Check background audio status
+  if (backgroundMusic.size() > 0) {
+    bool backgroundMusicPlaying = false;
+    if (backgroundMusicIt != backgroundMusic.end()) {
+      // Get sound pointer
+      std::shared_ptr<Sound> soundPtr = backgroundMusicIt->second;
+
+      // Check sound state (if it is still playing)
+      ALint state;
+      alGetSourcei(soundPtr->getSource(), AL_SOURCE_STATE, &state);
+      backgroundMusicPlaying = state == AL_PLAYING;
+    }
+
+    if (!backgroundMusicPlaying) {
+      // Switch to next background audio track
+      if (backgroundMusicIt != backgroundMusic.end() &&
+          std::next(backgroundMusicIt) != backgroundMusic.end())
+        backgroundMusicIt++;
+      else
+        backgroundMusicIt = backgroundMusic.begin();
+
+      // Play the next track
+      playSound(backgroundMusicIt->second, 1.0f);  // TODO: volume
+    }
+  }
+}
+
+// Loads an sound and returns the sound in case the file was loaded
+// successfully
+std::shared_ptr<Sound> AudioManager::loadSound(filesystem::path audioFile) {
+  if (!filesystem::is_regular_file(audioFile)) return nullptr;
 
   // Check for OGG file type
   std::string extension =
       boost::algorithm::to_lower_copy(audioFile.extension().u8string());
-  if (extension != ".ogg") return false;
+  if (extension != ".ogg") return nullptr;
 
   // Read file and check result
   unsigned char* data = nullptr;
   int fileSize = (int)FileAccess::readFile(audioFile, &data);
-  if (fileSize < 1) return false;
+  if (fileSize < 1) return nullptr;
 
   // Clear OpenAL error flag
   alGetError();
@@ -257,7 +315,7 @@ bool AudioManager::loadSound(filesystem::path audioFile,
     // Free the data malloc'd in FileAccess::readFile!
     free(data);
 
-    return false;
+    return nullptr;
   }
 
   // Get audio information
@@ -286,7 +344,7 @@ bool AudioManager::loadSound(filesystem::path audioFile,
          audioFile.filename().u8string() % error)
             .str(),
         Ogre::LogMessageLevel::LML_CRITICAL);
-    return false;
+    return nullptr;
   }
   alBufferData(buffer, format, samples, size, sampleRate);
   if ((error = alGetError()) != AL_NO_ERROR) {
@@ -297,16 +355,12 @@ bool AudioManager::loadSound(filesystem::path audioFile,
             .str(),
         Ogre::LogMessageLevel::LML_CRITICAL);
     alDeleteBuffers(1, &buffer);
-    return false;
+    return nullptr;
   }
 
   // Create sound object
   std::string fileName = audioFile.stem().u8string();
   std::shared_ptr<Sound> sound(new Sound(fileName, buffer, samples));
-
-  // Get destination map file and add sound to it
-  SoundMap destMap = isBackgroundMusic ? backgroundMusic : effects;
-  destMap.insert({fileName, sound});
 
   Ogre::LogManager::getSingletonPtr()->logMessage(
       (boost::format("Audio file '%s' loaded") %
@@ -314,7 +368,7 @@ bool AudioManager::loadSound(filesystem::path audioFile,
           .str());
 
   // Audio file successfully loaded
-  return true;
+  return sound;
 }
 
 }  // namespace openhoi

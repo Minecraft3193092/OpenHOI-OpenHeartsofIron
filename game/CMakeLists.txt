@@ -21,6 +21,10 @@ else()
     find_package(SDL2 REQUIRED)
 endif()
 
+if(WIN32)
+    set(OS_LIBRARIES shcore)
+endif()
+
 
 # Add main code
 list(APPEND GAME_INCLUDES include/game_manager.hpp
@@ -124,7 +128,8 @@ target_link_libraries(game hoibase
                            ${SDL2_LIBRARIES}
                            ${OPENAL_LIBRARY}
                            Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
-                           Threads::Threads)
+                           Threads::Threads
+                           ${OS_LIBRARIES})
 
 target_include_directories(game
     PUBLIC

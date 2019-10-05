@@ -13,11 +13,13 @@
 #include <OgreRoot.h>
 #include <OgreSTBICodec.h>
 #include <OgreTextureManager.h>
-#ifdef OPENHOI_OS_WINDOWS
-#  include <OgreD3D11RenderSystem.h>
-#endif
 #include <SDL.h>
 #include <SDL_syswm.h>
+#include <boost/format.hpp>
+#ifdef OPENHOI_OS_WINDOWS
+#  include <OgreD3D11RenderSystem.h>
+#  include <shellscalingapi.h>
+#endif
 
 #include <exception>
 
@@ -261,11 +263,6 @@ void GameManager::loadRenderSystem() {
   renderSystem->setConfigOption(
       "FSAA", std::to_string(options->getFullScreenAntiAliasing()));
 
-  // Set window mode
-  renderSystem->setConfigOption(
-      "Full Screen",
-      options->getWindowMode() == WindowMode::FULLSCREEN ? "Yes" : "No");
-
   // Set VSync (turn always on in windowed screen mode because disabling VSync
   // can cause timing issues at lower frame rates here)
   renderSystem->setConfigOption(
@@ -316,6 +313,48 @@ void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
 
   // Set video mode
   renderSystem->setConfigOption("Video Mode", options->getVideoMode());
+
+  #ifdef OPENHOI_OS_WINDOWS
+  if (options->getWindowMode() != WindowMode::FULLSCREEN) {
+    // Enable High DPI awareness on Windows. Otherwise, openhoi's window size be
+    // increased by Windows' desktop scaling factor (e.g. 125%)
+    Ogre::LogManager::getSingletonPtr()->logMessage("Enabling DPI awareness");
+    HRESULT result = SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE);
+    if (result != S_OK) {
+      Ogre::LogManager::getSingletonPtr()->logMessage(
+          "Unable to High DPI awareness. Checking for monitor scale factor",
+          Ogre::LogMessageLevel::LML_WARNING);
+
+      // Something did not work. But this may not be an issue if the scale
+      // factor is 100%. We we have to check that first
+      HMONITOR monitor =
+          MonitorFromPoint(POINT{0, 0}, MONITOR_DEFAULTTOPRIMARY);
+      DEVICE_SCALE_FACTOR scaleFactor;
+      result = GetScaleFactorForMonitor(monitor, &scaleFactor);
+      if (result == S_OK && scaleFactor != DEVICE_SCALE_FACTOR_INVALID) {
+        // Check scale factor. If it is 100%, we can just continue. If not, we
+        // maybe have to select a lower resolution..
+        Ogre::LogManager::getSingletonPtr()->logMessage(
+            (boost::format("The primary monitor's scale factor is at %d%%") %
+             scaleFactor)
+                .str());
+        if (scaleFactor != SCALE_100_PERCENT) {
+          // Scale factor is not 100%. Thus, we switch to full screen
+          options->setWindowMode(WindowMode::FULLSCREEN);
+        }
+      } else {
+        Ogre::LogManager::getSingletonPtr()->logMessage(
+            "Unable to get scale factor of primary monitor",
+            Ogre::LogMessageLevel::LML_WARNING);
+      }
+    }
+  }
+#endif
+
+    // Set fullscreen flag
+  renderSystem->setConfigOption(
+      "Full Screen",
+      options->getWindowMode() == WindowMode::FULLSCREEN ? "Yes" : "No");
 }
 
 // Create a new render window
@@ -331,18 +370,14 @@ void GameManager::createWindow() {
   windowDesc.name = OPENHOI_GAME_NAME;
 
   // Create SDL window
-  int flags =
-      windowDesc.useFullScreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE;
-  window.sdl = SDL_CreateWindow(
-      windowDesc.name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-      windowDesc.width, windowDesc.height, flags);
-
-  // Adjust window style
-  if (options->getWindowMode() != WindowMode::FULLSCREEN) {
-    SDL_SetWindowResizable(window.sdl, SDL_FALSE);
-    if (options->getWindowMode() == WindowMode::BORDERLESS)
-      SDL_SetWindowBordered(window.sdl, SDL_FALSE);
-  }
+  Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI;
+  if (options->getWindowMode() == WindowMode::BORDERLESS)
+    flags |= SDL_WINDOW_BORDERLESS;
+  else if (options->getWindowMode() == WindowMode::FULLSCREEN)
+    flags |= SDL_WINDOW_FULLSCREEN;
+  window.sdl = SDL_CreateWindow(windowDesc.name.c_str(), SDL_WINDOWPOS_CENTERED,
+                                SDL_WINDOWPOS_CENTERED, windowDesc.width,
+                                windowDesc.height, flags);
 
   // Set window manager information
   SDL_SysWMinfo wmInfo;
@@ -538,6 +573,9 @@ bool GameManager::frameStarted(const Ogre::FrameEvent& /*evt*/) {
 
   // Update GUI in current state
   stateManager->updateGui();
+
+  // Refresh audio status
+  audioManager->updateStats();
 
   return true;
 }

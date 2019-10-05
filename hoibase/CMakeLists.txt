@@ -94,6 +94,10 @@ if(WIN32 AND NOT ENV{V8_HOME})
 endif()
 find_package(V8 REQUIRED)
 
+if(WIN32)
+    set(OS_LIBRARIES rpcrt4)
+endif()
+
 
 # openhoi.hpp
 list(APPEND HOIBASE_INCLUDES include/hoibase/openhoi.hpp)
@@ -160,7 +164,8 @@ target_link_libraries(hoibase
                       ${OGRE_LIBRARIES}
                       ${CGAL_IMPORTED_TARGET}
                       ${LIBUUID_IMPORTED_TARGET}
-                      ${V8_LIBRARIES})
+                      ${V8_LIBRARIES}
+                      ${OS_LIBRARIES})
 
 target_include_directories(hoibase
     PUBLIC

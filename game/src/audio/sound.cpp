@@ -28,11 +28,9 @@ Sound::~Sound() {
 }
 
 // Gets the sound file name
-std::string const& Sound::getFileName() const {
-  return fileName;
-}
+std::string const& Sound::getFileName() const { return fileName; }
 
-// Gets the OpenAL sound buffer
-ALuint const& Sound::getBuffer() const { return buffer; }
+// Gets the OpenAL sound source
+ALuint const& Sound::getSource() const { return source; }
 
 }  // namespace openhoi

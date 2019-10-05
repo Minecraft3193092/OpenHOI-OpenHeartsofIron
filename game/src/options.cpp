@@ -8,7 +8,7 @@ namespace openhoi {
 Options::Options()
     : videoMode(""),
       fullScreenAntiAliasing(8),
-      windowMode(WindowMode::FULLSCREEN),
+      windowMode(WindowMode::BORDERLESS),
       verticalSync(true),
       audioDevice("") {}
 

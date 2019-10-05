@@ -7,7 +7,6 @@
 #if defined(OPENHOI_OS_WINDOWS)
 #  include <rpc.h>
 #  include <codecvt>
-#  pragma comment(lib, "rpcrt4.lib")
 #elif defined(OPENHOI_OS_MACOS)
 #  include <CoreFoundation/CFUUID.h>
 #else
