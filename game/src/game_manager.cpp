@@ -340,7 +340,7 @@ void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
             (boost::format("The primary monitor's scale factor is at %d%%") %
              scaleFactor)
                 .str());
-        if (scaleFactor != SCALE_100_PERCENT) {
+        if (scaleFactor != DEVICE_SCALE_FACTOR::SCALE_100_PERCENT) {
           // Scale factor is not 100%. Thus, we have to switch to full screen
           switchToFullscreen = true;
         }
@@ -463,7 +463,7 @@ void GameManager::loadResources() {
   // Initialize and load resource groups
   std::array<std::string, 3> defaultResourceGroups = {
       Ogre::RGN_DEFAULT, OPENHOI_RSG_COA_TEXTURES, OPENHOI_RSG_FLAG_TEXTURES};
-  for (std::string& resourceGroup : defaultResourceGroups) {
+  for (const auto& resourceGroup : defaultResourceGroups) {
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(
         resourceGroup);
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(resourceGroup);

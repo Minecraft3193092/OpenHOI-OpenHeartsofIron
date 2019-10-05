@@ -103,6 +103,11 @@ AudioManager::AudioManager() {
 // Destroys the audio manager
 AudioManager::~AudioManager() {
   if (context) {
+    for (const auto& audioSource : playing) {
+      alDeleteSources(1, &audioSource);
+    }
+    if (playingBackgroundMusic) alDeleteSources(1, &playingBackgroundMusic);
+
     alcMakeContextCurrent(NULL);
     alcDestroyContext(context);
   }
@@ -233,13 +238,11 @@ void AudioManager::loadEffects(filesystem::path directory) {
 
 // Play the provided sound with the given volume
 void AudioManager::playSound(std::shared_ptr<Sound> sound, float volume) {
-#ifdef _DEBUG
-  Ogre::LogManager::getSingletonPtr()->logMessage(
-      (boost::format("Playing sound '%s'") % sound->getFileName()).str());
-#endif
+  // Generate source and play audio from it
+  ALuint source = generateSourceAndPlaySound(sound, volume);
 
-  alSourcePlay(sound->getSource());
-  // TODO: Volume
+  // Add source to list of playing sources
+  playing.push_back(source);
 }
 
 // Play the sound effect (no background music) identified by it's name with the
@@ -256,8 +259,30 @@ void AudioManager::playSound(std::string sound, float volume) {
   }
 }
 
+// Generate OpenAL source from the provided sound and play it with the given volume
+ALuint AudioManager::generateSourceAndPlaySound(std::shared_ptr<Sound> sound, float volume) {
+  // Create audio source object
+  ALuint source;
+  alGenSources(1, &source);
+  assert(source > 0);
+
+  alSourcei(source, AL_LOOPING, AL_FALSE);
+  alSourcei(source, AL_SOURCE_RELATIVE, AL_FALSE);
+  alSourcei(source, AL_BUFFER, sound->getBuffer());
+  alSourcef(source, AL_MIN_GAIN, 0.0f);
+  alSourcef(source, AL_MAX_GAIN, 1.0f);  // TODO: Volume
+
+  // Play audio from source
+  alSourcePlay(source);
+
+  // Return source
+  return source;
+}
+
 // Update audio stats (e.g. progress of background music)
 void AudioManager::updateStats() {
+  ALint state;
+
   // Check background audio status
   if (backgroundMusic.size() > 0) {
     bool backgroundMusicPlaying = false;
@@ -266,12 +291,17 @@ void AudioManager::updateStats() {
       std::shared_ptr<Sound> soundPtr = backgroundMusicIt->second;
 
       // Check sound state (if it is still playing)
-      ALint state;
-      alGetSourcei(soundPtr->getSource(), AL_SOURCE_STATE, &state);
-      backgroundMusicPlaying = state == AL_PLAYING;
+      alGetSourcei(playingBackgroundMusic, AL_SOURCE_STATE, &state);
+      backgroundMusicPlaying = state == AL_INITIAL || state == AL_PLAYING;
     }
 
     if (!backgroundMusicPlaying) {
+      // Delete audio source if required
+      if (playingBackgroundMusic) {
+        alDeleteSources(1, &playingBackgroundMusic);
+        playingBackgroundMusic = 0;
+      }
+
       // Switch to next background audio track
       if (backgroundMusicIt != backgroundMusic.end() &&
           std::next(backgroundMusicIt) != backgroundMusic.end())
@@ -280,7 +310,27 @@ void AudioManager::updateStats() {
         backgroundMusicIt = backgroundMusic.begin();
 
       // Play the next track
-      playSound(backgroundMusicIt->second, 1.0f);  // TODO: volume
+      playingBackgroundMusic = generateSourceAndPlaySound(
+          backgroundMusicIt->second, 1.0f);  // TODO: Volume
+    }
+  }
+
+  // Check for finished audio effects and deletes their sources
+  ALuint source;
+  for (auto it = playing.begin(); it != playing.end();) {
+    // Get source from iterator
+    source = *it;
+
+    // Check sound state (if it is still playing)
+    alGetSourcei(source, AL_SOURCE_STATE, &state);
+
+    // Delete it, if it is already stopped
+    if (state == AL_STOPPED) {
+      alDeleteSources(1, &source);
+      it = playing.erase(it);
+    } else {
+      // Do nothing but incrementing iterator to next element
+      it++;
     }
   }
 }
