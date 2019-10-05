@@ -314,12 +314,13 @@ void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
   // Set video mode
   renderSystem->setConfigOption("Video Mode", options->getVideoMode());
 
-  #ifdef OPENHOI_OS_WINDOWS
+#ifdef OPENHOI_OS_WINDOWS
   if (options->getWindowMode() != WindowMode::FULLSCREEN) {
-    // Enable High DPI awareness on Windows. Otherwise, openhoi's window size be
+    // Enable DPI awareness on Windows. Otherwise, openhoi's window size be
     // increased by Windows' desktop scaling factor (e.g. 125%)
     Ogre::LogManager::getSingletonPtr()->logMessage("Enabling DPI awareness");
-    HRESULT result = SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE);
+    HRESULT result = SetProcessDpiAwareness(
+        PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE);
     if (result != S_OK) {
       Ogre::LogManager::getSingletonPtr()->logMessage(
           "Unable to High DPI awareness. Checking for monitor scale factor",
@@ -351,7 +352,7 @@ void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
   }
 #endif
 
-    // Set fullscreen flag
+  // Set fullscreen flag
   renderSystem->setConfigOption(
       "Full Screen",
       options->getWindowMode() == WindowMode::FULLSCREEN ? "Yes" : "No");
