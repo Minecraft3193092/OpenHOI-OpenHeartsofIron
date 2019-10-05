@@ -2,6 +2,8 @@
 
 #include "options.hpp"
 
+#include <algorithm> 
+
 namespace openhoi {
 
 // Options constructor
@@ -10,7 +12,9 @@ Options::Options()
       fullScreenAntiAliasing(8),
       windowMode(WindowMode::BORDERLESS),
       verticalSync(true),
-      audioDevice("") {}
+      audioDevice(""),
+      musicVolume(0.35f),
+      effectsVolume(1.0f) {}
 
 // Gets the video mode name
 std::string const& Options::getVideoMode() const { return videoMode; }
@@ -52,6 +56,22 @@ std::string const& Options::getAudioDevice() const { return audioDevice; }
 // Sets the audio device name
 void Options::setAudioDevice(std::string const& audioDevice) {
   this->audioDevice = audioDevice;
+}
+
+  // Gets the music volume
+float const& Options::getMusicVolume() const { return musicVolume; }
+
+// Sets the music volume
+void Options::setMusicVolume(float const& musicVolume) {
+  this->musicVolume = musicVolume > 1.0f ? 1.0f : std::max(musicVolume, 0.0f);
+}
+
+// Gets the effects volume
+float const& Options::getEffectsVolume() const { return effectsVolume; }
+
+// Sets the effects volume
+void Options::setEffectsVolume(float const& effectsVolume) {
+  this->effectsVolume = effectsVolume > 1.0f ? 1.0f : std::max(effectsVolume, 0.0f);
 }
 
 }  // namespace openhoi

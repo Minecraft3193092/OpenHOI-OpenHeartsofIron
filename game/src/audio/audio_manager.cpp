@@ -1,6 +1,7 @@
 // Copyright 2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "audio/audio_manager.hpp"
+#include "game_manager.hpp"
 
 #include <hoibase/file/file_access.hpp>
 
@@ -282,6 +283,7 @@ ALuint AudioManager::generateSourceAndPlaySound(std::shared_ptr<Sound> sound,
 
 // Update audio stats (e.g. progress of background music)
 void AudioManager::updateStats() {
+  Options* options = GameManager::getInstance().getOptions();
   ALint state;
 
   // Check background audio status
@@ -296,6 +298,7 @@ void AudioManager::updateStats() {
       backgroundMusicPlaying = state == AL_INITIAL || state == AL_PLAYING;
     }
 
+    const float backgroundMusicVolume = options->getEffectsVolume();
     if (!backgroundMusicPlaying) {
       // Delete audio source if required
       if (playingBackgroundMusic) {
@@ -311,26 +314,30 @@ void AudioManager::updateStats() {
         backgroundMusicIt = backgroundMusic.begin();
 
       // Play the next track
-      playingBackgroundMusic = generateSourceAndPlaySound(
-          backgroundMusicIt->second, 1.0f);  // TODO: Volume
+      playingBackgroundMusic = generateSourceAndPlaySound(backgroundMusicIt->second, backgroundMusicVolume);
+    } else {
+      alSourcef(playingBackgroundMusic, AL_GAIN, backgroundMusicVolume);
     }
   }
 
   // Check for finished audio effects and deletes their sources
   ALuint source;
+  const float effectsVolume = options->getEffectsVolume();
   for (auto it = playing.begin(); it != playing.end();) {
     // Get source from iterator
     source = *it;
 
-    // Check sound state (if it is still playing)
+    // Check sound state (if it is still playing) and handle it
     alGetSourcei(source, AL_SOURCE_STATE, &state);
-
-    // Delete it, if it is already stopped
     if (state == AL_STOPPED) {
+      // Audio has stopped, so we can delete it
       alDeleteSources(1, &source);
       it = playing.erase(it);
     } else {
-      // Do nothing but incrementing iterator to next element
+      // Adjust volume if required
+      alSourcef(source, AL_GAIN, effectsVolume);
+
+      // Switch to next element in list
       it++;
     }
   }

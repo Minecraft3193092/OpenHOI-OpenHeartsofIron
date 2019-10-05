@@ -46,6 +46,18 @@ class Options final {
 
   // Sets the audio device name
   void setAudioDevice(std::string const& soundDevice);
+  
+  // Gets the music volume
+  float const& getMusicVolume() const;
+
+  // Sets the music volume
+  void setMusicVolume(float const& musicVolume);
+
+  // Gets the effects volume
+  float const& getEffectsVolume() const;
+
+  // Sets the effects volume
+  void setEffectsVolume(float const& effectsVolume);
 
  private:
   std::string videoMode;
@@ -53,6 +65,8 @@ class Options final {
   WindowMode windowMode;
   bool verticalSync;
   std::string audioDevice;
+  float musicVolume;
+  float effectsVolume;
 };
 
 }  // namespace openhoi
