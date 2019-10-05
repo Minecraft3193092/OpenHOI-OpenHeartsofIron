@@ -2,8 +2,6 @@
 
 #include "audio/sound.hpp"
 
-#include <cassert>
-
 namespace openhoi {
 
 // Sound constructor
