@@ -198,7 +198,7 @@ FILE* FileAccess::fopen(char const* fileName, char const* mode) {
     return nullptr;
   }
 #else
-  return fopen(fileName, mode);
+  return ::fopen(fileName, mode);
 #endif
 }
 
