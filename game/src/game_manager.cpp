@@ -332,6 +332,7 @@ void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
           MonitorFromPoint(POINT{0, 0}, MONITOR_DEFAULTTOPRIMARY);
       DEVICE_SCALE_FACTOR scaleFactor;
       result = GetScaleFactorForMonitor(monitor, &scaleFactor);
+      bool switchToFullscreen = false;
       if (result == S_OK && scaleFactor != DEVICE_SCALE_FACTOR_INVALID) {
         // Check scale factor. If it is 100%, we can just continue. If not, we
         // maybe have to select a lower resolution..
@@ -340,13 +341,19 @@ void GameManager::setBestPossibleVideoMode(Ogre::RenderSystem* renderSystem) {
              scaleFactor)
                 .str());
         if (scaleFactor != SCALE_100_PERCENT) {
-          // Scale factor is not 100%. Thus, we switch to full screen
-          options->setWindowMode(WindowMode::FULLSCREEN);
+          // Scale factor is not 100%. Thus, we have to switch to full screen
+          switchToFullscreen = true;
         }
       } else {
         Ogre::LogManager::getSingletonPtr()->logMessage(
             "Unable to get scale factor of primary monitor",
             Ogre::LogMessageLevel::LML_WARNING);
+        switchToFullscreen = true;
+      }
+      if (switchToFullscreen) {
+        Ogre::LogManager::getSingletonPtr()->logMessage(
+            "Switching to fullscreen");
+        options->setWindowMode(WindowMode::FULLSCREEN);
       }
     }
   }
