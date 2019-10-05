@@ -259,8 +259,10 @@ void AudioManager::playSound(std::string sound, float volume) {
   }
 }
 
-// Generate OpenAL source from the provided sound and play it with the given volume
-ALuint AudioManager::generateSourceAndPlaySound(std::shared_ptr<Sound> sound, float volume) {
+// Generate OpenAL source from the provided sound and play it with the given
+// volume
+ALuint AudioManager::generateSourceAndPlaySound(std::shared_ptr<Sound> sound,
+                                                float volume) {
   // Create audio source object
   ALuint source;
   alGenSources(1, &source);

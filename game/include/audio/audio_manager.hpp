@@ -66,7 +66,8 @@ class AudioManager final {
   // them as soon as the first file was fully loaded
   void loadAndPlayBackgroundMusic(filesystem::path directory);
 
-  // Generate OpenAL source from the provided sound and play it with the given volume
+  // Generate OpenAL source from the provided sound and play it with the given
+  // volume
   ALuint generateSourceAndPlaySound(std::shared_ptr<Sound> sound, float volume);
 
   // Loads an sound and returns the sound in case the file was loaded

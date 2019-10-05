@@ -16,8 +16,11 @@ using namespace openhoi;
 
 // Main entry point of program
 #ifdef OPENHOI_OS_WINDOWS
+#  pragma warning(push)
+#  pragma warning(disable : 28251)
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR strCmdLine,
                    INT nCmdShow)
+#  pragma warning(pop)
 #else
 int main(int argc, const char* argv[])
 #endif
