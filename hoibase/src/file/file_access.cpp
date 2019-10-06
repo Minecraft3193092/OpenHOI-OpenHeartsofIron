@@ -27,9 +27,13 @@
 #include <fstream>
 #include <stdexcept>
 
-// The game config directory. Starting with "." makes it a hidden folder on
-// Linux etc.
-#define OPENHOI_CONFIG_DIRECTORY_NAME ".openhoi"
+// The game config directory
+#ifdef OPENHOI_OS_WINDOWS
+#  define OPENHOI_CONFIG_DIRECTORY_NAME "openhoi"
+#else
+// Starting with "." makes it a hidden folder on Linux etc.
+#  define OPENHOI_CONFIG_DIRECTORY_NAME ".openhoi"
+#endif
 
 namespace openhoi {
 

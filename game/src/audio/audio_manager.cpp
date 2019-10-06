@@ -17,7 +17,8 @@
 namespace openhoi {
 
 // Initializes the audio manager
-AudioManager::AudioManager() {
+AudioManager::AudioManager()
+    : playingBackgroundMusic(0), device(0), context(0) {
   // Try to open the default device. Returns NULL in case no device was found
   ALCdevice* tmpDev = alcOpenDevice(NULL);
 
@@ -201,7 +202,7 @@ AudioManager::getPossibleDevices() const {
 
 // Starts the loading of background music
 void AudioManager::loadBackgroundMusicAsync(filesystem::path directory) {
-  // Invoke the function `loadBackgroundMusic` in a separate thread
+  // Invoke the function `loadAndPlayBackgroundMusic` in a separate thread
   std::thread{&AudioManager::loadAndPlayBackgroundMusic, this, directory}
       .detach();
 }
@@ -298,7 +299,7 @@ void AudioManager::updateStats() {
       backgroundMusicPlaying = state == AL_INITIAL || state == AL_PLAYING;
     }
 
-    const float backgroundMusicVolume = options->getEffectsVolume();
+    const float backgroundMusicVolume = options->getMusicVolume();
     if (!backgroundMusicPlaying) {
       // Delete audio source if required
       if (playingBackgroundMusic) {

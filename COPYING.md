@@ -66,5 +66,3 @@ Font files
 CMake Files
  - `cmake/cgal/FindCGAL.cmake` → [BSD](/legal/bsd-findcgal)
  *<sub><sup>(taken from [sidch/CMake](https://github.com/sidch/CMake))</sup></sub>*
- - `cmake/global/FindRapidJSON.cmake` → [BSD](/legal/bsd-findrapidjson)
- *<sub><sup>(taken from [lbaehren/CMakeModules](https://github.com/lbaehren/CMakeModules))</sup></sub>*

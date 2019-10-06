@@ -26,12 +26,9 @@ FIND_PATH(V8_INCLUDE_DIR "v8.h"
   DOC "V8 - Headers"
 )
 
-SET(V8_NAMES v8 v8_base v8_base.lib v8_libbase.dll.lib)
-SET(V8S_NAMES v8_snapshot v8_snapshot.lib)
-SET(V8_DBG_NAMES v8D v8_baseD v8_baseD.lib)
-SET(V8S_DBG_NAMES v8_snapshotD v8_snapshotD.lib)
+SET(V8_NAMES v8 v8_base v8_base v8_platform v8.dll.lib v8_libbase.dll.lib v8_libplatform.dll.lib)
 
-FIND_LIBRARY(V8_LIBRARY NAMES ${V8_NAMES}
+FIND_LIBRARY(V8_LIBRARY NAMES v8 v8.dll.lib
   PATHS
   $ENV{V8_HOME}
   $ENV{V8_HOME}/lib
@@ -48,10 +45,10 @@ FIND_LIBRARY(V8_LIBRARY NAMES ${V8_NAMES}
   /opt/csw
   /opt
   PATH_SUFFIXES lib lib64
-  DOC "V8 - Library"
+  DOC "V8 library"
 )
 
-FIND_LIBRARY(V8S_LIBRARY NAMES ${V8S_NAMES}
+FIND_LIBRARY(V8_BASE_LIBRARY NAMES v8_base v8_libbase.dll.lib
   PATHS
   $ENV{V8_HOME}
   $ENV{V8_HOME}/lib
@@ -68,17 +65,43 @@ FIND_LIBRARY(V8S_LIBRARY NAMES ${V8S_NAMES}
   /opt/csw
   /opt
   PATH_SUFFIXES lib lib64
-  DOC "V8S - Library"
+  DOC "V8 Base liibrary"
+)
+
+FIND_LIBRARY(V8_PLATFORM_LIBRARY NAMES v8_platform v8_libplatform.dll.lib
+  PATHS
+  $ENV{V8_HOME}
+  $ENV{V8_HOME}/lib
+  $ENV{EXTERNLIBS}/v8
+  ~/Library/Frameworks
+  /Library/Frameworks
+  /usr/local
+  /usr/local/v8/lib
+  /usr/local/v8/libexec
+  /usr/local/v8/libexec/lib
+  /usr
+  /sw
+  /opt/local
+  /opt/csw
+  /opt
+  PATH_SUFFIXES lib lib64
+  DOC "V8 Platform library"
 )
 
 INCLUDE(FindPackageHandleStandardArgs)
 
-SET(V8_LIBRARIES ${V8_LIBRARY})
+SET(V8_LIBRARIES ${V8_LIBRARY} ${V8_BASE_LIBRARY} ${V8_PLATFORM_LIBRARY})
 
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(V8 DEFAULT_MSG V8_LIBRARY V8_INCLUDE_DIR)
+SET(V8_PHSA V8_LIBRARY V8_INCLUDE_DIR)
+if(DEFINED V8_BASE_LIBRARY)
+    LIST(APPEND V8_PHSA V8_BASE_LIBRARY)
+endif()
+if(DEFINED V8_PLATFORM_LIBRARY)
+    LIST(APPEND V8_PHSA V8_PLATFORM_LIBRARY)
+endif()
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(V8 DEFAULT_MSG ${V8_PHSA})
 
-MARK_AS_ADVANCED(V8_LIBRARY V8_INCLUDE_DIR)
-
+MARK_AS_ADVANCED(${V8_PHSA})
 
 IF(V8_FOUND)
   SET(V8_INCLUDE_DIRS ${V8_INCLUDE_DIR})

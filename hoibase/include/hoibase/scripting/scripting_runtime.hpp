@@ -8,17 +8,28 @@
 
 namespace openhoi {
 
-// SpiderMonkey-powered JavaScript scripting runtime
+// V8-powered JavaScript scripting runtime
 class ScriptingRuntime final {
  public:
-  // ScriptingRuntime constructor
+  static ScriptingRuntime& getInstance() {
+    // Thread-safe C++11 singleton
+    static ScriptingRuntime instance;
+    return instance;
+  }
+
+  // Gets the internal V8 context
+  OPENHOI_LIB_EXPORT v8::Local<v8::Context> const& getInternalContext() const;
+
+ protected:
+  // Initializes the V8 scripting engine
   OPENHOI_LIB_EXPORT ScriptingRuntime();
 
-  // ScriptingRuntime destructor
+  // Destroys the V8 scripting engine
   OPENHOI_LIB_EXPORT ~ScriptingRuntime();
 
  private:
-  v8::Isolate* isolate;
+  v8::Isolate* internalIsolate;
+  v8::Local<v8::Context> internalContext;
 };
 
 }  // namespace openhoi

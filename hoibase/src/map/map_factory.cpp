@@ -1,6 +1,7 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "hoibase/map/map_factory.hpp"
+#include "hoibase/scripting/scripting_runtime.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <cassert>
@@ -13,17 +14,17 @@ std::unique_ptr<Map> MapFactory::loadMap(std::string path) {
   // Generate map object
   std::unique_ptr<Map> map =
       std::make_unique<Map>(6378137 /* TODO: Add to feature collection */);
-
+  /*
   // Load map file
   const Map* mapFile = NULL;  // TODO: Get from resource manager!
 
   // Open GeoJSON map file
   rapidjson::Document doc;
-  /*if (doc.Parse(reinterpret_cast<const char*>(mapFile->GetBytes()),
+  if (doc.Parse(reinterpret_cast<const char*>(mapFile->GetBytes()),
                 mapFile->GetSize())
           .HasParseError())
     throw "Unable to parse map file";  // TODO: Proper error handling!
-    */ // TODO: Remove comment!
+     // TODO: Remove comment!
 
   // Ensure that document is not an array
   if (!doc.IsObject())
@@ -139,25 +140,67 @@ std::unique_ptr<Map> MapFactory::loadMap(std::string path) {
       map->addProvince(province);
     }
   }
+  */
 
   // Return map
   return map;
 }
 
 // Get the coordinates for one single way
-std::vector<Ogre::Vector2> MapFactory::getCoordinates(rapidjson::Value& value) {
+std::vector<Ogre::Vector2> MapFactory::getCoordinates(
+    v8::Local<v8::Value> value) {
   std::vector<Ogre::Vector2> coords;
 
-  if (value.IsArray()) {
-    for (auto it = value.Begin(); it != std::prev(value.End()); ++it) {
-      if (it->IsArray()) {
-        auto coordArray = it->GetArray();
-        if (coordArray.Size() > 1) {
-          auto& lat = coordArray[0];
-          auto& lon = coordArray[1];
-          if (lat.IsDouble() && lon.IsDouble())
-            coords.push_back(Ogre::Vector2((Ogre::Real)lat.GetDouble(),
-                                           (Ogre::Real)lon.GetDouble()));
+  // Check if the provided value is an array
+  if (value->IsArray()) {
+#if V8_MAJOR_VERSION >= 7
+    // Get the V8 context for internal tasks
+    auto context = ScriptingRuntime::getInstance().getInternalContext();
+#endif
+
+    // Cast value to array and get array length
+    auto outerArray = v8::Handle<v8::Array>::Cast(value);
+    auto length = outerArray->Length();
+
+    // Loop through array
+    for (int i = 0; i < length; i++) {
+      // Get element at current position of `i`
+      auto innerValue = outerArray->Get(i);
+
+      // Check if the element is an array
+      if (innerValue->IsArray()) {
+        // Cast value to array and check array length
+        auto innerArray = v8::Handle<v8::Array>::Cast(innerValue);
+        if (innerArray->Length() > 1) {
+          // Get latitute and longitude from array
+        #if V8_MAJOR_VERSION >= 7
+          auto& lat = innerArray->Get(context, 0);
+          auto& lon = innerArray->Get(context, 1);
+          #else
+          auto& lat = innerArray->Get(0);
+          auto& lon = innerArray->Get(1);
+          #endif
+
+          #if V8_MAJOR_VERSION >= 7
+          // Convert latitude and longitude to Maybe<double> and check them
+          auto latMaybe = lat.ToLocalChecked()->NumberValue(context);
+          auto lonMaybe = lon.ToLocalChecked()->NumberValue(context);
+
+          // Verify that there are numbers inside the Maybe's
+          if (latMaybe.IsJust() && lonMaybe.IsJust()) {
+            // Add latitude and longitude to coords structure
+            coords.push_back(Ogre::Vector2((Ogre::Real)latMaybe.FromJust(),
+                                           (Ogre::Real)lonMaybe.FromJust()));
+          }
+          #else
+          // Ensuare that latitude and longitude are both numbers
+          if (lat->IsNumber() && lon->IsNumber()) {
+            // Add latitude and longitude to coords structure
+            coords.push_back(Ogre::Vector2((Ogre::Real)lat->NumberValue(),
+                                           (Ogre::Real)lon->NumberValue()));
+          }
+          #endif
+
         }
       }
     }

@@ -81,8 +81,8 @@ class AudioManager final {
   SoundMap backgroundMusic;
   SoundMap::iterator backgroundMusicIt;
   ALuint playingBackgroundMusic;
-  ALCdevice* device = 0;
-  ALCcontext* context = 0;
+  ALCdevice* device;
+  ALCcontext* context;
 };
 
 }  // namespace openhoi

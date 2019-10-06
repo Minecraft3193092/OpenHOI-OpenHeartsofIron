@@ -32,11 +32,6 @@ elseif(NOT WIN32)
      set(LIBUUID_IMPORTED_TARGET LibUUID::UUID)
 endif()
 
-if(WIN32)
-    set(RAPIDJSON_ROOT_DIR ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/rapidjson)
-endif()
-find_package(RapidJSON REQUIRED)
-
 if (EXISTS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/lib)
     set(MANUAL_CGAL_BUILD TRUE)
 else()
@@ -179,7 +174,6 @@ target_include_directories(hoibase SYSTEM
         ${GMP_INCLUDE_DIR}
         ${MPFR_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
-        ${RAPIDJSON_INCLUDES}
         ${V8_INCLUDE_DIR})
 
 

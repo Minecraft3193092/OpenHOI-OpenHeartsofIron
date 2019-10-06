@@ -11,7 +11,7 @@ Options::Options()
     : videoMode(""),
       fullScreenAntiAliasing(8),
       windowMode(WindowMode::BORDERLESS),
-      verticalSync(true),
+      verticalSync(false),
       audioDevice(""),
       musicVolume(0.35f),
       effectsVolume(1.0f) {}

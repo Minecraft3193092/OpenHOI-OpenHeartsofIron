@@ -257,21 +257,6 @@ cd ..
 robocopy "include" "%CWD%\thirdparty\manual-build\precompiled\openal\include" /mir
 cd %CWD%
 
-echo %LINEBEG% RapidJSON...
-set RAPIDJSON_NAME=rapidjson.v110
-set RAPIDJSON_VERSION=1.1.0
-nuget install %RAPIDJSON_NAME% -Version %RAPIDJSON_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%RAPIDJSON_NAME%.%RAPIDJSON_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\rapidjson\include" /mir
-rem TODO: Use github instead because there is no DLL...
-
-echo %LINEBEG% zlib...
-set ZLIB_NAME=zlib-msvc-x64
-set ZLIB_VERSION=1.2.11.8900
-nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
-robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
-
 echo %LINEBEG% Eigen...
 set EIGEN_BRANCH=3.3.7
 if not exist thirdparty\manual-build\lib\eigen (
@@ -324,7 +309,7 @@ cd %CWD%
 echo %LINEBEG% V8...
 set V8_NAME=v8-v141-x64
 set V8_REDIST_NAME=v8.redist-v141-x64
-set V8_VERSION=7.3.492.21
+set V8_VERSION=7.4.288.26
 nuget install %V8_NAME% -Version %V8_VERSION% -OutputDirectory thirdparty\manual-build\lib
 robocopy "%CWD%\thirdparty\manual-build\lib\%V8_NAME%.%V8_VERSION%\lib\Release" "%CWD%\thirdparty\manual-build\precompiled\v8\lib" /mir
 robocopy "%CWD%\thirdparty\manual-build\lib\%V8_NAME%.%V8_VERSION%\include" "%CWD%\thirdparty\manual-build\precompiled\v8\include" /mir
