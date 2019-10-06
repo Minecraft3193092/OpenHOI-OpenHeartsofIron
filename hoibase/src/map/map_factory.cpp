@@ -161,7 +161,7 @@ std::vector<Ogre::Vector2> MapFactory::getCoordinates(
     auto length = outerArray->Length();
 
     // Loop through array
-    for (int i = 0; i < length; i++) {
+    for (auto i = 0; i < length; i++) {
       // Get element at current position of `i`
       auto innerValue = outerArray->Get(i);
 
