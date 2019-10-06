@@ -12,8 +12,8 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                sh "chmod +x fetch-deps"
-                sh "./fetch-deps"
+                sh 'chmod +x fetch-deps'
+                sh './fetch-deps'
             }
         }
         stage('Build') {
