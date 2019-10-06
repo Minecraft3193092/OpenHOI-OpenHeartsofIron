@@ -84,7 +84,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
         PACKAGES="cmake git pkg-config build-essential libx11-dev libgl1-mesa-dev libxrandr-dev libxt-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev zlib1g-dev libv8-dev libfreetype6-dev libfreeimage-dev libcgal-dev libsdl2-dev clang-format snapd"
         OGRE_MANUAL_BUILD=true
-        V8_MANUAL_BUILD=TRUE
+        V8_MANUAL_BUILD=true
         INSTALL_SNAPCRAFT=true
     else
         printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
