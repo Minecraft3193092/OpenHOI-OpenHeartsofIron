@@ -158,21 +158,24 @@ std::vector<Ogre::Vector2> MapFactory::getCoordinates(
 
     // Cast value to array and get array length
     auto outerArray = v8::Handle<v8::Array>::Cast(value);
-    auto length = outerArray->Length();
+    uint32_t length = outerArray->Length();
 
     // Loop through array
-    for (auto i = 0; i < length; i++) {
+    for (uint32_t i = 0; i < length; i++) {
       // Get element at current position of `i`
-      auto innerValue = outerArray->Get(i);
+      auto innerValue = outerArray->Get(context, i);
+      if (innerValue.IsEmpty())
+        continue;
+      auto arrayElem = innerValue.ToLocalChecked();
 
       // Check if the element is an array
-      if (innerValue->IsArray()) {
+      if (arrayElem->IsArray()) {
         // Cast value to array and check array length
-        auto innerArray = v8::Handle<v8::Array>::Cast(innerValue);
+        auto innerArray = v8::Handle<v8::Array>::Cast(arrayElem);
         if (innerArray->Length() > 1) {
           // Get latitute and longitude from array
-          auto& lat = innerArray->Get(context, 0);
-          auto& lon = innerArray->Get(context, 1);
+          auto lat = innerArray->Get(context, 0);
+          auto lon = innerArray->Get(context, 1);
 
           // Convert latitude and longitude to Maybe<double> and check them
           auto latMaybe = lat.ToLocalChecked()->NumberValue(context);

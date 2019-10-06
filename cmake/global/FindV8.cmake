@@ -1,13 +1,13 @@
 # - Find V8
 # Find the V8 includes and library
 #
-#  V8_INCLUDE_DIR - Where to find V8 includes
+#  V8_INCLUDE_DIRS - Where to find V8 includes
 #  V8_LIBRARIES   - List of libraries when using V8
 #  V8_FOUND       - True if V8 was found
 
-IF(V8_INCLUDE_DIR)
+IF(V8_INCLUDE_DIRS)
   SET(V8_FIND_QUIETLY TRUE)
-ENDIF(V8_INCLUDE_DIR)
+ENDIF()
 
 FIND_PATH(V8_INCLUDE_DIR "v8.h"
   PATHS
@@ -16,6 +16,7 @@ FIND_PATH(V8_INCLUDE_DIR "v8.h"
   ~/Library/Frameworks/include
   /Library/Frameworks/include
   /usr/local/include
+  /usr/local/include/v8
   /usr/local/v8/include
   /usr/local/v8/libexec/include
   /usr/include
@@ -23,10 +24,8 @@ FIND_PATH(V8_INCLUDE_DIR "v8.h"
   /opt/local/include # DarwinPorts
   /opt/csw/include # Blastwave
   /opt/include
-  DOC "V8 - Headers"
+  DOC "V8 headers"
 )
-
-SET(V8_NAMES v8 v8_base v8_base v8_platform v8.dll.lib v8_libbase.dll.lib v8_libplatform.dll.lib)
 
 FIND_LIBRARY(V8_LIBRARY NAMES v8 v8.dll.lib
   PATHS
@@ -93,12 +92,11 @@ FIND_LIBRARY(V8_PLATFORM_LIBRARY NAMES v8_platform v8_libplatform v8_libplatform
 
 INCLUDE(FindPackageHandleStandardArgs)
 
-SET(V8_LIBRARIES ${V8_LIBRARY} ${V8_BASE_LIBRARY} ${V8_PLATFORM_LIBRARY})
-
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(V8 DEFAULT_MSG V8_LIBRARY V8_BASE_LIBRARY V8_PLATFORM_LIBRARY)
 
-MARK_AS_ADVANCED(V8_LIBRARY V8_BASE_LIBRARY V8_PLATFORM_LIBRARY)
+MARK_AS_ADVANCED(V8_LIBRARY V8_BASE_LIBRARY V8_PLATFORM_LIBRARY V8_INCLUDE_DIR)
 
 IF(V8_FOUND)
+  SET(V8_LIBRARIES ${V8_LIBRARY} ${V8_BASE_LIBRARY} ${V8_PLATFORM_LIBRARY})
   SET(V8_INCLUDE_DIRS ${V8_INCLUDE_DIR})
-ENDIF(V8_FOUND)
+ENDIF()

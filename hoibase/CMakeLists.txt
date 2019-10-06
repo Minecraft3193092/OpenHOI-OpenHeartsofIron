@@ -174,7 +174,7 @@ target_include_directories(hoibase SYSTEM
         ${GMP_INCLUDE_DIR}
         ${MPFR_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
-        ${V8_INCLUDE_DIR})
+        ${V8_INCLUDE_DIRS})
 
 
 # Copy hoibase windows dependencies to output directories
