@@ -77,8 +77,12 @@ if [ $OSTYPE == "linux-gnu" ]; then
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
         PACKAGES="base-devel git cmake pkgconf boost cgal openssl openal zlib sdl2 clang"
         AUR_PACKAGES=("v8", "ogre")
-    elif [ $DISTRO == "ubuntu" ]; then
-        printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
+    elif [ $DISTRO == "debian" ] || [ $DISTRO == "ubuntu" ]; then
+        if [ $DISTRO == "ubuntu" ]; then
+            printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
+        else
+            printf " $CHECKMARK Debian is supported. Using \e[1mapt-get\e[0m install system...\n"
+        fi
 
         #CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
