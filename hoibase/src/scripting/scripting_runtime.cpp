@@ -13,7 +13,8 @@ ScriptingRuntime::ScriptingRuntime() {
   v8::V8::InitializePlatform(platform.get());
   v8::V8::Initialize();
 
-  // Create internal isolate and context
+  // Create internal isolate and context. We use these objects for JS
+  // interactions outside the game
   v8::Isolate::CreateParams createParams;
   createParams.array_buffer_allocator =
       v8::ArrayBuffer::Allocator::NewDefaultAllocator();

@@ -58,6 +58,7 @@ INSTALL_SNAPCRAFT=false
 
 CGAL_MANUAL_BUILD=false
 OGRE_MANUAL_BUILD=false
+V8_MANUAL_BUILD=false
 
 if [ $OSTYPE == "linux-gnu" ]; then
     # Linux
@@ -83,6 +84,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
         PACKAGES="cmake git pkg-config build-essential libx11-dev libgl1-mesa-dev libxrandr-dev libxt-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev zlib1g-dev libv8-dev libfreetype6-dev libfreeimage-dev libcgal-dev libsdl2-dev clang-format snapd"
         OGRE_MANUAL_BUILD=true
+        V8_MANUAL_BUILD=TRUE
         INSTALL_SNAPCRAFT=true
     else
         printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
@@ -94,23 +96,6 @@ elif [[ $MACOS == true ]]; then
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
     PACKAGES=(cmake boost cgal v8 zlib openssl openal-soft freeimage freetype sdl2 clang-format)
     OGRE_MANUAL_BUILD=true
-elif [[ $OSTYPE == "freebsd"* ]]; then
-    # FreeBSD
-    printf " $CHECKMARK FreeBSD is supported\n"
-    
-    INSTALLSYSTEM=${INSTALLSYSTEMS[$PKG]}
-    PACKAGES="cmake git llvm-devel boost-all openssl libX11 libXaw libXext libXrandr libXt libSM libICE freetype2 sdl20 mesa-libs libGLU"
-    OGRE_MANUAL_BUILD=true
-: '
-elif [[ $OSTYPE == "openbsd"* ]]; then
-    # OpenBSD
-    printf " $CHECKMARK OpenBSD is supported\n"
-    # TODO: Add support
-elif [[ $OSTYPE == "netbsd"* ]]; then
-    # NetBSD
-    printf " $CHECKMARK NetBSD is supported\n"
-    # TODO: Add support
-'
 else
     printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
 fi
@@ -202,7 +187,33 @@ if [ $INSTALLSYSTEM ]; then
         sudo make install
         cd $CWD
     fi
-
+    
+    if [ $V8_MANUAL_BUILD = true ]; then
+        printf "$LINEBG Building V8...\n"
+        if [ ! -d thirdparty/manual-build/lib/depot_tools ]; then
+            git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git thirdparty/manual-build/lib/depot_tools
+            FRESH_DEPOT_TOOLS=true
+        else
+            FRESH_DEPOT_TOOLS=false
+        fi
+        export PATH=$PATH:$CWD/thirdparty/manual-build/lib/depot_tools
+        mkdir -p thirdparty/manual-build/lib/v8
+        cd thirdparty/manual-build/lib/v8
+        if [ $FRESH_DEPOT_TOOLS = true ]; then
+            git pull
+            gclient sync
+        fi
+        fetch v8
+        cd v8
+        gn gen --args="is_component_build=true v8_static_library=false use_custom_libcxx=false" out/x64.release
+        tools/dev/gm.py x64.release
+        ninja -C out/x64.release/
+        sudo cp -r include/ /usr/local/include/v8/
+        cd  out/x64.release
+        sudo cp lib{v8,v8_libplatform,v8_libbase,icuuc,icui18n}.so /usr/local/lib/
+        sudo cp *.bin /usr/local/bin/
+        cd $CWD
+    fi
     printf " $CHECKMARK Finished! Please check the above command line output in order to verify that everything was okay.\n"
 fi
 

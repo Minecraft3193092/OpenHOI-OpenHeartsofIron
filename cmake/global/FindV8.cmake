@@ -36,6 +36,7 @@ FIND_LIBRARY(V8_LIBRARY NAMES v8 v8.dll.lib
   ~/Library/Frameworks
   /Library/Frameworks
   /usr/local
+  /usr/local/lib
   /usr/local/v8/lib
   /usr/local/v8/libexec
   /usr/local/v8/libexec/lib
@@ -56,6 +57,7 @@ FIND_LIBRARY(V8_BASE_LIBRARY NAMES v8_base v8_libbase.dll.lib
   ~/Library/Frameworks
   /Library/Frameworks
   /usr/local
+  /usr/local/lib
   /usr/local/v8/lib
   /usr/local/v8/libexec
   /usr/local/v8/libexec/lib
@@ -76,6 +78,7 @@ FIND_LIBRARY(V8_PLATFORM_LIBRARY NAMES v8_platform v8_libplatform.dll.lib
   ~/Library/Frameworks
   /Library/Frameworks
   /usr/local
+  /usr/local/lib
   /usr/local/v8/lib
   /usr/local/v8/libexec
   /usr/local/v8/libexec/lib

@@ -257,6 +257,14 @@ cd ..
 robocopy "include" "%CWD%\thirdparty\manual-build\precompiled\openal\include" /mir
 cd %CWD%
 
+echo %LINEBEG% zlib...
+set ZLIB_NAME=zlib-msvc-x64
+set ZLIB_VERSION=1.2.11.8900
+nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
+robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
+robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
+robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
+
 echo %LINEBEG% Eigen...
 set EIGEN_BRANCH=3.3.7
 if not exist thirdparty\manual-build\lib\eigen (

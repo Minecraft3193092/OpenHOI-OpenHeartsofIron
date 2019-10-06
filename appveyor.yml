@@ -1,5 +1,5 @@
 shallow_clone: true
-image: Visual Studio 2017
+image: Visual Studio 2019
 clone_depth: 1
 platform: x64
 install:
@@ -10,7 +10,7 @@ install:
   - set PATH=C:\projects\deps\ninja;%PATH%
   - ninja --version
 before_build:
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
   - cd C:\projects\openhoi
   - fetch-deps
 build_script:
