@@ -205,7 +205,7 @@ if [ $INSTALLSYSTEM ]; then
         fi
         fetch v8
         cd v8
-        gn gen --args="is_component_build=true v8_static_library=false use_custom_libcxx=false" out/x64.release
+        gn gen --args='is_debug=false is_component_build=true v8_static_library=false use_custom_libcxx=false' out/x64.release
         tools/dev/gm.py x64.release
         ninja -C out/x64.release/
         sudo cp -r include/ /usr/local/include/v8/
