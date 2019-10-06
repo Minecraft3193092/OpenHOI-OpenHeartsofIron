@@ -49,7 +49,7 @@ FIND_LIBRARY(V8_LIBRARY NAMES v8 v8.dll.lib
   DOC "V8 library"
 )
 
-FIND_LIBRARY(V8_BASE_LIBRARY NAMES v8_base v8_libbase.dll.lib
+FIND_LIBRARY(V8_BASE_LIBRARY NAMES v8_base v8_libbase v8_libbase.dll.lib
   PATHS
   $ENV{V8_HOME}
   $ENV{V8_HOME}/lib
@@ -70,7 +70,7 @@ FIND_LIBRARY(V8_BASE_LIBRARY NAMES v8_base v8_libbase.dll.lib
   DOC "V8 Base liibrary"
 )
 
-FIND_LIBRARY(V8_PLATFORM_LIBRARY NAMES v8_platform v8_libplatform.dll.lib
+FIND_LIBRARY(V8_PLATFORM_LIBRARY NAMES v8_platform v8_libplatform v8_libplatform.dll.lib
   PATHS
   $ENV{V8_HOME}
   $ENV{V8_HOME}/lib
