@@ -18,13 +18,15 @@ pipeline {
         }
         stage('Build') {
             steps {
-                cmakeBuild
+                cmakeBuild([
+                    buildDir: 'build',
                     buildType: 'RelWithDebInfo',
                     cleanBuild: true,
                     installation: 'InSearchPath',
                     steps: [
                         [withCmake: true]
                     ]
+                ])
             }
         }
         stage('Test') {
