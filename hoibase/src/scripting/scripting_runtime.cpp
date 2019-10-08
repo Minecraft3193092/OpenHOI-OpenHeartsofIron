@@ -32,6 +32,8 @@ ScriptingRuntime::~ScriptingRuntime() {
   // Tear down V8
   v8::V8::Dispose();
   v8::V8::ShutdownPlatform();
+
+  // TODO: delete createParams.array_buffer_allocator;
 }
 
 // Gets the internal V8 context
