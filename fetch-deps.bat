@@ -146,7 +146,7 @@ echo %LINEBEG% Checking for required libraries...
 
 if not exist thirdparty\manual-build (
     setlocal enableextensions
-    md thirdparty\manual-build
+    mkdir thirdparty\manual-build
     if not exist thirdparty\manual-build\lib (
         mkdir thirdparty\manual-build\lib
     )
@@ -226,8 +226,8 @@ set OPENSSL_NAME=openssl-vc140-vc141-x86_64
 set OPENSSL_VERSION=1.1.4
 nuget install %OPENSSL_NAME% -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
 setlocal enableextensions
-md "%CWD%\thirdparty\manual-build\precompiled\openssl\lib"
-md "%CWD%\thirdparty\manual-build\precompiled\openssl\bin"
+mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\lib"
+mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\bin"
 endlocal
 copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib"
 copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libssl.lib"
@@ -287,7 +287,7 @@ echo %LINEBEG% CGAL...
 @rd /s /q thirdparty\manual-build\lib\cgal 2>nul
 rem We need to download the source ZIP because the directory structure is different to the GitHub/development version
 rem See https://www.cgal.org/download/windows.html
-set CGAL_VERSION=4.14
+set CGAL_VERSION=4.14.2
 echo Downloading CGAL v%CGAL_VERSION%...
 powershell -Command "Invoke-WebRequest https://github.com/CGAL/cgal/releases/download/releases/CGAL-%CGAL_VERSION%/CGAL-%CGAL_VERSION%.zip -OutFile %CWD%\thirdparty\manual-build\lib\cgal.zip"
 echo Expanding CGAL v%CGAL_VERSION% ZIP archive...
@@ -314,20 +314,9 @@ robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thir
 robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thirdparty\manual-build\lib\cgal\include\CGAL" compiler_config.h
 cd %CWD%
 
-echo %LINEBEG% V8...
-set V8_NAME=v8-v141-x64
-set V8_REDIST_NAME=v8.redist-v141-x64
-set V8_VERSION=7.4.288.26
-nuget install %V8_NAME% -Version %V8_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%V8_NAME%.%V8_VERSION%\lib\Release" "%CWD%\thirdparty\manual-build\precompiled\v8\lib" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\%V8_NAME%.%V8_VERSION%\include" "%CWD%\thirdparty\manual-build\precompiled\v8\include" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\%V8_REDIST_NAME%.%V8_VERSION%\lib\Release" "%CWD%\thirdparty\manual-build\precompiled\v8\bin" /mir
-cd %CWD%
-
-rem Skip OGRE building because we now provide pre-build binaries via our win64-prebuilt-libs repository
 if "%BUILD_OGRE%" == "y" (
     echo %LINEBEG% OGRE...
-    set OGRE_VERSION=1.12.2
+    set OGRE_VERSION=1.12.3
     if not exist thirdparty\manual-build\lib\ogre3d (
         git clone https://github.com/OGRECave/ogre --depth 1 --branch v%OGRE_VERSION% thirdparty\manual-build\lib\ogre3d
     ) else (
@@ -340,7 +329,7 @@ if "%BUILD_OGRE%" == "y" (
     @rd /s /q build 2>nul
     mkdir build
     cd build
-    set OGRE_CMAKE_PARAMS=-DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES_SOURCE=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_INSTALL_PDB=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=ON -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_STATIC=OFF -DOGRE_COPY_DEPENDENCIES=OFF -DOGRE_INSTALL_DEPENDENCIES=OFF -DZLIB_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\zlib\include" -DZLIB_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\zlib\lib\zlib.lib" -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=ON -DOGRE_BUILD_PLUGIN_DOT_SCENE=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_MESHLODGENERATOR=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_RTSHADERSYSTEM=ON -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_COMPONENT_BITES=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=ON -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON -DOGRE_BUILD_RENDERSYSTEM_D3D9=OFF
+    set OGRE_CMAKE_PARAMS=-DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES_SOURCE=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_INSTALL_PDB=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=ON -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_STATIC=OFF -DOGRE_COPY_DEPENDENCIES=OFF -DOGRE_INSTALL_DEPENDENCIES=OFF -DZLIB_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\zlib\include" -DZLIB_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\zlib\lib\zlib.lib" -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=ON -DOGRE_BUILD_PLUGIN_DOT_SCENE=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_MESHLODGENERATOR=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_RTSHADERSYSTEM=ON -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_COMPONENT_BITES=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=ON -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON -DOGRE_BUILD_RENDERSYSTEM_D3D9=OFF -DOGRE_BUILD_COMPONENT_OVERLAY_IMGUI=OFF
     rem Build Release
     cmake %OGRE_CMAKE_PARAMS% -DCMAKE_BUILD_TYPE=Release -G Ninja ..
     ninja
@@ -363,4 +352,26 @@ if "%BUILD_OGRE%" == "y" (
     cd %CWD%
 )
 
+echo %LINEBEG% RapidJSON...
+set RAPIDJSON_BRANCH=v1.1.0
+if not exist thirdparty\manual-build\lib\rapidjson (
+    git clone https://github.com/Tencent/rapidjson/ --depth 1 --branch %RAPIDJSON_BRANCH% thirdparty\manual-build\lib\rapidjson
+) else (
+    git -C thirdparty\manual-build\lib\rapidjson reset --hard
+    git -C thirdparty\manual-build\lib\rapidjson fetch
+    git -C thirdparty\manual-build\lib\rapidjson checkout %EIGEN_BRANCH%
+    git -C thirdparty\manual-build\lib\rapidjson pull --depth 1
+)
+robocopy "%CWD%\thirdparty\manual-build\lib\rapidjson\include" "%CWD%\thirdparty\manual-build\precompiled\rapidjson\include" /mir
+cd %CWD%
+
+
+
+
+set FETCH_FINISHED=y
+
 :end
+
+if "%FETCH_FINISHED%" == "y" (
+    echo %CHECKMARK% Finished! Please check the above command line output in order to verify that everything was okay.
+)

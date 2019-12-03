@@ -32,6 +32,11 @@ elseif(NOT WIN32)
      set(LIBUUID_IMPORTED_TARGET LibUUID::UUID)
 endif()
 
+if(WIN32)
+    set(RAPIDJSON_ROOT_DIR ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/rapidjson)
+endif()
+find_package(RapidJSON REQUIRED)
+
 if (EXISTS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/lib)
     set(MANUAL_CGAL_BUILD TRUE)
 else()
@@ -65,9 +70,9 @@ else()
 endif()
 find_package(CGAL ${CGAL_VERSION} REQUIRED)
 if(${MANUAL_CGAL_BUILD})
-    set(CGAL_VERSION "${CGAL_VERSION_MAJOR}.${CGAL_VERSION_MINOR}")
+    set(CGAL_VERSION "${CGAL_VERSION_MAJOR}.${CGAL_VERSION_MINOR}.2")
     if(WIN32 AND NOT CGAL_LIBRARY)
-        set(CGAL_LIBRARY optimized ${CGAL_LIBRARIES_DIR}/CGAL-vc140-mt-${CGAL_VERSION}.lib debug ${CGAL_LIBRARIES_DIR}/CGAL-vc140-mt-gd-${CGAL_VERSION}.lib)
+        set(CGAL_LIBRARY optimized ${CGAL_LIBRARIES_DIR}/CGAL-vc142-mt-${CGAL_VERSION}.lib debug ${CGAL_LIBRARIES_DIR}/CGAL-vc142-mt-gd-${CGAL_VERSION}.lib)
     endif()
     string(REPLACE ";" " " CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CGAL_DEBUG_CFLAGS}")
     string(REPLACE ";" " " CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CGAL_RELEASE_CFLAGS}")
@@ -82,15 +87,6 @@ if(${MANUAL_CGAL_BUILD})
     endif()
 else()
     set(CGAL_IMPORTED_TARGET CGAL::CGAL)
-endif()
-
-if(WIN32 AND NOT ENV{V8_HOME})
-    set(ENV{V8_HOME} ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8)
-endif()
-find_package(V8 REQUIRED)
-
-if(WIN32)
-    set(OS_LIBRARIES rpcrt4)
 endif()
 
 
@@ -159,7 +155,6 @@ target_link_libraries(hoibase
                       ${OGRE_LIBRARIES}
                       ${CGAL_IMPORTED_TARGET}
                       ${LIBUUID_IMPORTED_TARGET}
-                      ${V8_LIBRARIES}
                       ${OS_LIBRARIES})
 
 target_include_directories(hoibase
@@ -174,7 +169,7 @@ target_include_directories(hoibase SYSTEM
         ${GMP_INCLUDE_DIR}
         ${MPFR_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
-        ${V8_INCLUDE_DIRS})
+        ${RAPIDJSON_INCLUDES})
 
 
 # Copy hoibase windows dependencies to output directories
@@ -202,19 +197,11 @@ if(WIN32)
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_thread-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libgmp-10.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libmpfr-4.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL_Core-vc140-mt-$<$<CONFIG:Debug>:gd->4.14.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc140-mt-$<$<CONFIG:Debug>:gd->4.14.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL_Core-vc142-mt-$<$<CONFIG:Debug>:gd->4.14.2.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc142-mt-$<$<CONFIG:Debug>:gd->4.14.2.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/bin/SDL2.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libcrypto-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libssl-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/icudtl.dat" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/icui18n.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/icuuc.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/natives_blob.bin" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/snapshot_blob.bin" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/v8.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/v8_libbase.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/v8/bin/v8_libplatform.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/zlib/bin/zlib.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openal/bin/OpenAL32.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
                        COMMAND "${CMAKE_SOURCE_DIR}/cmake/win64/copy-pdb.bat" "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" $<CONFIG:Debug>

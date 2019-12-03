@@ -26,7 +26,8 @@ set_target_properties(server PROPERTIES OUTPUT_NAME "openhoi-server")
 
 target_link_libraries(server hoibase
                              ${FILESYSTEM_LIB}
-                             Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale)
+                             Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
+                             Threads::Threads)
 
 target_include_directories(server
     PRIVATE

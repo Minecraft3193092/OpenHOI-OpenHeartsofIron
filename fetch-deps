@@ -58,7 +58,6 @@ INSTALL_SNAPCRAFT=false
 
 CGAL_MANUAL_BUILD=false
 OGRE_MANUAL_BUILD=false
-V8_MANUAL_BUILD=false
 
 if [ $OSTYPE == "linux-gnu" ]; then
     # Linux
@@ -75,8 +74,8 @@ if [ $OSTYPE == "linux-gnu" ]; then
         printf " $CHECKMARK Arch Linux is supported. Using \e[1mpacman\e[0m install system...\n"
 
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
-        PACKAGES="base-devel git cmake pkgconf boost cgal openssl openal zlib sdl2 clang"
-        AUR_PACKAGES=("v8", "ogre")
+        PACKAGES="base-devel git cmake pkgconf boost cgal openssl openal zlib sdl2 clang rapidjson"
+        AUR_PACKAGES=("ogre")
     elif [ $DISTRO == "debian" ] || [ $DISTRO == "ubuntu" ]; then
         if [ $DISTRO == "ubuntu" ]; then
             printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
@@ -86,9 +85,8 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         #CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake git pkg-config build-essential libx11-dev libgl1-mesa-dev libxrandr-dev libxt-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev zlib1g-dev libv8-dev libfreetype6-dev libfreeimage-dev libcgal-dev libsdl2-dev clang-format snapd"
+        PACKAGES="cmake git pkg-config build-essential libx11-dev libgl1-mesa-dev libxrandr-dev libxt-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev zlib1g-dev libfreetype6-dev libfreeimage-dev libcgal-dev libsdl2-dev clang-format snapd rapidjson-dev"
         OGRE_MANUAL_BUILD=true
-        V8_MANUAL_BUILD=true
         INSTALL_SNAPCRAFT=true
     else
         printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
@@ -98,7 +96,7 @@ elif [[ $MACOS == true ]]; then
     printf " $CHECKMARK macOS is supported\n"
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
-    PACKAGES=(cmake boost cgal v8 zlib openssl openal-soft freeimage freetype sdl2 clang-format)
+    PACKAGES=(cmake boost cgal zlib openssl openal-soft freeimage freetype sdl2 clang-format rapidjson)
     OGRE_MANUAL_BUILD=true
 else
     printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
@@ -154,7 +152,7 @@ if [ $INSTALLSYSTEM ]; then
 
     if [ $CGAL_MANUAL_BUILD = true ]; then
         printf "$LINEBG Building CGAL...\n"
-        CGAL_VERSION="4.14"
+        CGAL_VERSION="4.14.2"
         mkdir -p thirdparty/manual-build/lib
         cd thirdparty/manual-build/lib
         rm -rf CGAL-*
@@ -186,39 +184,12 @@ if [ $INSTALLSYSTEM ]; then
         if [ -d build ]; then rm -Rf build; fi
         mkdir build
         cd build
-        cmake -DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=ON -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_BUILD_COMPONENT_PYTHON=OFF -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=ON -DOGRE_BUILD_PLUGIN_DOT_SCENE=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_MESHLODGENERATOR=OFF -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_COMPONENT_BITES=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=ON -DOGRE_STATIC=OFF -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=ON -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_BUILD_COMPONENT_PYTHON=OFF -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=ON -DOGRE_BUILD_PLUGIN_DOT_SCENE=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_MESHLODGENERATOR=OFF -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_COMPONENT_BITES=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=ON -DOGRE_STATIC=OFF -DOGRE_BUILD_COMPONENT_OVERLAY_IMGUI=OFF -DCMAKE_BUILD_TYPE=Release ..
         make
         sudo make install
         cd $CWD
     fi
     
-    if [ $V8_MANUAL_BUILD = true ]; then
-        printf "$LINEBG Building V8...\n"
-        if [ ! -d thirdparty/manual-build/lib/depot_tools ]; then
-            git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git thirdparty/manual-build/lib/depot_tools
-            FRESH_DEPOT_TOOLS=true
-        else
-            FRESH_DEPOT_TOOLS=false
-        fi
-        export PATH=$PATH:$CWD/thirdparty/manual-build/lib/depot_tools
-        mkdir -p thirdparty/manual-build/lib/v8
-        cd thirdparty/manual-build/lib/v8
-        if [ $FRESH_DEPOT_TOOLS = true ]; then
-            git pull
-            gclient sync
-        fi
-        fetch v8
-        cd v8
-        gn gen --args='is_debug=false is_component_build=true v8_static_library=false use_custom_libcxx=false' out/x64.release
-        tools/dev/gm.py x64.release
-        ninja -C out/x64.release/
-        sudo cp -r include/ /usr/local/include/v8/
-        cd  out/x64.release
-        sudo cp lib{v8,v8_libplatform,v8_libbase,icuuc,icui18n}.so /usr/local/lib/
-        sudo mkdir -p /usr/local/share/v8
-        sudo cp *.bin /usr/local/share/v8
-        cd $CWD
-    fi
     printf " $CHECKMARK Finished! Please check the above command line output in order to verify that everything was okay.\n"
 fi
 

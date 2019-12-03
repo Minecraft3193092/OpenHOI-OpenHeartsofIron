@@ -2,6 +2,8 @@
 
 #include "options.hpp"
 
+#include <hoibase/scripting/scripting_runtime.hpp>
+
 #include <algorithm>
 
 namespace openhoi {
@@ -14,7 +16,16 @@ Options::Options()
       verticalSync(false),
       audioDevice(""),
       musicVolume(0.35f),
-      effectsVolume(1.0f) {}
+      effectsVolume(1.0f) {
+  // Load options from file, overwriting the defaults set before
+  loadFromFile();
+}
+
+// Load options from file
+void Options::loadFromFile() { ScriptingRuntime::getInstance(); }
+
+// Save options to file
+void Options::saveToFile() {}
 
 // Gets the video mode name
 std::string const& Options::getVideoMode() const { return videoMode; }

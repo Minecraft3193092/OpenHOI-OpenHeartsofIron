@@ -34,7 +34,7 @@ namespace openhoi {
 
 // Initializes the game manager
 GameManager::GameManager() {
-  // Create options instance
+  // Create options instance and load options from file
   options = new Options();
 
   // Create root object of OGRE system
@@ -97,6 +97,9 @@ GameManager::GameManager() {
 
   // Create camera
   createCamera();
+
+  // Save options to file
+  options->saveToFile();
 
   // Create state manager and startup with menu state
   stateManager = new StateManager();

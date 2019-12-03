@@ -17,6 +17,9 @@ class Options final {
   // Options constructor
   Options();
 
+  // Save options to file
+  void saveToFile();
+
   // Gets the video mode name
   std::string const& getVideoMode() const;
 
@@ -60,6 +63,9 @@ class Options final {
   void setEffectsVolume(float const& effectsVolume);
 
  private:
+  // Load options from file
+  void loadFromFile();
+
   std::string videoMode;
   byte fullScreenAntiAliasing;
   WindowMode windowMode;

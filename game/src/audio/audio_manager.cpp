@@ -221,6 +221,9 @@ void AudioManager::loadAndPlayBackgroundMusic(filesystem::path directory) {
   std::mt19937 twister(rd());
   std::shuffle(files.begin(), files.end(), twister);
 
+  // Move smallest file to the beginning to decrease loading time for music on startup
+  // TODO
+
   // Load all music files
   for (const auto& file : files) {
     auto soundPtr = loadSound(file);

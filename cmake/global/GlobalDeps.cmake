@@ -33,6 +33,10 @@ if(NOT WIN32)
     list(APPEND OGRE_LIBRARIES ${X11_LIBRARIES} Xt Xaw Freetype::Freetype)
 endif()
 
+if(WIN32)
+    set(OS_LIBRARIES rpcrt4)
+endif()
+
 
 if(NOT WIN32)
     set(FILESYSTEM_LIB stdc++fs)
