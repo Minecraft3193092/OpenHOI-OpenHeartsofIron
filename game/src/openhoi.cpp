@@ -24,7 +24,8 @@ static char* lockFilePath;
 // Handle SIGINT (release lock file)
 void sigintHandler(int sig) {
   unlink(lockFilePath);
-  _exit(EXIT_FAILURE); // exit() is not safe in a signal handler, the we use _exit()
+  _exit(EXIT_FAILURE);  // exit() is not safe in a signal handler, the we use
+                        // _exit()
 }
 #endif
 
@@ -47,8 +48,8 @@ int main(int argc, const char* argv[])
   HANDLE mutexHandle = CreateMutex(NULL, FALSE, TEXT(OPENHOI_UNIQUE_HANDLE));
   DWORD lastError = GetLastError();
   if (lastError == ERROR_ALREADY_EXISTS) {
-    MessageBox(NULL, "You cannot run " OPENHOI_GAME_NAME "twice!", OPENHOI_GAME_NAME,
-               MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+    MessageBox(NULL, "You cannot run " OPENHOI_GAME_NAME "twice!",
+               OPENHOI_GAME_NAME, MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
     exit(exitStatus);
   }
 #else

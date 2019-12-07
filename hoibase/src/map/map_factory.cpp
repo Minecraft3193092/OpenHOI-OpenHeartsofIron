@@ -14,16 +14,16 @@ std::unique_ptr<Map> MapFactory::loadMap(std::string path) {
   // Generate map object
   std::unique_ptr<Map> map =
       std::make_unique<Map>(6378137 /* TODO: Add to feature collection */);
- 
+
   // Load map file
   const Map* mapFile = NULL;  // TODO: Get from resource manager!
 
   // Open GeoJSON map file
   rapidjson::Document doc;
   /*
-  if (doc.Parse(reinterpret_cast<const char*>(mapFile->getBytes()), mapFile->getSize())
-          .HasParseError())
-    throw "Unable to parse map file";  // TODO: Proper error handling!
+  if (doc.Parse(reinterpret_cast<const char*>(mapFile->getBytes()),
+  mapFile->getSize()) .HasParseError()) throw "Unable to parse map file";  //
+  TODO: Proper error handling!
   */ // TODO: Remove comment!
 
   // Ensure that document is not an array
@@ -141,7 +141,6 @@ std::unique_ptr<Map> MapFactory::loadMap(std::string path) {
     }
   }
 
-
   // Return map
   return map;
 }
@@ -150,7 +149,7 @@ std::unique_ptr<Map> MapFactory::loadMap(std::string path) {
 std::vector<Ogre::Vector2> MapFactory::getCoordinates(rapidjson::Value& value) {
   std::vector<Ogre::Vector2> coords;
 
-if (value.IsArray()) {
+  if (value.IsArray()) {
     for (auto it = value.Begin(); it != std::prev(value.End()); ++it) {
       if (it->IsArray()) {
         auto coordArray = it->GetArray();

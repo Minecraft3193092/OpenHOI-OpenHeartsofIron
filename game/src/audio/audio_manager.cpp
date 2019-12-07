@@ -221,9 +221,22 @@ void AudioManager::loadAndPlayBackgroundMusic(filesystem::path directory) {
   std::mt19937 twister(rd());
   std::shuffle(files.begin(), files.end(), twister);
 
-  // Move smallest file to the beginning to decrease loading time for music on startup
-  // TODO
-
+  // Move smallest file to the beginning to decrease loading time for music on
+  // startup
+  auto smallestFileSize = UINTMAX_MAX;
+  for (auto it = files.begin(); it != files.end(); ++it) {
+    auto fileSize = filesystem::file_size(*it);
+    if (fileSize < smallestFileSize) smallestFileSize = fileSize;
+  }
+  for (auto it = files.begin(); it != files.end(); ++it) {
+    auto file = *it;
+    auto fileSize = filesystem::file_size(file);
+    if (fileSize <= smallestFileSize && it != files.begin()) {
+      files.erase(it);
+      files.insert(files.begin(), file);
+      break;
+    }
+  }
   // Load all music files
   for (const auto& file : files) {
     auto soundPtr = loadSound(file);
