@@ -155,8 +155,7 @@ target_link_libraries(hoibase
                       ${OGRE_LIBRARIES}
                       ${CGAL_IMPORTED_TARGET}
                       ${LIBUUID_IMPORTED_TARGET}
-                      ${OS_LIBRARIES}
-                      GL)
+                      ${OS_LIBRARIES})
 
 target_include_directories(hoibase
     PUBLIC
