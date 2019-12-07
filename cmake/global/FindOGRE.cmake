@@ -29,7 +29,7 @@ find_path(
     DOC "The directory where Ogre.h resides")
 
 
-set (FINDOGRE_VERSION 1.12.2)
+set (FINDOGRE_VERSION 1.12.3)
 if(${OGRE_NIX_MANUAL_BUILD})
     set(NON_PREFIX_SUFFIX .so.${FINDOGRE_VERSION})
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BAK ${CMAKE_FIND_LIBRARY_SUFFIXES})
