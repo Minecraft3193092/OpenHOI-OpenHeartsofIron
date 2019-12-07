@@ -73,7 +73,7 @@ int main(int argc, const char* argv[])
   lockFilePath = lockFile.c_str();
   struct sigaction sigAction;
   int mutexFd;
-  mutexFd = open(lockFilePath, O_CREAT | O_EXCL);
+  mutexFd = open(lockFilePath, O_CREAT | O_EXCL, 0600);
   if (mutexFd < 0) {
     std::cerr << "You cannot run " OPENHOI_GAME_NAME
                  " twice! Please stop the currently running instance "
