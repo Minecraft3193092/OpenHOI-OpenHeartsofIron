@@ -8,6 +8,7 @@
 
 #include <OgrePrerequisites.h>
 #include <SDL.h>
+#include <imgui.h>
 
 namespace openhoi {
 
