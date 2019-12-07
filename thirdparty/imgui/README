@@ -1,0 +1,1 @@
+IMPORTANT: After updating ImGui, please rebuild OGRE for Win64 and update dependencies (as well as README.md in the Win64 repo)!
