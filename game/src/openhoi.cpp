@@ -48,8 +48,8 @@ int main(int argc, const char* argv[])
   SetLastError(0);
   auto mutexHandle = CreateMutex(NULL, FALSE, TEXT(OPENHOI_UNIQUE_HANDLE));
   auto lastError = GetLastError();
-  if (lastError == ERROR_ALREADY_EXISTS) {
-    MessageBox(NULL,
+  if (mutexHandle == nullptr || lastError == ERROR_ALREADY_EXISTS) {
+    MessageBox(nullptr,
                "You cannot run " OPENHOI_GAME_NAME
                " twice! Please stop the currently running instance "
                "of " OPENHOI_GAME_NAME
@@ -100,7 +100,7 @@ int main(int argc, const char* argv[])
     // Handle exception
     std::string exception = Debug::prettyPrintException(&e);
 #ifdef OPENHOI_OS_WINDOWS
-    MessageBox(NULL, exception.c_str(), "An exception has occured",
+    MessageBox(nullptr, exception.c_str(), "An exception has occured",
                MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
     std::cerr << "An exception has occured:" << std::endl
