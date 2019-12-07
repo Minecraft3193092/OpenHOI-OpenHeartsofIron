@@ -46,8 +46,8 @@ int main(int argc, const char* argv[])
 #ifdef OPENHOI_OS_WINDOWS
   // Enforce the game to run only once
   SetLastError(0);
-  HANDLE mutexHandle = CreateMutex(NULL, FALSE, TEXT(OPENHOI_UNIQUE_HANDLE));
-  DWORD lastError = GetLastError();
+  auto mutexHandle = CreateMutex(NULL, FALSE, TEXT(OPENHOI_UNIQUE_HANDLE));
+  auto lastError = GetLastError();
   if (lastError == ERROR_ALREADY_EXISTS) {
     MessageBox(NULL,
                "You cannot run " OPENHOI_GAME_NAME

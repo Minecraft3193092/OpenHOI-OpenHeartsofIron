@@ -4,9 +4,9 @@
 
 #include <hoibase/openhoi.hpp>
 
-#include <imgui_impl_sdl.h>
 #include <OgreImGuiOverlay.h>
 #include <OgreOverlayManager.h>
+#include <imgui_impl_sdl.h>
 #ifdef OPENHOI_OS_WINDOWS
 #  include <OgreD3D11RenderSystem.h>
 #endif
