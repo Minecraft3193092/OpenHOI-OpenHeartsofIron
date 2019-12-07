@@ -1,15 +1,16 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
-#include "game_manager.hpp"
-
 #include <hoibase/file/file_access.hpp>
 #include <hoibase/helper/debug.hpp>
 #include <hoibase/helper/os.hpp>
 #include <hoibase/openhoi.hpp>
 #include <iostream>
 
+#include "game_manager.hpp"
+
 #ifndef OPENHOI_OS_WINDOWS
 #  include <fcntl.h>
+#  include <signal.h>
 #  include <unistd.h>
 #endif
 
@@ -19,7 +20,7 @@
 using namespace openhoi;
 
 #ifndef OPENHOI_OS_WINDOWS
-static char* lockFilePath;
+const char* lockFilePath;
 
 // Handle SIGINT (release lock file)
 void sigintHandler(int sig) {

@@ -1,9 +1,10 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "hoibase/file/file_access.hpp"
-#include "hoibase/helper/os.hpp"
 
 #include <boost/format.hpp>
+
+#include "hoibase/helper/os.hpp"
 
 #ifdef OPENHOI_OS_WINDOWS
 #  include <KnownFolders.h>
@@ -11,11 +12,11 @@
 #  include <wchar.h>
 #else
 #  include <OgreLogManager.h>
-#  include <boost/algorithm/string.hpp>
-
 #  include <pwd.h>
 #  include <sys/types.h>
 #  include <unistd.h>
+
+#  include <boost/algorithm/string.hpp>
 #  if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
 #    ifndef _GNU_SOURCE
 #      define _GNU_SOURCE
@@ -73,7 +74,7 @@ filesystem::path FileAccess::getUserHomeDirectory() {
 }
 
 // Get the temp directory. If it cannot be found, an exception will be thrown.
-filesystem::path getTempDirectory() {
+filesystem::path FileAccess::getTempDirectory() {
   return filesystem::temp_directory_path();
 }
 
