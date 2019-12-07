@@ -235,7 +235,7 @@ long FileAccess::readFile(filesystem::path file, unsigned char** data) {
   uintmax_t size;
   try {
     size = filesystem::file_size(file);
-  } catch (filesystem::filesystem_error& ex) {
+  } catch (filesystem::filesystem_error&) {
     return -1;
   }
 

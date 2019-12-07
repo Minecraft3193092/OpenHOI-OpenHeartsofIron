@@ -27,7 +27,7 @@
 #ifdef OPENHOI_OS_WINDOWS
 // Direct3D11 causes blurry font textures and thus we disable support for it at
 // the moment
-#define ENABLE_DIRECT3D11
+#  define ENABLE_DIRECT3D11
 #endif
 
 namespace openhoi {
