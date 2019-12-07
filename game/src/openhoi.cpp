@@ -49,7 +49,11 @@ int main(int argc, const char* argv[])
   HANDLE mutexHandle = CreateMutex(NULL, FALSE, TEXT(OPENHOI_UNIQUE_HANDLE));
   DWORD lastError = GetLastError();
   if (lastError == ERROR_ALREADY_EXISTS) {
-    MessageBox(NULL, "You cannot run " OPENHOI_GAME_NAME "twice!",
+    MessageBox(NULL,
+               "You cannot run " OPENHOI_GAME_NAME
+               " twice! Please stop the currently running instance "
+               "of " OPENHOI_GAME_NAME
+               " before you try to run the game executable.",
                OPENHOI_GAME_NAME, MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
     exit(exitStatus);
   }
@@ -71,7 +75,11 @@ int main(int argc, const char* argv[])
   int mutexFd;
   mutexFd = open(lockFilePath, O_CREAT | O_EXCL);
   if (mutexFd < 0) {
-    std::cerr << "You cannot run " OPENHOI_GAME_NAME "twice!" << std::endl;
+    std::cerr << "You cannot run " OPENHOI_GAME_NAME
+                 " twice! Please stop the currently running instance "
+                 "of " OPENHOI_GAME_NAME
+                 " before you try to run the game executable."
+              << std::endl;
     exit(exitStatus);
   }
   sigAction.sa_handler = sigintHandler;
