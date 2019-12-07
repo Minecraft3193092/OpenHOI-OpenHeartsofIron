@@ -24,12 +24,6 @@
 
 #include <exception>
 
-#ifdef OPENHOI_OS_WINDOWS
-// Direct3D11 causes blurry font textures and thus we disable support for it at
-// the moment
-#  define ENABLE_DIRECT3D11
-#endif
-
 namespace openhoi {
 
 // Initializes the game manager
@@ -222,7 +216,7 @@ void GameManager::initializeAudio() {
 
 // Load and configure the render system
 void GameManager::loadRenderSystem() {
-#if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
+#if defined(OPENHOI_OS_WINDOWS)
   // Prefer DirectX11 on Windows
   try {
     root->loadPlugin(getPluginPath(OGRE_PLUGIN_RS_D3D11));
@@ -242,7 +236,7 @@ void GameManager::loadRenderSystem() {
         // do nothing
       }
     }
-#if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
+#if defined(OPENHOI_OS_WINDOWS)
   }
 #endif
 
@@ -256,7 +250,7 @@ void GameManager::loadRenderSystem() {
 
   // Configure render system
   bool d3d11 = false;
-#if defined(OPENHOI_OS_WINDOWS) && defined(ENABLE_DIRECT3D11)
+#if defined(OPENHOI_OS_WINDOWS)
   if (Ogre::D3D11RenderSystem* d3d11rs =
           dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem)) {
     d3d11 = true;
