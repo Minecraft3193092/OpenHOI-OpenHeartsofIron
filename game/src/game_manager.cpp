@@ -87,7 +87,6 @@ GameManager::GameManager() {
   // Create a generic scene manager
   sceneManager = root->createSceneManager();
   sceneManager->addRenderQueueListener(overlaySystem);
-  sceneManager->addRenderQueueListener(guiManager);
 
   // Register our scene with the RTSS
   Ogre::RTShader::ShaderGenerator::getSingleton().addSceneManager(sceneManager);
@@ -596,12 +595,12 @@ void GameManager::fingerUp(const SDL_Event evt) {}
 void GameManager::fingerMoved(const SDL_Event evt) {}
 
 // Frame started event
-bool GameManager::frameStarted(const Ogre::FrameEvent& /*evt*/) {
+bool GameManager::frameStarted(const Ogre::FrameEvent& evt) {
   // Poll for events
   pollEvents();
 
   // Start new GUI frame
-  guiManager->newFrame();
+  guiManager->newFrame(evt);
 
   // Update GUI in current state
   stateManager->updateGui();

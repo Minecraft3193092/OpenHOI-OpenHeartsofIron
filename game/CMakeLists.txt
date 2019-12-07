@@ -60,14 +60,12 @@ list(APPEND GAME_SOURCES ${GRAPHIC_SOURCES})
 # Add gui code
 list(APPEND GUI_INCLUDES include/gui/debug_console.hpp
                          include/gui/gui_element.hpp
-                         include/gui/gui_manager.hpp
-                         include/gui/imgui_renderable.hpp)
+                         include/gui/gui_manager.hpp)
 source_group("Header Files\\gui" FILES ${GUI_INCLUDES})
 list(APPEND GAME_INCLUDES ${GUI_INCLUDES})
 
 list(APPEND GUI_SOURCES src/gui/debug_console.cpp
-                        src/gui/gui_manager.cpp
-                        src/gui/imgui_renderable.cpp)
+                        src/gui/gui_manager.cpp)
 source_group("Source Files\\gui" FILES ${GUI_SOURCES})
 list(APPEND GAME_SOURCES ${GUI_SOURCES})
 
@@ -91,21 +89,12 @@ set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${STBVORBIS_SOURCES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis)
 
 # Add third-party library ImGui
-list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imconfig.h
-                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_impl_sdl.h
-                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_internal.h
-                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui.h
-                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imstb_rectpack.h
-                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imstb_textedit.h
-                           ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imstb_truetype.h)
+list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_impl_sdl.h)
 source_group("Header Files\\thirdparty\\imgui" FILES ${IMGUI_INCLUDES})
 set(THIRDPARTY_INCLUDES ${THIRDPARTY_INCLUDES} ${IMGUI_INCLUDES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/imgui)
 
-list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui.cpp
-                          ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_draw.cpp
-                          ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_impl_sdl.cpp
-                          ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_widgets.cpp)
+list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_impl_sdl.cpp)
 source_group("Source Files\\thirdparty\\imgui" FILES ${IMGUI_SOURCES})
 set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${IMGUI_SOURCES})
 

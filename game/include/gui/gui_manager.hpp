@@ -3,20 +3,16 @@
 #pragma once
 
 #include "gui/debug_console.hpp"
-#include "gui/imgui_renderable.hpp"
 
 #include <hoibase/helper/os.hpp>
 
 #include <OgrePrerequisites.h>
-#include <OgreRenderQueueListener.h>
-#include <OgreSceneManager.h>
 #include <SDL.h>
-#include <imgui.h>
 
 namespace openhoi {
 
 // GUI manager for openhoi
-class GuiManager final : public Ogre::RenderQueueListener {
+class GuiManager final {
  public:
   // Initializes the GUI manager
   GuiManager();
@@ -28,16 +24,11 @@ class GuiManager final : public Ogre::RenderQueueListener {
   void initialize(Ogre::SceneManager* sceneManager,
                   Ogre::RenderSystem* renderSystem, SDL_Window* window);
 
-  // Render queue ended event
-  virtual void renderQueueEnded(Ogre::uint8 queueGroupId,
-                                const Ogre::String& invocation,
-                                bool& /*repeatThisInvocation*/);
-
   // Handle SDL event
   void handleEvent(SDL_Event event);
 
   // Render new GUI frame
-  void newFrame();
+  void newFrame(const Ogre::FrameEvent& e);
 
   // Gets the default font
   ImFont* getDefaultFont();
@@ -52,24 +43,11 @@ class GuiManager final : public Ogre::RenderQueueListener {
   // Configure GUI
   void configureGui();
 
-  // Load a single font
-  ImFont* loadFont(std::string name);
-
-  // Create font texture
-  void createFontTexture();
-
-  // Create GUI material
-  void createMaterial();
-
   Ogre::SceneManager* sceneManager;
-  Ogre::TexturePtr fontTexture;
-  std::vector<std::vector<ImWchar>> codePointRanges;
-  ImGuiRenderable renderable;
-  bool frameEnded;
+  SDL_Window* window;
   DebugConsole* debugConsole;
   ImFont* defaultFont;
   ImFont* bigFont;
-  SDL_Window* window;
 };
 
 }  // namespace openhoi

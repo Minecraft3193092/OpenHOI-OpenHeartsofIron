@@ -2,7 +2,7 @@ font gui/default
 {
 	type 		truetype
 	source 		gui.ttf
-	size 		16
+	size 		22
     resolution  96
     code_points 1-591 959-1327 7680-8190
 }
@@ -11,7 +11,7 @@ font gui/big
 {
 	type 		truetype
 	source 		gui.ttf
-	size 		22
+	size 		24
     resolution  96
     code_points 1-591 959-1327 7680-8190
 }

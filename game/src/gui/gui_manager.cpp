@@ -4,23 +4,13 @@
 
 #include <hoibase/openhoi.hpp>
 
-#include <OgreFont.h>
-#include <OgreFontManager.h>
-#include <OgreFrameListener.h>
-#include <OgreHardwarePixelBuffer.h>
-#include <OgreMaterialManager.h>
-#include <OgrePrerequisites.h>
-#include <OgreRenderTarget.h>
-#include <OgreRoot.h>
-#include <OgreTechnique.h>
-#include <OgreTexture.h>
-#include <OgreTextureManager.h>
-#include <OgreViewport.h>
+#include <imgui_impl_sdl.h>
+#include <OgreImGuiOverlay.h>
+#include <OgreOverlayManager.h>
 #ifdef OPENHOI_OS_WINDOWS
 #  include <OgreD3D11RenderSystem.h>
 #endif
 #include <OgreGLRenderSystemCommon.h>
-#include <imgui_impl_sdl.h>
 
 #include <cassert>
 
@@ -28,17 +18,8 @@ namespace openhoi {
 
 // Initializes the GUI manager
 GuiManager::GuiManager() {
-  // Create ImGui context
-  ImGui::CreateContext();
-
   // Configure ImGui
   configureGui();
-
-  // Create font texture
-  createFontTexture();
-
-  // Create GUI material
-  createMaterial();
 
   // Create debug console
   debugConsole = new DebugConsole();
@@ -49,109 +30,8 @@ GuiManager::~GuiManager() {
   // Destroy debug console
   delete debugConsole;
 
-  // Destroy ImGui references
+  // Destroy ImGui SDL2 implementation
   ImGui_ImplSDL2_Shutdown();
-  ImGui::DestroyContext();
-}
-
-// Render queue ended event
-void GuiManager::renderQueueEnded(Ogre::uint8 queueGroupId,
-                                  const Ogre::String& invocation,
-                                  bool& /*repeatThisInvocation*/) {
-  if (queueGroupId != Ogre::RENDER_QUEUE_OVERLAY || invocation == "SHADOWS")
-    return;
-
-  Ogre::RenderSystem* renderSystem =
-      Ogre::Root::getSingletonPtr()->getRenderSystem();
-  Ogre::Viewport* vp = renderSystem->_getViewport();
-
-  if (!vp || (!vp->getTarget()->isPrimary()) || frameEnded) return;
-
-  frameEnded = true;
-  ImGuiIO& io = ImGui::GetIO();
-
-  // Construct projection matrix, taking texel offset corrections in account
-  const float texelOffsetX = renderSystem->getHorizontalTexelOffset();
-  const float texelOffsetY = renderSystem->getVerticalTexelOffset();
-  const float L = texelOffsetX;
-  const float R = io.DisplaySize.x + texelOffsetX;
-  const float T = texelOffsetY;
-  const float B = io.DisplaySize.y + texelOffsetY;
-
-  renderable.xform = Ogre::Matrix4(
-      2.0f / (R - L), 0.0f, 0.0f, (L + R) / (L - R), 0.0f, -2.0f / (B - T),
-      0.0f, (T + B) / (B - T), 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-
-  // Instruct ImGui to Render() and process the resulting CmdList-s
-  ImGui::Render();
-  ImDrawData* drawData = ImGui::GetDrawData();
-
-  int vpWidth = vp->getActualWidth();
-  int vpHeight = vp->getActualHeight();
-
-  for (int i = 0; i < drawData->CmdListsCount; ++i) {
-    const ImDrawList* drawList = drawData->CmdLists[i];
-    renderable.updateVertexData(drawList->VtxBuffer, drawList->IdxBuffer);
-
-    unsigned int startIdx = 0;
-
-    for (int j = 0; j < drawList->CmdBuffer.Size; ++j) {
-      // Create a renderable and fill it's buffers
-      const ImDrawCmd* drawCmd = &drawList->CmdBuffer[j];
-
-      // Set scissoring
-      int scLeft = static_cast<int>(drawCmd->ClipRect.x);
-      int scTop = static_cast<int>(drawCmd->ClipRect.y);
-      int scRight = static_cast<int>(drawCmd->ClipRect.z);
-      int scBottom = static_cast<int>(drawCmd->ClipRect.w);
-
-      scLeft = scLeft < 0
-                   ? 0
-                   : (scLeft > vpWidth
-                          ? vpWidth
-                          : scLeft);  // Clamp bounds to viewport dimensions
-      scRight = scRight < 0 ? 0 : (scRight > vpWidth ? vpWidth : scRight);
-      scTop = scTop < 0 ? 0 : (scTop > vpHeight ? vpHeight : scTop);
-      scBottom = scBottom < 0 ? 0 : (scBottom > vpHeight ? vpHeight : scBottom);
-
-      if (renderable.material->getSupportedTechniques().empty())
-        renderable.material->load();  // Support for adding lights run time
-
-      Ogre::Pass* pass = renderable.material->getBestTechnique()->getPass(0);
-      Ogre::TextureUnitState* st = pass->getTextureUnitState(0);
-      if (drawCmd->TextureId != 0) {
-        Ogre::ResourceHandle handle = (Ogre::ResourceHandle)drawCmd->TextureId;
-        Ogre::TexturePtr texture = Ogre::static_pointer_cast<Ogre::Texture>(
-            Ogre::TextureManager::getSingleton().getByHandle(handle));
-        if (texture) {
-          st->setTexture(texture);
-          st->setTextureFiltering(Ogre::TFO_TRILINEAR);
-        }
-      } else {
-        st->setTexture(fontTexture);
-        st->setTextureFiltering(Ogre::TFO_NONE);
-      }
-      renderSystem->setScissorTest(true, scLeft, scTop, scRight, scBottom);
-
-      // Render
-      renderable.renderOperation.indexData->indexStart = startIdx;
-      renderable.renderOperation.indexData->indexCount = drawCmd->ElemCount;
-      sceneManager->_injectRenderWithPass(pass, &renderable, false);
-
-      // Update counts
-      startIdx += drawCmd->ElemCount;
-    }
-  }
-
-  renderSystem->setScissorTest(false);
-
-  if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-    SDL_Window* backupCurrentWindow = SDL_GL_GetCurrentWindow();
-    SDL_GLContext backupCurrentContext = SDL_GL_GetCurrentContext();
-    ImGui::UpdatePlatformWindows();
-    ImGui::RenderPlatformWindowsDefault();
-    SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
-  }
 }
 
 // Initialize GUI manager
@@ -164,7 +44,7 @@ void GuiManager::initialize(Ogre::SceneManager* sceneManager,
   // Set window reference
   this->window = window;
 
-// Initialize ImGui SDL implementation
+  // Initialize ImGui SDL implementation
 #ifdef OPENHOI_OS_WINDOWS
   if (Ogre::D3D11RenderSystem* d3d11RenderSystem =
           dynamic_cast<Ogre::D3D11RenderSystem*>(renderSystem)) {
@@ -182,91 +62,9 @@ void GuiManager::initialize(Ogre::SceneManager* sceneManager,
 #endif
 }
 
-// Create font texture
-void GuiManager::createFontTexture() {
-  // Build texture atlas
-  ImGuiIO& io = ImGui::GetIO();
-  if (io.Fonts->Fonts.empty()) io.Fonts->AddFontDefault();
-
-  unsigned char* pixels;
-  int width, height;
-  io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-
-  fontTexture = Ogre::TextureManager::getSingleton().createManual(
-      OPENHOI_BUILD_DYNAMIC_OBJECT_NAME("ImGui_Font_Texture"),
-      Ogre::ResourceGroupManager::INTERNAL_RESOURCE_GROUP_NAME,
-      Ogre::TEX_TYPE_2D, width, height, 1, 1, Ogre::PF_BYTE_RGBA);
-  fontTexture->getBuffer()->blitFromMemory(Ogre::PixelBox(
-      Ogre::Box(0, 0, width, height), Ogre::PF_BYTE_RGBA, pixels));
-
-  codePointRanges.clear();
-}
-
-// Create GUI material
-void GuiManager::createMaterial() {
-  renderable.material = std::dynamic_pointer_cast<Ogre::Material>(
-      Ogre::MaterialManager::getSingleton()
-          .createOrRetrieve(
-              "imgui/material",
-              Ogre::ResourceGroupManager::INTERNAL_RESOURCE_GROUP_NAME)
-          .first);
-  Ogre::Pass* pass = renderable.material->getTechnique(0)->getPass(0);
-  pass->setCullingMode(Ogre::CULL_NONE);
-  pass->setDepthFunction(Ogre::CMPF_ALWAYS_PASS);
-  pass->setLightingEnabled(false);
-  pass->setVertexColourTracking(Ogre::TVC_DIFFUSE);
-  pass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-  pass->setSeparateSceneBlendingOperation(Ogre::SBO_ADD, Ogre::SBO_ADD);
-  pass->setSeparateSceneBlending(
-      Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA,
-      Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ZERO);
-
-  Ogre::TextureUnitState* texUnit = pass->createTextureUnitState();
-  texUnit->setTexture(fontTexture);
-  texUnit->setTextureFiltering(Ogre::TFO_NONE);
-
-  renderable.material->load();
-}
-
-// Load a single font
-ImFont* GuiManager::loadFont(std::string name) {
-  Ogre::FontPtr font =
-      Ogre::FontManager::getSingleton().getByName(name, Ogre::RGN_DEFAULT);
-  assert(font && font->getType() == Ogre::FT_TRUETYPE);
-  Ogre::DataStreamPtr dataStreamPtr =
-      Ogre::ResourceGroupManager::getSingleton().openResource(font->getSource(),
-                                                              font->getGroup());
-  Ogre::MemoryDataStream ttfChunk(dataStreamPtr,
-                                  false);  // transfer ownership to ImGui
-
-  // Convert codepoint ranges for ImGui
-  std::vector<ImWchar> codePointRange;
-  for (const auto& r : font->getCodePointRangeList()) {
-    codePointRange.push_back(r.first);
-    codePointRange.push_back(r.second);
-  }
-
-  ImGuiIO& io = ImGui::GetIO();
-  const ImWchar* cprangePtr = io.Fonts->GetGlyphRangesDefault();
-  if (!codePointRange.empty()) {
-    codePointRange.push_back(0);  // terminate
-    codePointRanges.push_back(codePointRange);
-    // ptr must persist until createFontTexture
-    cprangePtr = codePointRanges.back().data();
-  }
-
-  ImFontConfig cfg;
-#ifdef OPENHOI_OS_WINDOWS
-#  pragma warning(push)
-#  pragma warning(disable : 4996)
-#endif
-  strncpy(cfg.Name, name.c_str(), 40);
-#ifdef OPENHOI_OS_WINDOWS
-#  pragma warning(pop)
-#endif
-  return io.Fonts->AddFontFromMemoryTTF(ttfChunk.getPtr(), (int)ttfChunk.size(),
-                                        font->getTrueTypeSize(), &cfg,
-                                        cprangePtr);
+// Handle SDL event
+void GuiManager::handleEvent(SDL_Event event) {
+  ImGui_ImplSDL2_ProcessEvent(&event);
 }
 
 // Gets the default font
@@ -284,17 +82,11 @@ ImFont* GuiManager::getBigFont() {
 // Toggle debug console
 void GuiManager::toggleDebugConsole() { debugConsole->toggle(); }
 
-// Handle SDL event
-void GuiManager::handleEvent(SDL_Event event) {
-  ImGui_ImplSDL2_ProcessEvent(&event);
-}
-
 // Render new GUI frame
-void GuiManager::newFrame() {
+void GuiManager::newFrame(const Ogre::FrameEvent& e) {
   // Start the ImGui frame
-  frameEnded = false;
   ImGui_ImplSDL2_NewFrame(window);
-  ImGui::NewFrame();
+  Ogre::ImGuiOverlay::NewFrame(e);
 
   // Draw debug console
   debugConsole->draw();
@@ -302,10 +94,20 @@ void GuiManager::newFrame() {
 
 // Configure GUI
 void GuiManager::configureGui() {
+  // Create ImGui overlay
+  auto imguiOverlay = new Ogre::ImGuiOverlay();
+  imguiOverlay->setZOrder(300);
+
   // Load default dont
-  defaultFont = loadFont("gui/default");
+  defaultFont = imguiOverlay->addFont("gui/default");
   // Load big font
-  bigFont = loadFont("gui/big");
+  bigFont = imguiOverlay->addFont("gui/default");
+
+  // Show overlay (fonts must be added at this point)
+  imguiOverlay->show();
+
+  // Add overlay to overlay manager
+  Ogre::OverlayManager::getSingleton().addOverlay(imguiOverlay);
 
   // Get ImGui IO
   ImGuiIO& io = ImGui::GetIO();
