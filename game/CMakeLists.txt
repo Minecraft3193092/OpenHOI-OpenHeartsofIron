@@ -83,9 +83,8 @@ source_group("Source Files\\state" FILES ${STATE_SOURCES})
 list(APPEND GAME_SOURCES ${STATE_SOURCES})
 
 # Add third-party library stb_vorbis
-list(APPEND STBVORBIS_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis/stb_vorbis.c)
-source_group("Source Files\\thirdparty\\stb_vorbis" FILES ${STBVORBIS_SOURCES})
-set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${STBVORBIS_SOURCES})
+list(APPEND STBVORBIS_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis/stb_vorbis.c)
+source_group("Header Files\\thirdparty\\stb_vorbis" FILES ${STBVORBIS_INCLUDES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis)
 
 # Add third-party library ImGui
@@ -97,7 +96,6 @@ list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/imgui)
 list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_impl_sdl.cpp)
 source_group("Source Files\\thirdparty\\imgui" FILES ${IMGUI_SOURCES})
 set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${IMGUI_SOURCES})
-
 
 
 # Create executable

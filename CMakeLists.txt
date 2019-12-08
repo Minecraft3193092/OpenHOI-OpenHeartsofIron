@@ -46,12 +46,23 @@ if(WIN32)
 endif()
 
 
+# Ensure that we get code coverage on GCC
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+endif()
+
+
+
 # Add a "test" target
-enable_testing()
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(GoogleTestDeps)
+    enable_testing()
+endif()
 
 
 # Add game base library
 add_subdirectory(hoibase)
+add_subdirectory(hoibase/test)
 
 
 # Add game executable
