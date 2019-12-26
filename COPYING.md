@@ -33,7 +33,7 @@ All 3rd-party files **must** be included in the following list:
 List of all 3rd-party files in openhoi:
 
 Source files
- - `thirdparty/imgui/imconfig.h`, `thirdparty/imgui/imgui*` → [MIT](/legal/mit-imgui)
+ - `thirdparty/imgui/*` → [MIT](/legal/mit-imgui)
  *<sub><sup>(taken from [ocornut/imgui](https://github.com/ocornut/imgui))</sup></sub>*
  
 openhoi source files heavily influenced by 3rd-party code:
