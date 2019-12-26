@@ -6,7 +6,7 @@ set DEBUG_MODE=%3
 
 if "%DEBUG_MODE%"=="1" (
     rem Debug mode -> Copy PDB files
-    robocopy "%CMAKE_SOURCE_DIR%\thirdparty\manual-build\precompiled\ogre3d\bin" "%CMAKE_BINARY_DIR%\output\Debug" *_d.pdb
+    robocopy "%CMAKE_SOURCE_DIR%\thirdparty\manual-build\precompiled\ogre3d\bin" "%CMAKE_BINARY_DIR%" *_d.pdb
 )
 
 exit 0

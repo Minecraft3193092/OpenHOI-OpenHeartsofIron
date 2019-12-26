@@ -174,37 +174,42 @@ target_include_directories(hoibase SYSTEM
 
 # Copy hoibase windows dependencies to output directories
 if(WIN32)
+    if(NOT CMAKE_MAKE_PROGRAM MATCHES ninja)
+        set(WIN32_DEP_OUT_DIR "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/")
+    else()
+        set(WIN32_DEP_OUT_DIR "${CMAKE_BINARY_DIR}/output/")
+    endif()
     add_custom_command(TARGET hoibase POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMain$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreOverlay$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreProperty$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreRTShaderSystem$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Plugin_ParticleFX$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_Direct3D11$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL3Plus$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL$<$<CONFIG:Debug>:_d>.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_atomic-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_chrono-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_date_time-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_filesystem-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_locale-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_program_options-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_regex-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_system-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_thread-vc141-mt-x64-1_69.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libgmp-10.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libmpfr-4.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL_Core-vc142-mt-$<$<CONFIG:Debug>:gd->5.0.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc142-mt-$<$<CONFIG:Debug>:gd->5.0.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/bin/SDL2.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libcrypto-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libssl-1_1-x64.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/zlib/bin/zlib.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openal/bin/OpenAL32.dll" "${CMAKE_BINARY_DIR}/output/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>/"
-                       COMMAND "${CMAKE_SOURCE_DIR}/cmake/win64/copy-pdb.bat" "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" $<CONFIG:Debug>
+                       COMMAND ${CMAKE_COMMAND} -E make_directory "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMain$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreOverlay$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreProperty$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreRTShaderSystem$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Plugin_ParticleFX$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_Direct3D11$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL3Plus$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/RenderSystem_GL$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_atomic-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_chrono-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_date_time-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_filesystem-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_locale-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_program_options-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_regex-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_system-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_thread-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libgmp-10.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libmpfr-4.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL_Core-vc142-mt-$<$<CONFIG:Debug>:gd->5.0.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc142-mt-$<$<CONFIG:Debug>:gd->5.0.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/bin/SDL2.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libcrypto-1_1-x64.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libssl-1_1-x64.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/zlib/bin/zlib.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openal/bin/OpenAL32.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND "${CMAKE_SOURCE_DIR}/cmake/win64/copy-pdb.bat" "${CMAKE_SOURCE_DIR}" "${WIN32_DEP_OUT_DIR}" $<CONFIG:Debug>
                        VERBATIM)
 endif()
 
