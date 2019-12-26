@@ -67,7 +67,3 @@ add_subdirectory(hoibase/test)
 
 # Add game executable
 add_subdirectory(game)
-
-
-# Add game server executable
-add_subdirectory(server)

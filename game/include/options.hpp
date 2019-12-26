@@ -9,7 +9,7 @@
 namespace openhoi {
 
 // Window mode enumeration
-enum WindowMode { WINDOWED, FULLSCREEN, BORDERLESS };
+enum class WindowMode { WINDOWED, FULLSCREEN, BORDERLESS };
 
 // Options class
 class Options final {

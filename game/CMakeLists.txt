@@ -107,6 +107,9 @@ add_executable(game WIN32 MACOSX_BUNDLE
     ${THIRDPARTY_INCLUDES} ${THIRDPARTY_SOURCES}
     ${WINDOWS_RESOURCE_PATH})
 
+# Set default project to the game for MSVC
+set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT "game")
+
 set_target_properties(game PROPERTIES OUTPUT_NAME "openhoi")
 
 target_link_libraries(game hoibase
