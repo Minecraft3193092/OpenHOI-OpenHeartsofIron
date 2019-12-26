@@ -1,3 +1,5 @@
+// Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
+
 #include <gtest/gtest.h>
 
 #include <hoibase/map/province.hpp>
