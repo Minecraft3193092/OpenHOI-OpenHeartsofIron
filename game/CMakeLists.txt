@@ -131,6 +131,7 @@ target_include_directories(game SYSTEM
         ${OGRE_INCLUDE_DIRS}
         ${SDL2_INCLUDE_DIRS}
         ${OPENAL_INCLUDE_DIR}
+        ${RAPIDJSON_INCLUDES}
         ${THIRDPARTY_INCLUDE_DIRS})
 
 

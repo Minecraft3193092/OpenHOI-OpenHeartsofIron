@@ -3,7 +3,6 @@ if(NOT WIN32)
 endif()
 find_package(Threads REQUIRED)
 
-
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(Boost_USE_DEBUG_LIBS OFF)
@@ -34,9 +33,13 @@ if(NOT WIN32)
 endif()
 
 if(WIN32)
+    set(RAPIDJSON_ROOT_DIR ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/rapidjson)
+endif()
+find_package(RapidJSON REQUIRED)
+
+if(WIN32)
     set(OS_LIBRARIES rpcrt4)
 endif()
-
 
 if(NOT WIN32)
     set(FILESYSTEM_LIB stdc++fs)

@@ -29,4 +29,8 @@
 #define OPENHOI_BUILD_DYNAMIC_OBJECT_NAME(objectName) \
   (std::string(OPENHOI_GAME_NAME "__dyn__") + objectName)
 
+// Macro to convert a preprocessor token to string
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
 // EOF

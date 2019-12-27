@@ -74,7 +74,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
         printf " $CHECKMARK Arch Linux is supported. Using \e[1mpacman\e[0m install system...\n"
 
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
-        PACKAGES="base-devel git cmake pkgconf boost cgal openssl openal zlib sdl2 clang rapidjson"
+        PACKAGES="base-devel git cmake pkgconf boost cgal openssl openal zlib sdl2 clang rapidjson lua"
         AUR_PACKAGES=("ogre")
     elif [ $DISTRO == "debian" ] || [ $DISTRO == "ubuntu" ]; then
         if [ $DISTRO == "ubuntu" ]; then
@@ -85,7 +85,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         #CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake git pkg-config build-essential libx11-dev libgl1-mesa-dev libxrandr-dev libxt-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev zlib1g-dev libfreetype6-dev libfreeimage-dev libcgal-dev libsdl2-dev clang-format snapd rapidjson-dev"
+        PACKAGES="cmake git pkg-config build-essential libx11-dev libgl1-mesa-dev libxrandr-dev libxt-dev libxaw7-dev uuid-dev libboost-all-dev libssl-dev libopenal-dev zlib1g-dev libfreetype6-dev libfreeimage-dev libcgal-dev libsdl2-dev clang-format snapd rapidjson-dev liblua5.3-dev"
         OGRE_MANUAL_BUILD=true
         INSTALL_SNAPCRAFT=true
     else
@@ -96,7 +96,7 @@ elif [[ $MACOS == true ]]; then
     printf " $CHECKMARK macOS is supported\n"
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
-    PACKAGES=(cmake boost cgal zlib openssl openal-soft freeimage freetype sdl2 clang-format rapidjson)
+    PACKAGES=(cmake boost cgal zlib openssl openal-soft freeimage freetype sdl2 clang-format rapidjson lua)
     OGRE_MANUAL_BUILD=true
 else
     printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"

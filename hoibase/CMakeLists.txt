@@ -33,9 +33,11 @@ elseif(NOT WIN32)
 endif()
 
 if(WIN32)
-    set(RAPIDJSON_ROOT_DIR ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/rapidjson)
+    set(LUA_LIBRARIES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/lua/lib/lua.lib)
+    set(LUA_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/lua/include)
+else()
+    find_package(Lua 5.3 REQUIRED)
 endif()
-find_package(RapidJSON REQUIRED)
 
 if (EXISTS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/lib)
     set(MANUAL_CGAL_BUILD TRUE)
@@ -142,7 +144,6 @@ list(APPEND SCRIPTING_SOURCES src/scripting/scripting_runtime.cpp)
 source_group("Source Files\\scripting" FILES ${SCRIPTING_SOURCES})
 set(BASE_SOURCES ${BASE_SOURCES} ${SCRIPTING_SOURCES})
 
-
 # Create library
 add_library(hoibase SHARED
     ${BASE_INCLUDES} ${BASE_SOURCES})
@@ -154,6 +155,7 @@ target_link_libraries(hoibase
                       ZLIB::ZLIB
                       ${OGRE_LIBRARIES}
                       ${CGAL_IMPORTED_TARGET}
+                      ${LUA_LIBRARIES}
                       ${LIBUUID_IMPORTED_TARGET}
                       ${OS_LIBRARIES})
 
@@ -166,6 +168,7 @@ target_include_directories(hoibase SYSTEM
     PRIVATE
         ${OGRE_INCLUDE_DIRS}
         ${CGAL_INCLUDE_DIRS_HOI}
+        ${LUA_INCLUDE_DIR}
         ${GMP_INCLUDE_DIR}
         ${MPFR_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}

@@ -212,6 +212,11 @@ FILE* FileAccess::fopen(char const* fileName, char const* mode) {
 #endif
 }
 
+// Custom fopen override for Windows
+FILE* FileAccess::fopen(filesystem::path file, char const* mode) {
+  return FileAccess::fopen(file.c_str(), mode);
+}
+
 // Read the provided file to the provided data pointer. The file length is
 // returned or -1 in case the file could not be read.
 long FileAccess::readFile(filesystem::path file, unsigned char** data) {

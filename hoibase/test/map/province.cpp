@@ -89,5 +89,4 @@ TEST(Hoibase, MapProviceTriangulate) {
   EXPECT_FLOAT_EQ(triangles.at(52), 0.502444148f);
 }
 
-
 }  // namespace openhoi

@@ -2,6 +2,8 @@
 
 #include "hoibase/scripting/scripting_runtime.hpp"
 
+#include <lua.h>
+
 namespace openhoi {
 
 // Initializes the V8 scripting engine

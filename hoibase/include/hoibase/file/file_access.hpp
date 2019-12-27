@@ -52,6 +52,12 @@ class OPENHOI_LIB_EXPORT FileAccess final {
   // returned or -1 in case the file could not be read.
   static long readFile(filesystem::path file, unsigned char** data);
 
+  // Custom fopen function for Windows compatibility
+  static FILE* fopen(char const* fileName, char const* mode);
+
+  // Custom fopen function for Windows compatibility
+  static FILE* fopen(filesystem::path file, char const* mode);
+
  private:
   // Get the current user's home directory. If it cannot be found, an exception
   // will be thrown.
@@ -62,9 +68,6 @@ class OPENHOI_LIB_EXPORT FileAccess final {
 
   // Cached game asset root directory
   static filesystem::path gameAssetRootDirectory;
-
-  // Custom fopen function for Windows compatibility
-  static FILE* fopen(char const* fileName, char const* mode);
 
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
   // Cached OGRE plugin directory

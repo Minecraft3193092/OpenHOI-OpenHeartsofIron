@@ -2,9 +2,26 @@
 
 #include "options.hpp"
 
-#include <hoibase/scripting/scripting_runtime.hpp>
+#include <hoibase/file/file_access.hpp>
+
+#define RAPIDJSON_HAS_STDSTRING 1
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/ostreamwrapper.h>
+#include <rapidjson/prettywriter.h>
 
 #include <algorithm>
+#include <fstream>
+
+#define OPENHOI_CONFIG_FILE_NAME "options.jsonx"
+
+#define OPTION_KEY_VIDEO_MODE videoMode
+#define OPTION_KEY_FSAA fsaa
+#define OPTION_KEY_WINDOW_MODE windowMode
+#define OPTION_KEY_VSYNC verticalSync
+#define OPTION_KEY_AUDIO_DEVICE audioDevice
+#define OPTION_KEY_MUSIC_VOLUME musicVolume
+#define OPTION_KEY_EFFECTS_VOLUME effectsVolume
 
 namespace openhoi {
 
@@ -22,10 +39,62 @@ Options::Options()
 }
 
 // Load options from file
-void Options::loadFromFile() { ScriptingRuntime::getInstance(); }
+void Options::loadFromFile() {
+  // Open input stream
+  std::ifstream ifs(FileAccess::getUserGameConfigDirectory() /
+                    filesystem::path(OPENHOI_CONFIG_FILE_NAME));
+  rapidjson::IStreamWrapper isw(ifs);
+
+  // Create document and parse JSON
+  rapidjson::Document doc;
+  doc.ParseStream(isw);
+
+  // Check if document is empty
+  if (!doc.IsObject()) return;
+
+  // Get members (=options) from document
+  if (doc[TOSTRING(OPTION_KEY_VIDEO_MODE)].IsString())
+    videoMode = doc[TOSTRING(OPTION_KEY_VIDEO_MODE)].GetString();
+  if (doc[TOSTRING(OPTION_KEY_FSAA)].IsInt())
+    fullScreenAntiAliasing = (byte)doc[TOSTRING(OPTION_KEY_FSAA)].GetInt();
+  if (doc[TOSTRING(OPTION_KEY_WINDOW_MODE)].IsInt())
+    windowMode =
+        static_cast<WindowMode>(doc[TOSTRING(OPTION_KEY_WINDOW_MODE)].GetInt());
+  if (doc[TOSTRING(OPTION_KEY_VSYNC)].IsBool())
+    verticalSync = doc[TOSTRING(OPTION_KEY_VSYNC)].GetBool();
+  if (doc[TOSTRING(OPTION_KEY_AUDIO_DEVICE)].IsString())
+    audioDevice = doc[TOSTRING(OPTION_KEY_AUDIO_DEVICE)].GetString();
+  if (doc[TOSTRING(OPTION_KEY_MUSIC_VOLUME)].IsFloat())
+    musicVolume = doc[TOSTRING(OPTION_KEY_MUSIC_VOLUME)].GetFloat();
+  if (doc[TOSTRING(OPTION_KEY_EFFECTS_VOLUME)].IsFloat())
+    effectsVolume = doc[TOSTRING(OPTION_KEY_EFFECTS_VOLUME)].GetFloat();
+}
 
 // Save options to file
-void Options::saveToFile() {}
+void Options::saveToFile() {
+  // Create document
+  rapidjson::Document doc;
+  doc.SetObject();
+  auto& allocator = doc.GetAllocator();
+
+  // Add members (=options) to document
+  doc.AddMember(TOSTRING(OPTION_KEY_VIDEO_MODE), videoMode, allocator);
+  doc.AddMember(TOSTRING(OPTION_KEY_FSAA), fullScreenAntiAliasing, allocator);
+  doc.AddMember(TOSTRING(OPTION_KEY_WINDOW_MODE), windowMode, allocator);
+  doc.AddMember(TOSTRING(OPTION_KEY_VSYNC), verticalSync, allocator);
+  doc.AddMember(TOSTRING(OPTION_KEY_AUDIO_DEVICE), audioDevice, allocator);
+  doc.AddMember(TOSTRING(OPTION_KEY_MUSIC_VOLUME), musicVolume, allocator);
+  doc.AddMember(TOSTRING(OPTION_KEY_EFFECTS_VOLUME), effectsVolume, allocator);
+
+  // Open output stream
+  std::ofstream ofs(FileAccess::getUserGameConfigDirectory() /
+                    filesystem::path(OPENHOI_CONFIG_FILE_NAME));
+  rapidjson::OStreamWrapper osw(ofs);
+  rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
+
+  // Write document to file system
+  doc.Accept(writer);
+}
 
 // Gets the video mode name
 std::string const& Options::getVideoMode() const { return videoMode; }
