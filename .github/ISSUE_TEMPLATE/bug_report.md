@@ -1,3 +1,12 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: bug
+assignees: ''
+
+---
+
 At first, thank you for supporting `openhoi`!
 
 Before you open an issue, please check if a similar issue already exists or has been closed before.
@@ -15,4 +24,3 @@ Before you open an issue, please check if a similar issue already exists or has 
 - [ ] A description of the problem you're trying to solve, including *why* you think this is a problem
 - [ ] An overview of the suggested solution
 - [ ] If the feature changes current behavior, reasons why your solution is better
-

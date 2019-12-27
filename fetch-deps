@@ -130,9 +130,10 @@ if [ $INSTALLSYSTEM ]; then
             done
         fi
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$APTGET]} ]; then
-        sudo apt-get update
-        sudo apt-get upgrade
-        sudo apt-get -y install $PACKAGES
+        sudo apt-get update -qy
+        sudo apt-get upgrade -qy
+        sudo apt-get install -qy  --no-install-recommends $PACKAGES
+	sudo apt-get clean
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$PKG]} ]; then
         sudo freebsd-update fetch --not-running-from-cron
         sudo freebsd-update install --not-running-from-cron
