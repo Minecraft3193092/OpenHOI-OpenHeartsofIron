@@ -3,6 +3,10 @@
 #include "hoibase/helper/log_listener.hpp"
 #include "hoibase/openhoi.hpp"
 
+#ifndef OPENHOI_OS_WINDOWS
+#  include <syslog.h>
+#endif
+
 namespace openhoi {
 
 // Log listener constructor

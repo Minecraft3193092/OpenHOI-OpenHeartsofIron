@@ -7,10 +7,6 @@
 
 #include <OgreLog.h>
 
-#ifndef OPENHOI_OS_WINDOWS
-#  include <syslog.h>
-#endif
-
 namespace openhoi {
 
 // OGRE log listener
