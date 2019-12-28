@@ -8,6 +8,7 @@
 #include "state/state_manager.hpp"
 
 #include <hoibase/file/filesystem.hpp>
+#include <hoibase/helper/log_listener.hpp>
 #include <hoibase/helper/os.hpp>
 
 #include <OgreFrameListener.h>
@@ -160,12 +161,14 @@ class GameManager final : public Ogre::FrameListener,
   StateManager* stateManager;
   AudioManager* audioManager;
   GuiManager* guiManager;
+  std::unique_ptr<Ogre::LogManager> logManager;
   Ogre::Root* root;
   Ogre::OverlaySystem* overlaySystem;
   Ogre::SceneManager* sceneManager;
   NativeWindowPair window;
   Ogre::Camera* camera;
   Ogre::RTShader::ShaderGenerator* shaderGenerator;
+  LogListener* logListener;
 };
 
 }  // namespace openhoi

@@ -110,6 +110,7 @@ set(BASE_SOURCES ${BASE_SOURCES} ${FILE_SOURCES})
 # Add helper code
 list(APPEND HELPER_INCLUDES include/hoibase/helper/debug.hpp
                             include/hoibase/helper/library.hpp
+                            include/hoibase/helper/log_listener.hpp
                             include/hoibase/helper/os.hpp
                             include/hoibase/helper/synchronization.hpp
                             include/hoibase/helper/unique_id.hpp)
@@ -117,6 +118,7 @@ source_group("Header Files\\helper" FILES ${HELPER_INCLUDES})
 set(BASE_INCLUDES ${BASE_INCLUDES} ${HELPER_INCLUDES})
 
 list(APPEND HELPER_SOURCES src/helper/debug.cpp
+                           src/helper/log_listener.cpp
                            src/helper/os.cpp
                            src/helper/unique_id.cpp)
 source_group("Source Files\\helper" FILES ${HELPER_SOURCES})

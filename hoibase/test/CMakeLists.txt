@@ -12,7 +12,7 @@ include(GoogleTest)
 
 # Add map tests
 list(APPEND MAP_TESTS map/province.cpp)
-source_group("Tests\\map" FILES ${MAP_TESTS})
+source_group("Test Files\\map" FILES ${MAP_TESTS})
 set(TEST_SOURCES ${TEST_SOURCES} ${MAP_TESTS})
 
 
@@ -22,7 +22,6 @@ add_executable(hoibase_test
 
 target_link_libraries(hoibase_test
                       hoibase
-                      ${OGRE_LIBRARIES}
                       gtest_main)
 
 target_include_directories(hoibase_test

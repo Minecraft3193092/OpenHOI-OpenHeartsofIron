@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <fstream>
 
-#define OPENHOI_CONFIG_FILE_NAME "options.jsonx"
+#define OPENHOI_CONFIG_FILE_NAME "options.json"
 
 #define OPTION_KEY_VIDEO_MODE videoMode
 #define OPTION_KEY_FSAA fsaa

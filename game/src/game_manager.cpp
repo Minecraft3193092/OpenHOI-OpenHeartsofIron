@@ -4,8 +4,6 @@
 #include "gui/gui_manager.hpp"
 #include "state/menu_state.hpp"
 
-#include <hoibase/file/file_access.hpp>
-
 #include <Ogre.h>
 #include <OgreLogManager.h>
 #include <OgreOverlaySystem.h>
@@ -16,13 +14,14 @@
 #include <SDL.h>
 #include <SDL_syswm.h>
 #include <boost/format.hpp>
+#include <exception>
+#include <hoibase/file/file_access.hpp>
+
 #ifdef OPENHOI_OS_WINDOWS
 #  include <OgreD3D11RenderSystem.h>
 #  include <expandedresources.h>
 #  include <shellscalingapi.h>
 #endif
-
-#include <exception>
 
 namespace openhoi {
 
@@ -31,11 +30,24 @@ GameManager::GameManager() {
   // Create options instance and load options from file
   options = new Options();
 
+  // Initialize logging
+  logManager.reset(OGRE_NEW Ogre::LogManager());
+  std::string logFile;
+  Ogre::Log* logger;
+#ifdef OPENHOI_OS_WINDOWS
+  logFile = (FileAccess::getUserGameConfigDirectory() /
+             filesystem::path(OPENHOI_GAME_NAME ".log"))
+                .u8string();
+  logger = logManager->createLog(logFile, true);
+#else
+  logFile = OPENHOI_GAME_NAME ".log";
+  logger = logManager->createLog(logFile, true, true, true);
+#endif
+  logListener = OGRE_NEW LogListener();
+  logger->addListener(logListener);
+
   // Create root object of OGRE system
-  std::string logFile = (FileAccess::getUserGameConfigDirectory() /
-                         filesystem::path(OPENHOI_GAME_NAME ".log"))
-                            .u8string();
-  root = OGRE_NEW Ogre::Root("", "", logFile);
+  root = OGRE_NEW Ogre::Root("", "", "");
 
   // Create the overlay system
   overlaySystem = OGRE_NEW Ogre::OverlaySystem();
@@ -165,8 +177,8 @@ void GameManager::run() {
   HRESULT result = GetExpandedResourceExclusiveCpuCount(&exclusiveCpuCount);
   if (result == S_OK) {
     Ogre::LogManager::getSingletonPtr()->logMessage(
-        (boost::format(
-             "Windows Game Mode provides usa total of %d exclusive CPU cores") %
+        (boost::format("Windows Game Mode provides us a total of %d exclusive "
+                       "CPU cores") %
          exclusiveCpuCount)
             .str());
   } else {
@@ -452,16 +464,12 @@ void GameManager::locateResources() {
   // Declare all material resources
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
       (assetRoot / "materials").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
-  if (Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsl")) {
-    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-        (assetRoot / "materials" / "glsl").u8string(), "FileSystem",
-        Ogre::RGN_DEFAULT);
-  } else if (Ogre::GpuProgramManager::getSingleton().isSyntaxSupported(
-                 "hlsl")) {
-    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-        (assetRoot / "materials" / "hlsl").u8string(), "FileSystem",
-        Ogre::RGN_DEFAULT);
-  }
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "materials" / "glsl").u8string(), "FileSystem",
+      Ogre::RGN_DEFAULT);
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "materials" / "hlsl").u8string(), "FileSystem",
+      Ogre::RGN_DEFAULT);
 
   // Declare all particle resources
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(

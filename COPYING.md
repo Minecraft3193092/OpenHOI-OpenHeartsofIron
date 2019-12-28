@@ -2,11 +2,11 @@ Any file in this project that doesn't state otherwise, and isn't listed as an ex
 
 _The openhoi authors are:_
 
-| Full name                   | Aliases                     | E-Mail                                            |
+| Full name                   | Alias                       | E-Mail                                            |
 |-----------------------------|-----------------------------|---------------------------------------------------|
 | Thomas Reiser               | thomasreiser                | reiser.thomas à gmail dawt com                    |
 
-If you're a first-time committer, add yourself to the above list. This is not just for legal reasons, but also to keep an overview of all those nicknames.
+If you're a first-time committer, add yourself to the above list as well as in the [credits file](/dist/credits.json). This is not just for legal reasons, but also to keep an overview of all those nicknames.
 
 A full list of all openhoi authors ("contributors") can also be determined from the VCS, e.g. via `git shortlog -sne`, or conveniently looked up on [the GitHub web interface](https://github.com/openhoi/openhoi/graphs/contributors).
 
@@ -28,7 +28,7 @@ In addition to this file, to prevent legal caveats, every source file *must* inc
 
 Authors of 3rd-party files should generally not be entered in the "openhoi authors" list.
 
-All 3rd-party files **must** be included in the following list:
+All 3rd-party files **must** be included in the following list as well as in the [credits file](/dist/credits.json):
 
 List of all 3rd-party files in openhoi:
 

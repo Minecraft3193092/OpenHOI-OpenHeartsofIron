@@ -159,12 +159,11 @@ mkdir thirdparty\manual-build\precompiled
 echo %LINEBEG% Prebuilt dependencies for 64-bit Windows...
 if not exist thirdparty\manual-build\lib\win64-prebuilt-deps (
     git clone https://github.com/openhoi/win64-prebuilt-deps --depth 1 thirdparty\manual-build\lib\win64-prebuilt-deps
-    cd thirdparty\manual-build\lib\win64-prebuilt-deps
 ) else (
     git -C thirdparty\manual-build\lib\win64-prebuilt-deps reset --hard
     git -C thirdparty\manual-build\lib\win64-prebuilt-deps pull --depth 1
-    cd thirdparty\manual-build\lib\win64-prebuilt-deps
 )
+cd thirdparty\manual-build\lib\win64-prebuilt-deps
 
 echo %LINEBEG% GMP / MPFR...
 robocopy "%CD%\gmp\lib" "%CWD%\thirdparty\manual-build\precompiled\gmp\lib" libgmp-10.lib libmpfr-4.lib
@@ -316,7 +315,7 @@ cd %CWD%
 
 if "%BUILD_OGRE%" == "y" (
     echo %LINEBEG% OGRE...
-    set OGRE_VERSION=1.12.3
+    set OGRE_VERSION=1.12.4
     if not exist thirdparty\manual-build\lib\ogre3d (
         git clone https://github.com/OGRECave/ogre --depth 1 --branch v%OGRE_VERSION% thirdparty\manual-build\lib\ogre3d
     ) else (
