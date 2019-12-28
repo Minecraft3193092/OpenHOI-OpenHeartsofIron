@@ -4,8 +4,8 @@
 
 #include "gui/gui_element.hpp"
 
-#include <imgui.h>
 #include <OgreLog.h>
+#include <imgui.h>
 
 #include <string>
 #include <vector>

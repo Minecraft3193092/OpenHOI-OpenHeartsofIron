@@ -156,7 +156,8 @@ int DebugConsole::textEditCallback(ImGuiInputTextCallbackData* data) {
           */
       if (candidates.Size == 0) {
         // No match
-        addLog(Ogre::LogMessageLevel::LML_TRIVIAL, "No match for \"%.*s\"!\n", (int)(word_end - word_start), word_start);
+        addLog(Ogre::LogMessageLevel::LML_TRIVIAL, "No match for \"%.*s\"!\n",
+               (int)(word_end - word_start), word_start);
       } else if (candidates.Size == 1) {
         // Single match. Delete the beginning of the word and replace it
         // entirely so we've got nice casing
