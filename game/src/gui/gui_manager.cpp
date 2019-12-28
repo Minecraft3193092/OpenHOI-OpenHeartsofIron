@@ -79,8 +79,8 @@ ImFont* GuiManager::getBigFont() {
   return bigFont;
 }
 
-// Toggle debug console
-void GuiManager::toggleDebugConsole() { debugConsole->toggle(); }
+// Get debug console
+DebugConsole* GuiManager::getDebugConsole() { return debugConsole; }
 
 // Render new GUI frame
 void GuiManager::newFrame(const Ogre::FrameEvent& e) {

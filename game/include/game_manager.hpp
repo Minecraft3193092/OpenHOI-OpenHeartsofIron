@@ -8,8 +8,9 @@
 #include "state/state_manager.hpp"
 
 #include <hoibase/file/filesystem.hpp>
-#include <hoibase/helper/log_listener.hpp>
 #include <hoibase/helper/os.hpp>
+#include <hoibase/log/log_handler.hpp>
+#include <hoibase/log/log_listener.hpp>
 
 #include <OgreFrameListener.h>
 #include <OgreMaterialManager.h>
@@ -27,7 +28,8 @@ namespace openhoi {
 // Manager used to handle the main game loop and the basic logic required to run
 // the game
 class GameManager final : public Ogre::FrameListener,
-                          public Ogre::MaterialManager::Listener {
+                          public Ogre::MaterialManager::Listener,
+                          public LogHandler {
  public:
   static GameManager& getInstance() {
     // Thread-safe C++11 singleton
@@ -38,7 +40,7 @@ class GameManager final : public Ogre::FrameListener,
   // Start the main loop
   void run();
 
-  /// Request game exit
+  // Request game exit
   void requestExit();
 
   // Gets the game options
@@ -85,6 +87,10 @@ class GameManager final : public Ogre::FrameListener,
   // Called right after illuminated passes were created, so that owner of
   // runtime generated technique can handle this
   bool afterIlluminationPassesCreated(Ogre::Technique* tech);
+
+  // This is called whenever the log receives a message and is about to write it
+  // out
+  void messageLogged(std::string message, Ogre::LogMessageLevel lml);
 
  protected:
   // Initializes the game manager
@@ -169,6 +175,8 @@ class GameManager final : public Ogre::FrameListener,
   Ogre::Camera* camera;
   Ogre::RTShader::ShaderGenerator* shaderGenerator;
   LogListener* logListener;
+  std::vector<std::pair<Ogre::LogMessageLevel, std::string>>
+      queuedDebugConsoleLogs;
 };
 
 }  // namespace openhoi

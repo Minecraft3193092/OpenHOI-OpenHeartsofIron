@@ -18,7 +18,7 @@ DebugConsole::DebugConsole() {
   // Reset history pos
   historyPos = -1;
 
-  addLog("Hey hey");
+  addLog(Ogre::LogMessageLevel::LML_NORMAL, "Hey hey");
 }
 
 // Destroys the debug console
@@ -31,7 +31,7 @@ DebugConsole::~DebugConsole() {
 void DebugConsole::toggle() { showConsole = !showConsole; }
 
 // Add log to debug console
-void DebugConsole::addLog(const char* fmt, ...) {
+void DebugConsole::addLog(Ogre::LogMessageLevel lml, const char* fmt, ...) {
   char buffer[1024];
   va_list args;
   va_start(args, fmt);
@@ -156,8 +156,7 @@ int DebugConsole::textEditCallback(ImGuiInputTextCallbackData* data) {
           */
       if (candidates.Size == 0) {
         // No match
-        addLog("No match for \"%.*s\"!\n", (int)(word_end - word_start),
-               word_start);
+        addLog(Ogre::LogMessageLevel::LML_TRIVIAL, "No match for \"%.*s\"!\n", (int)(word_end - word_start), word_start);
       } else if (candidates.Size == 1) {
         // Single match. Delete the beginning of the word and replace it
         // entirely so we've got nice casing
@@ -189,9 +188,9 @@ int DebugConsole::textEditCallback(ImGuiInputTextCallbackData* data) {
         }
 
         // List matches
-        addLog("Possible matches:\n");
+        addLog(Ogre::LogMessageLevel::LML_TRIVIAL, "Possible matches:\n");
         for (int i = 0; i < candidates.Size; i++)
-          addLog("- %s\n", candidates[i]);
+          addLog(Ogre::LogMessageLevel::LML_TRIVIAL, "- %s\n", candidates[i]);
       }
 
       break;

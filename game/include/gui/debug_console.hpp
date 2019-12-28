@@ -5,6 +5,7 @@
 #include "gui/gui_element.hpp"
 
 #include <imgui.h>
+#include <OgreLog.h>
 
 #include <string>
 #include <vector>
@@ -24,7 +25,7 @@ class DebugConsole final : public GuiElement {
   void toggle();
 
   // Add log to debug console
-  void addLog(const char* fmt, ...);
+  void addLog(Ogre::LogMessageLevel lml, const char* fmt, ...);
 
   // Clear debug console log
   void clearLog();

@@ -1,6 +1,6 @@
 // Copyright 2019 the openhoi authors. See COPYING.md for legal info.
 
-#include "hoibase/helper/log_listener.hpp"
+#include "hoibase/log/log_listener.hpp"
 #include "hoibase/openhoi.hpp"
 
 #ifndef OPENHOI_OS_WINDOWS
@@ -61,6 +61,16 @@ void LogListener::messageLogged(const Ogre::String& message,
 
   syslog(logLevel, message.c_str());
 #endif
+
+  // Send event to all registered handlers
+  for (auto const& logHandler : logHandlers) {
+    logHandler->messageLogged(message, lml);
+  }
+}
+
+// Register a new event handler that will be called for each logged message
+void LogListener::registerLogHandler(LogHandler* logHandler) {
+  logHandlers.push_back(logHandler);
 }
 
 }  // namespace openhoi

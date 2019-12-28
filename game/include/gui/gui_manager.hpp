@@ -37,8 +37,8 @@ class GuiManager final {
   // Gets the big font
   ImFont* getBigFont();
 
-  // Toggle debug console
-  void toggleDebugConsole();
+  // Get debug console
+  DebugConsole* getDebugConsole();
 
  private:
   // Configure GUI

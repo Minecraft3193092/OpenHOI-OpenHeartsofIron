@@ -110,7 +110,6 @@ set(BASE_SOURCES ${BASE_SOURCES} ${FILE_SOURCES})
 # Add helper code
 list(APPEND HELPER_INCLUDES include/hoibase/helper/debug.hpp
                             include/hoibase/helper/library.hpp
-                            include/hoibase/helper/log_listener.hpp
                             include/hoibase/helper/os.hpp
                             include/hoibase/helper/synchronization.hpp
                             include/hoibase/helper/unique_id.hpp)
@@ -118,11 +117,20 @@ source_group("Header Files\\helper" FILES ${HELPER_INCLUDES})
 set(BASE_INCLUDES ${BASE_INCLUDES} ${HELPER_INCLUDES})
 
 list(APPEND HELPER_SOURCES src/helper/debug.cpp
-                           src/helper/log_listener.cpp
                            src/helper/os.cpp
                            src/helper/unique_id.cpp)
 source_group("Source Files\\helper" FILES ${HELPER_SOURCES})
 set(BASE_SOURCES ${BASE_SOURCES} ${HELPER_SOURCES})
+
+# Add log code
+list(APPEND LOG_INCLUDES include/hoibase/log/log_handler.hpp
+                         include/hoibase/log/log_listener.hpp)
+source_group("Header Files\\log" FILES ${LOG_INCLUDES})
+set(BASE_INCLUDES ${BASE_INCLUDES} ${LOG_INCLUDES})
+
+list(APPEND LOG_SOURCES src/log/log_listener.cpp)
+source_group("Source Files\\log" FILES ${LOG_SOURCES})
+set(BASE_SOURCES ${BASE_SOURCES} ${LOG_SOURCES})
 
 # Add map code
 list(APPEND MAP_INCLUDES include/hoibase/map/map_factory.hpp

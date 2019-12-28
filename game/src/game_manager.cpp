@@ -1,8 +1,6 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "game_manager.hpp"
-#include "gui/gui_manager.hpp"
-#include "state/menu_state.hpp"
 
 #include <Ogre.h>
 #include <OgreLogManager.h>
@@ -13,9 +11,13 @@
 #include <OgreTextureManager.h>
 #include <SDL.h>
 #include <SDL_syswm.h>
+
 #include <boost/format.hpp>
 #include <exception>
 #include <hoibase/file/file_access.hpp>
+
+#include "gui/gui_manager.hpp"
+#include "state/menu_state.hpp"
 
 #ifdef OPENHOI_OS_WINDOWS
 #  include <OgreD3D11RenderSystem.h>
@@ -44,6 +46,7 @@ GameManager::GameManager() {
   logger = logManager->createLog(logFile, true, true, true);
 #endif
   logListener = OGRE_NEW LogListener();
+  logListener->registerLogHandler(this);
   logger->addListener(logListener);
 
   // Create root object of OGRE system
@@ -571,7 +574,7 @@ void GameManager::keyDown(const SDL_Event evt) {}
 void GameManager::keyUp(const SDL_Event evt) {
   if (evt.key.keysym.sym == SDLK_CARET) {
     // Show debug console on caret button click
-    guiManager->toggleDebugConsole();
+    guiManager->getDebugConsole()->toggle();
   }
 }
 
@@ -705,6 +708,29 @@ bool GameManager::afterIlluminationPassesCreated(Ogre::Technique* tech) {
     return true;
   }
   return false;
+}
+
+// This is called whenever the log receives a message and is about to write it
+// out
+void GameManager::messageLogged(std::string message,
+                                Ogre::LogMessageLevel lml) {
+#ifndef _DEBUG
+  if (lml != Ogre::LogMessageLevel::LML_TRIVIAL) {
+#endif
+    if (guiManager) {
+      // Log to debug console
+      auto it = queuedDebugConsoleLogs.begin();
+      while (it != queuedDebugConsoleLogs.end()) {
+        guiManager->getDebugConsole()->addLog(it->first, it->second.c_str());
+        it = queuedDebugConsoleLogs.erase(it);
+      }
+      guiManager->getDebugConsole()->addLog(lml, message.c_str());
+    } else {
+      queuedDebugConsoleLogs.push_back(std::pair(lml, message));
+    }
+#ifndef _DEBUG
+  }
+#endif
 }
 
 }  // namespace openhoi

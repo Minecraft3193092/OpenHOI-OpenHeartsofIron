@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "library.hpp"
-#include "os.hpp"
+#include "hoibase/helper/library.hpp"
+#include "hoibase/helper/os.hpp"
+#include "log_handler.hpp"
 
 #include <OgreLog.h>
 
@@ -25,6 +26,12 @@ class LogListener final : public Ogre::LogListener {
                                         bool maskDebug,
                                         const Ogre::String& logName,
                                         bool& skipThisMessage);
+
+  // Register a new event handler that will be called for each logged message
+  OPENHOI_LIB_EXPORT void registerLogHandler(LogHandler* logHandler);
+
+ private:
+  std::vector<LogHandler*> logHandlers;
 };
 
 }  // namespace openhoi
