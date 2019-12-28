@@ -59,7 +59,7 @@ void LogListener::messageLogged(const Ogre::String& message,
       logLevel = LOG_NOTICE;
   }
 
-  syslog(logLevel, message);
+  syslog(logLevel, message.c_str());
 #endif
 }
 
