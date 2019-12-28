@@ -10,13 +10,18 @@
 namespace openhoi {
 
 // Log listener constructor
-LogListener::LogListener() {
+LogListener::LogListener(bool gameClientExecutable /* = true */) {
 #ifndef OPENHOI_OS_WINDOWS
   // Set syslog log mask
   setlogmask(LOG_UPTO(LOG_NOTICE));
 
   // Open syslog
-  openlog(OPENHOI_GAME_NAME, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
+  const char* logName;
+  if (gameClientExecutable)
+    logName = OPENHOI_GAME_NAME;
+  else
+    logName = OPENHOI_GAME_NAME "-server";
+  openlog(logName, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
 #endif
 }
 

@@ -13,7 +13,7 @@ namespace openhoi {
 class LogListener final : public Ogre::LogListener {
  public:
   // Log listener constructor
-  OPENHOI_LIB_EXPORT LogListener();
+  OPENHOI_LIB_EXPORT LogListener(bool gameClientExecutable = true);
 
   // Log listener destructor
   ~LogListener();
