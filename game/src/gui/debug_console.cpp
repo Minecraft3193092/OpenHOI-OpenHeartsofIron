@@ -17,8 +17,6 @@ DebugConsole::DebugConsole() {
 
   // Reset history pos
   historyPos = -1;
-
-  addLog(Ogre::LogMessageLevel::LML_NORMAL, "Hey hey");
 }
 
 // Destroys the debug console
