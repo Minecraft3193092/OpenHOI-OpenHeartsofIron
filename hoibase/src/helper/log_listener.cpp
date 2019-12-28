@@ -35,6 +35,10 @@ void LogListener::messageLogged(const Ogre::String& message,
                                 const Ogre::String& logName,
                                 bool& skipThisMessage) {
 #ifndef OPENHOI_OS_WINDOWS
+  // As we are not writing to a simple file on non-Windows systems but to
+  // syslog, we have to convert the OGRE log message level to make it compatible
+  // with syslog. Then we can log the message accordingly.
+
   int logLevel;
   switch (lml) {
     case Ogre::LogMessageLevel::LML_NORMAL:
