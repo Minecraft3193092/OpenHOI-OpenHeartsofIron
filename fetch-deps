@@ -61,7 +61,7 @@ OGRE_MANUAL_BUILD=false
 
 if [ $OSTYPE == "linux-gnu" ]; then
     # Linux
-    printf " $CHECKMARK Linux is supported, but we need to check for your install distribution...\n"
+    printf " $CHECKMARK Linux is supported, but we need to check for your installed distribution...\n"
     
     # Get current Linux distribution
     if [ -f /etc/arch-release ]; then
@@ -173,12 +173,12 @@ if [ $INSTALLSYSTEM ]; then
         printf "$LINEBG Building OGRE...\n"
         OGRE_BRANCH="v1.12.4"
         if [ ! -d thirdparty/manual-build/lib/ogre3d ]; then
-            git clone https://github.com/OGRECave/ogre --depth 1 --branch $OGRE_BRANCH thirdparty/manual-build/lib/ogre3d
+            git clone https://github.com/OGRECave/ogre --branch $OGRE_BRANCH thirdparty/manual-build/lib/ogre3d
         else
             git -C thirdparty/manual-build/lib/ogre3d reset --hard
             git -C thirdparty/manual-build/lib/ogre3d fetch
             git -C thirdparty/manual-build/lib/ogre3d checkout $OGRE_BRANCH
-            git -C thirdparty/manual-build/lib/ogre3d pull --depth 1
+            git -C thirdparty/manual-build/lib/ogre3d pull
         fi
         cd thirdparty/manual-build/lib/ogre3d
         rm -R Components/Overlay/src/imgui
