@@ -8,9 +8,9 @@ namespace openhoi {
 // This is called whenever the log receives a message and is about to write it
 // out
 void LogListener::messageLogged(const Ogre::String& message,
-                                Ogre::LogMessageLevel lml, bool maskDebug,
-                                const Ogre::String& logName,
-                                bool& skipThisMessage) {
+                                Ogre::LogMessageLevel lml, bool /*maskDebug*/,
+                                const Ogre::String& /*logName*/,
+                                bool& /*skipThisMessage*/) {
   // Send event to all registered handlers
   for (auto const& logHandler : logHandlers) {
     logHandler->messageLogged(message, lml);
