@@ -78,18 +78,6 @@ filesystem::path FileAccess::getTempDirectory() {
   return filesystem::temp_directory_path();
 }
 
-#ifndef OPENHOI_OS_WINDOWS
-// Get the log directory. If it cannot be found, an exception will be thrown.
-filesystem::path FileAccess::getLogDirectory() {
-  filesystem::path logDirectory = filesystem::path("/var/log");
-
-  if (!filesystem::is_directory(logDirectory))
-    throw std::runtime_error("Unable to find log directory");
-
-  return logDirectory;
-}
-#endif
-
 // Get the game config directory. If it does not exist, this function also tries
 // to create it. In case something bad happens, an exception will be thrown.
 filesystem::path FileAccess::getUserGameConfigDirectory() {

@@ -34,14 +34,9 @@ GameManager::GameManager() {
 
   // Initialize logging
   logManager.reset(OGRE_NEW Ogre::LogManager());
-  filesystem::path logDirectory;
-#ifdef OPENHOI_OS_WINDOWS
-  logDirectory = FileAccess::getUserGameConfigDirectory();
-#else
-  logDirectory = FileAccess::getLogDirectory();
-#endif
-  std::string logFile =
-      (logDirectory / filesystem::path(OPENHOI_GAME_NAME ".log")).u8string();
+  std::string logFile = (FileAccess::getUserGameConfigDirectory() /
+                         filesystem::path(OPENHOI_GAME_NAME ".log"))
+                            .u8string();
   Ogre::Log* logger = logManager->createLog(logFile, true);
   logListener = OGRE_NEW LogListener();
   logListener->registerLogHandler(this);

@@ -35,11 +35,6 @@ class OPENHOI_LIB_EXPORT FileAccess final {
   // Get the temp directory. If it cannot be found, an exception will be thrown.
   static filesystem::path getTempDirectory();
 
-#ifndef OPENHOI_OS_WINDOWS
-  // Get the log directory. If it cannot be found, an exception will be thrown.
-  static filesystem::path getLogDirectory();
-#endif
-
   // Get the game config directory. If it does not exist, this function also
   // tries to create it. In case something bad happens, an exception will be
   // thrown.
