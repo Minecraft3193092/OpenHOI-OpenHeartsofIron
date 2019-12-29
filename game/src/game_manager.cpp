@@ -198,7 +198,10 @@ void GameManager::run() {
 }
 
 // Request game exit
-void GameManager::requestExit() { root->queueEndRendering(true); }
+void GameManager::requestExit() {
+  root->queueEndRendering(true);
+  exiting = true;
+}
 
 // Gets the full path to the provided OGRE plugin
 std::string GameManager::getPluginPath(std::string pluginName) {
@@ -714,6 +717,11 @@ bool GameManager::afterIlluminationPassesCreated(Ogre::Technique* tech) {
 // out
 void GameManager::messageLogged(std::string message,
                                 Ogre::LogMessageLevel lml) {
+  if (exiting) {
+    // Do not attempt to log anything to console when the game is exiting!
+    return;
+  }
+
 #ifndef _DEBUG
   if (lml != Ogre::LogMessageLevel::LML_TRIVIAL) {
 #endif

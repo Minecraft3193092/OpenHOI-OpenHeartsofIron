@@ -23,7 +23,7 @@ using namespace openhoi;
 const char* lockFilePath;
 
 // Handle SIGINT (release lock file)
-void sigintHandler(int sig) {
+void sigintHandler(int /*sig*/) {
   unlink(lockFilePath);
   _exit(EXIT_FAILURE);  // exit() is not safe in a signal handler, the we use
                         // _exit()

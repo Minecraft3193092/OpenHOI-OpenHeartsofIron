@@ -163,6 +163,7 @@ class GameManager final : public Ogre::FrameListener,
     SDL_Window* sdl;
   };
 
+  bool exiting;
   Options* options;
   StateManager* stateManager;
   AudioManager* audioManager;

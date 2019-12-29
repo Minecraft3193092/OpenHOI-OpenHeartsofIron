@@ -4,7 +4,7 @@
 
 #include "hoibase/helper/library.hpp"
 
-#include <OgreVector2.h>
+#include <Ogre.h>
 
 #include <string>
 #include <vector>
