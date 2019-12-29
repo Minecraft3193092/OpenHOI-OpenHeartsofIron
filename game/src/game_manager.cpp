@@ -38,9 +38,7 @@ GameManager::GameManager() {
                          filesystem::path(OPENHOI_GAME_NAME ".log"))
                             .u8string();
   Ogre::Log* logger = logManager->createLog(logFile, true);
-  logListener = OGRE_NEW LogListener();
-  logListener->registerLogHandler(this);
-  logger->addListener(logListener);
+  logger->addListener(this);
 
   // Create root object of OGRE system
   root = OGRE_NEW Ogre::Root("", "", "");
@@ -568,7 +566,7 @@ void GameManager::keyDown(const SDL_Event evt) {}
 
 // Key up event
 void GameManager::keyUp(const SDL_Event evt) {
-  if (evt.key.keysym.sym == SDLK_CARET) {
+  if (evt.key.keysym.sym == SDLK_CARET || evt.key.keysym.sym == 0x40000000) {
     // Show debug console on caret button click
     guiManager->getDebugConsole()->toggle();
   }
@@ -708,8 +706,10 @@ bool GameManager::afterIlluminationPassesCreated(Ogre::Technique* tech) {
 
 // This is called whenever the log receives a message and is about to write it
 // out
-void GameManager::messageLogged(std::string message,
-                                Ogre::LogMessageLevel lml) {
+void GameManager::messageLogged(const Ogre::String& message,
+                                Ogre::LogMessageLevel lml, bool /*maskDebug*/,
+                                const Ogre::String& /*logName*/,
+                                bool& /*skipThisMessage*/) {
   if (exiting) {
     // Do not attempt to log anything to console when the game is exiting!
     return;

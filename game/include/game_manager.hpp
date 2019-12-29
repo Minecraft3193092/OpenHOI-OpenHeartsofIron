@@ -9,8 +9,6 @@
 
 #include <hoibase/file/filesystem.hpp>
 #include <hoibase/helper/os.hpp>
-#include <hoibase/log/log_handler.hpp>
-#include <hoibase/log/log_listener.hpp>
 
 #include <OgreFrameListener.h>
 #include <OgreMaterialManager.h>
@@ -29,7 +27,7 @@ namespace openhoi {
 // the game
 class GameManager final : public Ogre::FrameListener,
                           public Ogre::MaterialManager::Listener,
-                          public LogHandler {
+                          public Ogre::LogListener {
  public:
   static GameManager& getInstance() {
     // Thread-safe C++11 singleton
@@ -65,10 +63,10 @@ class GameManager final : public Ogre::FrameListener,
   Ogre::RenderWindow* const& getRenderWindow() const;
 
   // Frame started event
-  virtual bool frameStarted(const Ogre::FrameEvent& /*evt*/);
+  bool frameStarted(const Ogre::FrameEvent& /*evt*/);
 
   // Frame rendering queued event
-  virtual bool frameRenderingQueued(const Ogre::FrameEvent& /*evt*/);
+  bool frameRenderingQueued(const Ogre::FrameEvent& /*evt*/);
 
   // Hook point where shader based technique will be created. Will be called
   // whenever the material manager won't find appropriate technique to satisfy
@@ -90,7 +88,11 @@ class GameManager final : public Ogre::FrameListener,
 
   // This is called whenever the log receives a message and is about to write it
   // out
-  void messageLogged(std::string message, Ogre::LogMessageLevel lml);
+  void messageLogged(const Ogre::String& message,
+                                        Ogre::LogMessageLevel lml,
+                                        bool maskDebug,
+                                        const Ogre::String& logName,
+                                        bool& skipThisMessage);
 
  protected:
   // Initializes the game manager
@@ -175,7 +177,6 @@ class GameManager final : public Ogre::FrameListener,
   NativeWindowPair window;
   Ogre::Camera* camera;
   Ogre::RTShader::ShaderGenerator* shaderGenerator;
-  LogListener* logListener;
   std::vector<std::pair<Ogre::LogMessageLevel, std::string>>
       queuedDebugConsoleLogs;
 };

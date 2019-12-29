@@ -122,16 +122,6 @@ list(APPEND HELPER_SOURCES src/helper/debug.cpp
 source_group("Source Files\\helper" FILES ${HELPER_SOURCES})
 set(BASE_SOURCES ${BASE_SOURCES} ${HELPER_SOURCES})
 
-# Add log code
-list(APPEND LOG_INCLUDES include/hoibase/log/log_handler.hpp
-                         include/hoibase/log/log_listener.hpp)
-source_group("Header Files\\log" FILES ${LOG_INCLUDES})
-set(BASE_INCLUDES ${BASE_INCLUDES} ${LOG_INCLUDES})
-
-list(APPEND LOG_SOURCES src/log/log_listener.cpp)
-source_group("Source Files\\log" FILES ${LOG_SOURCES})
-set(BASE_SOURCES ${BASE_SOURCES} ${LOG_SOURCES})
-
 # Add map code
 list(APPEND MAP_INCLUDES include/hoibase/map/map_factory.hpp
                          include/hoibase/map/map.hpp
