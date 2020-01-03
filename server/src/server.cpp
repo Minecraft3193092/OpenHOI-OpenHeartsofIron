@@ -1,10 +1,9 @@
 ﻿// Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
+#include <boost/program_options.hpp>
 #include <hoibase/file/file_access.hpp>
 #include <hoibase/helper/os.hpp>
 #include <hoibase/openhoi.hpp>
-
-#include <boost/program_options.hpp>
 #include <iostream>
 
 #ifndef OPENHOI_OS_WINDOWS

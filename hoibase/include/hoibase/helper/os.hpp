@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "hoibase/helper/library.hpp"
-
 #include <string>
+
+#include "hoibase/helper/library.hpp"
 
 ////////////////////////////////////////////////////////////////////////////
 //

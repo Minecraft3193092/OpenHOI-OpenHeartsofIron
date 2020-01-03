@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <hoibase/helper/os.hpp>
-
 #include <Ogre.h>
+
+#include <hoibase/helper/os.hpp>
 
 namespace openhoi {
 

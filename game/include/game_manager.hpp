@@ -2,14 +2,6 @@
 
 #pragma once
 
-#include "audio/audio_manager.hpp"
-#include "gui/gui_manager.hpp"
-#include "options.hpp"
-#include "state/state_manager.hpp"
-
-#include <hoibase/file/filesystem.hpp>
-#include <hoibase/helper/os.hpp>
-
 #include <OgreFrameListener.h>
 #include <OgreMaterialManager.h>
 #include <OgreOverlaySystem.h>
@@ -18,8 +10,15 @@
 #include <OgreSceneManager.h>
 
 #include <array>
+#include <hoibase/file/filesystem.hpp>
+#include <hoibase/helper/os.hpp>
 #include <map>
 #include <string>
+
+#include "audio/audio_manager.hpp"
+#include "gui/gui_manager.hpp"
+#include "options.hpp"
+#include "state/state_manager.hpp"
 
 namespace openhoi {
 
@@ -88,11 +87,9 @@ class GameManager final : public Ogre::FrameListener,
 
   // This is called whenever the log receives a message and is about to write it
   // out
-  void messageLogged(const Ogre::String& message,
-                                        Ogre::LogMessageLevel lml,
-                                        bool maskDebug,
-                                        const Ogre::String& logName,
-                                        bool& skipThisMessage);
+  void messageLogged(const Ogre::String& message, Ogre::LogMessageLevel lml,
+                     bool maskDebug, const Ogre::String& logName,
+                     bool& skipThisMessage);
 
  protected:
   // Initializes the game manager

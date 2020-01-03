@@ -1,9 +1,10 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "gui/debug_console.hpp"
-#include "gui/gui_manager.hpp"
 
 #include <hoibase/helper/unique_id.hpp>
+
+#include "gui/gui_manager.hpp"
 
 namespace openhoi {
 

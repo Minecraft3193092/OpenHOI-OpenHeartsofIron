@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "gui/gui_element.hpp"
-
 #include <OgreLog.h>
 #include <imgui.h>
 
 #include <string>
 #include <vector>
+
+#include "gui/gui_element.hpp"
 
 namespace openhoi {
 

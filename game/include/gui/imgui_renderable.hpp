@@ -2,12 +2,11 @@
 
 #pragma once
 
-#include <imgui.h>
-
 #include <OgreCamera.h>
 #include <OgrePrerequisites.h>
 #include <OgreRenderOperation.h>
 #include <OgreRenderable.h>
+#include <imgui.h>
 
 namespace openhoi {
 

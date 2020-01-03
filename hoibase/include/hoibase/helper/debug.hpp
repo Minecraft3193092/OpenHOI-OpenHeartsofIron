@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "hoibase/helper/library.hpp"
-
 #include <exception>
 #include <string>
+
+#include "hoibase/helper/library.hpp"
 
 namespace openhoi {
 

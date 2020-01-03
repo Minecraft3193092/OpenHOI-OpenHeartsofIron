@@ -2,11 +2,11 @@
 
 #include "gui/gui_manager.hpp"
 
-#include <hoibase/openhoi.hpp>
-
 #include <OgreImGuiOverlay.h>
 #include <OgreOverlayManager.h>
 #include <imgui_impl_sdl.h>
+
+#include <hoibase/openhoi.hpp>
 #ifdef OPENHOI_OS_WINDOWS
 #  include <OgreD3D11RenderSystem.h>
 #endif

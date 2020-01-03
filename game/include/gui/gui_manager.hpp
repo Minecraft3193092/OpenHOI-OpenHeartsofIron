@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "gui/debug_console.hpp"
-
-#include <hoibase/helper/os.hpp>
-
 #include <OgrePrerequisites.h>
 #include <SDL.h>
 #include <imgui.h>
+
+#include <hoibase/helper/os.hpp>
+
+#include "gui/debug_console.hpp"
 
 namespace openhoi {
 

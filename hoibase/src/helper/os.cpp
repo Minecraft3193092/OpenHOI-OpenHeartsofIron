@@ -3,8 +3,8 @@
 #include "hoibase/helper/os.hpp"
 
 #include <OgreLogManager.h>
-
 #include <stdio.h>
+
 #include <array>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/format.hpp>

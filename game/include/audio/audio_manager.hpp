@@ -2,18 +2,17 @@
 
 #pragma once
 
-#include "audio_device.hpp"
-#include "sound.hpp"
-
-#include <hoibase/file/filesystem.hpp>
-
 #include <al.h>
 #include <alc.h>
 
+#include <hoibase/file/filesystem.hpp>
 #include <list>
 #include <memory>
 #include <unordered_map>
 #include <vector>
+
+#include "audio_device.hpp"
+#include "sound.hpp"
 
 namespace openhoi {
 

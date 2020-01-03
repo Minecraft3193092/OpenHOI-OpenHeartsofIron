@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "hoibase/helper/library.hpp"
-
 #include <Ogre.h>
 
 #include <string>
 #include <vector>
+
+#include "hoibase/helper/library.hpp"
 
 namespace openhoi {
 

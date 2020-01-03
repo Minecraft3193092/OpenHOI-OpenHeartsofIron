@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "library.hpp"
-
 #include <string>
+
+#include "library.hpp"
 
 namespace openhoi {
 
