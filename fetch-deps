@@ -166,10 +166,12 @@ if [ $INSTALLSYSTEM ]; then
         if [ $OSTYPE == "linux-gnu" ]; then
             if [ $DISTRO == "debian" ]; then
                 # TODO: DEB
-            elif [ $DISTRO == "ubuntu"]; then
+                TODO="1"
+            elif [ $DISTRO == "ubuntu" ]; then
                 # TODO: PPA
+                TODO="1"
             else
-               printf " $CROSSMARK Your Linux distro '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n" 
+                printf " $CROSSMARK Your Linux distro '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n" 
             fi
         else
             printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
@@ -181,3 +183,10 @@ if [ $INSTALLSYSTEM ]; then
 fi
 
 cd $CWD
+
+
+# Cleanup
+rm -R thirdparty/ogre-package/ogre/Components/Overlay/src/imgui
+git -C thirdparty/ogre-package/imgui reset --hard
+git -C thirdparty/ogre-package/imgui pull --rebase origin docking
+git -C thirdparty/ogre-package/ogre reset --hard v$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH
