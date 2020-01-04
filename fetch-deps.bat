@@ -145,7 +145,7 @@ if "%SCRIPT_INSTALLED_SOMETHING%" == "y" (
 git submodule sync
 git submodule update --init --recursive --remote
 git -C thirdparty\ogre-package\imgui reset --hard
-git -C thirdparty\ogre-package\imgui pull origin docking
+git -C thirdparty\ogre-package\imgui pull --rebase origin docking
 
 
 @rem Install required libs...
