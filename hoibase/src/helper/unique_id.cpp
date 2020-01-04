@@ -1,11 +1,13 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "hoibase/helper/unique_id.hpp"
-#include "hoibase/helper/os.hpp"
 
 #include <array>
+
+#include "hoibase/helper/os.hpp"
 #if defined(OPENHOI_OS_WINDOWS)
 #  include <rpc.h>
+
 #  include <codecvt>
 #elif defined(OPENHOI_OS_MACOS)
 #  include <CoreFoundation/CFUUID.h>

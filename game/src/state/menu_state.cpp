@@ -1,9 +1,6 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "state/menu_state.hpp"
-#include "game_manager.hpp"
-#include "graphic/texture_helper.hpp"
-#include "gui/gui_manager.hpp"
 
 #include <OgreLogManager.h>
 #include <OgreMaterialManager.h>
@@ -15,6 +12,10 @@
 
 #include <algorithm>
 #include <cassert>
+
+#include "game_manager.hpp"
+#include "graphic/texture_helper.hpp"
+#include "gui/gui_manager.hpp"
 
 namespace openhoi {
 

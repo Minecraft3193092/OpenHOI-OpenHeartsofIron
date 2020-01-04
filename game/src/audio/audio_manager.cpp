@@ -1,18 +1,18 @@
 // Copyright 2019 the openhoi authors. See COPYING.md for legal info.
 
 #include "audio/audio_manager.hpp"
-#include "game_manager.hpp"
-
-#include <hoibase/file/file_access.hpp>
 
 #include <OgreLogManager.h>
-#include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
-#include <stb_vorbis.c>
 
 #include <algorithm>
+#include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
+#include <hoibase/file/file_access.hpp>
 #include <random>
+#include <stb_vorbis.c>
 #include <thread>
+
+#include "game_manager.hpp"
 
 namespace openhoi {
 

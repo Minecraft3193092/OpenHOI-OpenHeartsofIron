@@ -141,6 +141,11 @@ if "%SCRIPT_INSTALLED_SOMETHING%" == "y" (
 )
 
 
+@rem Sync submodules
+git submodule sync
+git submodule update --init --recursive --remote
+
+
 @rem Install required libs...
 echo %LINEBEG% Checking for required libraries...
 

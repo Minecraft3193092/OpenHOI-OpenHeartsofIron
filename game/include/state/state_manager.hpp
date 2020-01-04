@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "state.hpp"
-
 #include <OgrePrerequisites.h>
+
+#include "state.hpp"
 
 namespace openhoi {
 

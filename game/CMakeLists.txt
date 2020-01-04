@@ -88,12 +88,15 @@ source_group("Header Files\\thirdparty\\stb_vorbis" FILES ${STBVORBIS_INCLUDES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis)
 
 # Add third-party library ImGui
-list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_impl_sdl.h)
+list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/ogre-package/imgui/imgui.h
+                           ${CMAKE_SOURCE_DIR}/thirdparty/ogre-package/imgui/imgui_internal.h
+                           ${CMAKE_SOURCE_DIR}/thirdparty/ogre-package/imgui/examples/imgui_impl_sdl.h)
 source_group("Header Files\\thirdparty\\imgui" FILES ${IMGUI_INCLUDES})
 set(THIRDPARTY_INCLUDES ${THIRDPARTY_INCLUDES} ${IMGUI_INCLUDES})
-list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/imgui)
+list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/ogre-package/imgui
+                                    ${CMAKE_SOURCE_DIR}/thirdparty/ogre-package/imgui/examples)
 
-list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/imgui/imgui_impl_sdl.cpp)
+list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/ogre-package/imgui/examples/imgui_impl_sdl.cpp)
 source_group("Source Files\\thirdparty\\imgui" FILES ${IMGUI_SOURCES})
 set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${IMGUI_SOURCES})
 

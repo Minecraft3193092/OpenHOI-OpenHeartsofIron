@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "state.hpp"
-
 #include <OgreRectangle2D.h>
+
+#include "state.hpp"
 
 namespace openhoi {
 

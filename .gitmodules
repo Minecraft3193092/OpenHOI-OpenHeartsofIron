@@ -1,0 +1,3 @@
+[submodule "thirdparty/ogre-package"]
+	path = thirdparty/ogre-package
+	url = https://github.com/openhoi/ogre-package
