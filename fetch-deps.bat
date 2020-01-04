@@ -380,6 +380,47 @@ robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\nativ
 robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.redist.%LUA_VERSION%\build\native\bin\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\bin" lua.dll
 cd %CWD%
 
+goto comment
+echo %LINEBEG% Protocol Buffers...
+set PROTOBUF_BRANCH=v3.11.2
+if not exist thirdparty\manual-build\lib\protobuf (
+    git clone https://github.com/protocolbuffers/protobuf --branch %PROTOBUF_BRANCH% thirdparty\manual-build\lib\protobuf
+) else (
+    git -C thirdparty\manual-build\lib\protobuf reset --hard
+    git -C thirdparty\manual-build\lib\protobuf fetch --tags
+    git -C thirdparty\manual-build\lib\protobuf checkout %PROTOBUF_BRANCH%
+    git -C thirdparty\manual-build\lib\protobuf pull
+)
+cd thirdparty\manual-build\lib\protobuf\cmake
+@rd /s /q build 2>nul
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=OFF -G Ninja ..
+ninja
+robocopy "%CD%" "%CWD%\thirdparty\manual-build\precompiled\protobuf\lib" libprotobuf.lib
+cd ..\..
+robocopy "%CD%\src" "%CWD%\thirdparty\manual-build\precompiled\protobuf\include" /mir
+cd %CWD%
+
+echo %LINEBEG% GameNetworkingSockets...
+set GAMENETWORKINGSOCKETS_BRANCH=master
+if not exist thirdparty\manual-build\lib\gamenetworkingsockets (
+    git clone https://github.com/ValveSoftware/GameNetworkingSockets --branch %GAMENETWORKINGSOCKETS_BRANCH% thirdparty\manual-build\lib\gamenetworkingsockets
+) else (
+    git -C thirdparty\manual-build\lib\gamenetworkingsockets reset --hard
+    git -C thirdparty\manual-build\lib\gamenetworkingsockets fetch --tags
+    git -C thirdparty\manual-build\lib\gamenetworkingsockets checkout %GAMENETWORKINGSOCKETS_BRANCH%
+    git -C thirdparty\manual-build\lib\gamenetworkingsockets pull
+)
+cd thirdparty\manual-build\lib\gamenetworkingsockets
+@rd /s /q build 2>nul
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DProtobuf_USE_STATIC_LIBS=ON -DProtobuf_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\protobuf\lib\libprotobuf.lib" -DProtobuf_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\protobuf\include" -DOPENSSL_CRYPTO_LIBRARY="%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib" -DOPENSSL_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\openssl\include" -DOPENSSL_ROOT_DIR="%CWD%\thirdparty\manual-build\precompiled\openssl" -G Ninja ..
+ninja
+:comment
+cd %CWD%
+
 
 
 set FETCH_FINISHED=y
