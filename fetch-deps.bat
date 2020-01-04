@@ -141,7 +141,8 @@ if "%SCRIPT_INSTALLED_SOMETHING%" == "y" (
 )
 
 
-@rem Sync submodules
+@rem Cleanup and sync submodules
+@rem HINT: We do not need to OGRE here, only the ImGui repo
 git submodule sync
 git submodule update --init --recursive --remote
 
