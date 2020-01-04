@@ -105,14 +105,8 @@ fi
 
 
 
-# Cleanup and sync submodules
-source thirdparty/ogre-package/version
-if [ ! -d thirdparty/ogre-package/ogre/Components/Overlay/src/imgui ]; then
-    rm -R thirdparty/ogre-package/ogre/Components/Overlay/src/imgui
-fi
-git submodule sync
+# Update submodules
 git submodule update --init --recursive --remote
-git -C thirdparty/ogre-package/ogre reset --hard v$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH
 
 
 
