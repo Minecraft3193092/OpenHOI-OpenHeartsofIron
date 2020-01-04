@@ -142,9 +142,10 @@ if "%SCRIPT_INSTALLED_SOMETHING%" == "y" (
 
 
 @rem Cleanup and sync submodules
-@rem HINT: We do not need to OGRE here, only the ImGui repo
 git submodule sync
 git submodule update --init --recursive --remote
+git -C thirdparty\ogre-package\imgui reset --hard
+git -C thirdparty\ogre-package\imgui pull origin docking
 
 
 @rem Install required libs...
