@@ -158,10 +158,10 @@ mkdir thirdparty\manual-build\precompiled
 
 echo %LINEBEG% Prebuilt dependencies for 64-bit Windows...
 if not exist thirdparty\manual-build\lib\win64-prebuilt-deps (
-    git clone https://github.com/openhoi/win64-prebuilt-deps --depth 1 thirdparty\manual-build\lib\win64-prebuilt-deps
+    git clone https://github.com/openhoi/win64-prebuilt-deps thirdparty\manual-build\lib\win64-prebuilt-deps
 ) else (
     git -C thirdparty\manual-build\lib\win64-prebuilt-deps reset --hard
-    git -C thirdparty\manual-build\lib\win64-prebuilt-deps pull --depth 1
+    git -C thirdparty\manual-build\lib\win64-prebuilt-deps pull
 )
 cd thirdparty\manual-build\lib\win64-prebuilt-deps
 
@@ -237,12 +237,12 @@ robocopy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\bui
 echo %LINEBEG% OpenAL...
 set OPENAL_BRANCH=openal-soft-1.19.1
 if not exist thirdparty\manual-build\lib\openal (
-    git clone https://github.com/kcat/openal-soft --depth 1 --branch %OPENAL_BRANCH% thirdparty\manual-build\lib\openal
+    git clone https://github.com/kcat/openal-soft --branch %OPENAL_BRANCH% thirdparty\manual-build\lib\openal
 ) else (
     git -C thirdparty\manual-build\lib\openal reset --hard
     git -C thirdparty\manual-build\lib\openal fetch --tags
     git -C thirdparty\manual-build\lib\openal checkout %OPENAL_BRANCH%
-    git -C thirdparty\manual-build\lib\openal pull --depth 1
+    git -C thirdparty\manual-build\lib\openal pull
 )
 cd thirdparty\manual-build\lib\openal
 @rd /s /q build 2>nul
@@ -267,12 +267,12 @@ robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\nat
 echo %LINEBEG% Eigen...
 set EIGEN_BRANCH=3.3.7
 if not exist thirdparty\manual-build\lib\eigen (
-    git clone https://github.com/eigenteam/eigen-git-mirror --depth 1 --branch %EIGEN_BRANCH% thirdparty\manual-build\lib\eigen
+    git clone https://github.com/eigenteam/eigen-git-mirror --branch %EIGEN_BRANCH% thirdparty\manual-build\lib\eigen
 ) else (
     git -C thirdparty\manual-build\lib\eigen reset --hard
     git -C thirdparty\manual-build\lib\eigen fetch
     git -C thirdparty\manual-build\lib\eigen checkout %EIGEN_BRANCH%
-    git -C thirdparty\manual-build\lib\eigen pull --depth 1
+    git -C thirdparty\manual-build\lib\eigen pull
 )
 cd thirdparty\manual-build\lib\eigen
 @rd /s /q build 2>nul
@@ -317,12 +317,12 @@ if "%BUILD_OGRE%" == "y" (
     echo %LINEBEG% OGRE...
     set OGRE_VERSION=1.12.4
     if not exist thirdparty\manual-build\lib\ogre3d (
-        git clone https://github.com/OGRECave/ogre --depth 1 --branch v%OGRE_VERSION% thirdparty\manual-build\lib\ogre3d
+        git clone https://github.com/OGRECave/ogre --branch v%OGRE_VERSION% thirdparty\manual-build\lib\ogre3d
     ) else (
         git -C thirdparty\manual-build\lib\ogre3d reset --hard
         git -C thirdparty\manual-build\lib\ogre3d fetch
         git -C thirdparty\manual-build\lib\ogre3d checkout v%OGRE_VERSION%
-        git -C thirdparty\manual-build\lib\ogre3d pull --depth 1
+        git -C thirdparty\manual-build\lib\ogre3d pull
     )
     cd thirdparty\manual-build\lib\ogre3d
     @rd /s /q Components\Overlay\src\imgui 2>nul
@@ -356,16 +356,15 @@ if "%BUILD_OGRE%" == "y" (
 echo %LINEBEG% RapidJSON...
 set RAPIDJSON_BRANCH=v1.1.0
 if not exist thirdparty\manual-build\lib\rapidjson (
-    git clone https://github.com/Tencent/rapidjson/ --depth 1 --branch %RAPIDJSON_BRANCH% thirdparty\manual-build\lib\rapidjson
+    git clone https://github.com/Tencent/rapidjson/ --branch %RAPIDJSON_BRANCH% thirdparty\manual-build\lib\rapidjson
 ) else (
     git -C thirdparty\manual-build\lib\rapidjson reset --hard
     git -C thirdparty\manual-build\lib\rapidjson fetch
     git -C thirdparty\manual-build\lib\rapidjson checkout %EIGEN_BRANCH%
-    git -C thirdparty\manual-build\lib\rapidjson pull --depth 1
+    git -C thirdparty\manual-build\lib\rapidjson pull
 )
 robocopy "%CWD%\thirdparty\manual-build\lib\rapidjson\include" "%CWD%\thirdparty\manual-build\precompiled\rapidjson\include" /mir
 cd %CWD%
-
 
 echo %LINEBEG% Lua...
 set LUA_NAME=lua
@@ -374,6 +373,7 @@ nuget install %LUA_NAME% -Version %LUA_VERSION% -OutputDirectory thirdparty\manu
 robocopy "thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\lua\include" /mir
 robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\lib\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\lib" lua.lib
 robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.redist.%LUA_VERSION%\build\native\bin\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\bin" lua.dll
+cd %CWD%
 
 
 
