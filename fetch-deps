@@ -55,8 +55,8 @@ for ((i=0; i < $isa; i++)); do
 done
 
 INSTALL_SNAPCRAFT=false
-
 OGRE_MANUAL_BUILD=false
+OGRE_CUSTOM_PACKAGE=false
 
 if [ $OSTYPE == "linux-gnu" ]; then
     # Linux
@@ -85,14 +85,13 @@ if [ $OSTYPE == "linux-gnu" ]; then
         #CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
         PACKAGES="cmake git pkg-config build-essential uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format snapd rapidjson-dev liblua5.3-dev"
-        OGRE_MANUAL_BUILD=true
+        OGRE_CUSTOM_PACKAGE=true
         INSTALL_SNAPCRAFT=true
     else
         printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
         exit 1 
     fi
 elif [[ $MACOS == true ]]; then
-    # macOS
     printf " $CHECKMARK macOS is supported.\n"
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
@@ -107,12 +106,13 @@ fi
 
 
 # Cleanup and sync submodules
+source thirdparty/ogre-package/version
 if [ ! -d thirdparty/ogre-package/ogre/Components/Overlay/src/imgui ]; then
     rm -R thirdparty/ogre-package/ogre/Components/Overlay/src/imgui
-    git -C thirdparty/ogre-package/ogre reset --hard
 fi
 git submodule sync
 git submodule update --init --recursive --remote
+git -C thirdparty/ogre-package/ogre reset --hard v$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH
 
 
 
@@ -144,7 +144,7 @@ if [ $INSTALLSYSTEM ]; then
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$APTGET]} ]; then
         sudo apt-get update -qy
         sudo apt-get upgrade -qy
-        sudo apt-get install -qy  --no-install-recommends $PACKAGES
+        sudo apt-get install -qy --no-install-recommends $PACKAGES
 	    sudo apt-get clean
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$PKG]} ]; then
         sudo freebsd-update fetch --not-running-from-cron
@@ -165,26 +165,22 @@ if [ $INSTALLSYSTEM ]; then
 
     if [ $OGRE_MANUAL_BUILD = true ]; then
         printf "$LINEBG Building OGRE...\n"
-        OGRE_BRANCH="v1.12.4"
-        if [ ! -d thirdparty/manual-build/lib/ogre3d ]; then
-            git clone https://github.com/OGRECave/ogre --branch $OGRE_BRANCH thirdparty/manual-build/lib/ogre3d
-        else
-            git -C thirdparty/manual-build/lib/ogre3d reset --hard
-            git -C thirdparty/manual-build/lib/ogre3d fetch
-            git -C thirdparty/manual-build/lib/ogre3d checkout $OGRE_BRANCH
-            git -C thirdparty/manual-build/lib/ogre3d pull
-        fi
-        cd thirdparty/manual-build/lib/ogre3d
-        rm -R Components/Overlay/src/imgui
-        ln -s $CWD/thirdparty/imgui Components/Overlay/src/imgui
-	if [ -d $CWD/thirdparty/manual-build/precompiled/ogre3d ]; then rm -Rf $CWD/thirdparty/manual-build/precompiled/ogre3d; fi
-        if [ -d build ]; then rm -Rf build; fi
-        mkdir build
-        cd build
-        cmake -DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=ON -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_BUILD_COMPONENT_PYTHON=OFF -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=ON -DOGRE_BUILD_PLUGIN_DOT_SCENE=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_MESHLODGENERATOR=OFF -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_COMPONENT_BITES=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=ON -DOGRE_STATIC=OFF -DOGRE_BUILD_COMPONENT_OVERLAY_IMGUI=ON -DOpenGL_GL_PREFERENCE=LEGACY -DCMAKE_BUILD_TYPE=Release ..
-        make
-        sudo make install
+        cd $CWD/thirdparty/ogre-package
+        source package y # y = "Build only"
         cd $CWD
+    elif [ $OGRE_CUSTOM_PACKAGE = true ]; then
+        if [ $OSTYPE == "linux-gnu" ]; then
+            if [ $DISTRO == "debian" ]; then
+                # TODO: DEB
+            elif [ $DISTRO == "ubuntu"]; then
+                # TODO: PPA
+            else
+               printf " $CROSSMARK Your Linux distro '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n" 
+            fi
+        else
+            printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
+            exit 1 
+        fi
     fi
     
     printf " $CHECKMARK Finished! Please check the above command line output in order to verify that everything was okay.\n"
