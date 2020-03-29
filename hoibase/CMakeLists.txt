@@ -73,6 +73,9 @@ endif()
 find_package(CGAL ${CGAL_VERSION} REQUIRED)
 if(${MANUAL_CGAL_BUILD})
     set(CGAL_VERSION "${CGAL_VERSION_MAJOR}.${CGAL_VERSION_MINOR}")
+    if(NOT "${CGAL_BUGFIX_VERSION}" STREQUAL "0")
+        set(CGAL_VERSION "${CGAL_VERSION_MAJOR}.${CGAL_VERSION_MINOR}.${CGAL_BUGFIX_VERSION}")
+    endif()
     if(WIN32 AND NOT CGAL_LIBRARY)
         set(CGAL_LIBRARY optimized ${CGAL_LIBRARIES_DIR}/CGAL-vc142-mt-${CGAL_VERSION}.lib debug ${CGAL_LIBRARIES_DIR}/CGAL-vc142-mt-gd-${CGAL_VERSION}.lib)
     endif()
@@ -204,8 +207,8 @@ if(WIN32)
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/boost/bin/boost_thread-vc141-mt-x64-1_69.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libgmp-10.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/gmp/bin/libmpfr-4.dll" "${WIN32_DEP_OUT_DIR}"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL_Core-vc142-mt-$<$<CONFIG:Debug>:gd->5.0.dll" "${WIN32_DEP_OUT_DIR}"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc142-mt-$<$<CONFIG:Debug>:gd->5.0.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL_Core-vc142-mt-$<$<CONFIG:Debug>:gd->5.0.2.dll" "${WIN32_DEP_OUT_DIR}"
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/cgal/bin/CGAL-vc142-mt-$<$<CONFIG:Debug>:gd->5.0.2.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/bin/SDL2.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libcrypto-1_1-x64.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libssl-1_1-x64.dll" "${WIN32_DEP_OUT_DIR}"
