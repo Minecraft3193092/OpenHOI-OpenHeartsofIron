@@ -185,7 +185,6 @@ if(WIN32)
     add_custom_command(TARGET hoibase POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E make_directory "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/Codec_STBI$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreHLMS$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreMain$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreOverlay$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d/bin/OgreProperty$<$<CONFIG:Debug>:_d>.dll" "${WIN32_DEP_OUT_DIR}"

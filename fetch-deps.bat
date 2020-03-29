@@ -319,7 +319,7 @@ cd %CWD%
 
 if "%BUILD_OGRE%" == "y" (
     echo %LINEBEG% OGRE...
-    set OGRE_VERSION=1.12.4
+    set OGRE_VERSION=1.12.5
     if not exist thirdparty\manual-build\lib\ogre3d (
         git clone https://github.com/OGRECave/ogre --branch v%OGRE_VERSION% thirdparty\manual-build\lib\ogre3d
     ) else (
@@ -330,7 +330,7 @@ if "%BUILD_OGRE%" == "y" (
     )
     cd thirdparty\manual-build\lib\ogre3d
     @rd /s /q Components\Overlay\src\imgui 2>nul
-    mklink /D Components\Overlay\src\imgui %CWD%\thirdparty\imgui
+    mklink /D Components\Overlay\src\imgui %CWD%\thirdparty\ogre-package\imgui
     @rd /s /q build 2>nul
     mkdir build
     cd build
@@ -340,9 +340,9 @@ if "%BUILD_OGRE%" == "y" (
     ninja
     ninja install
     robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\include" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\include" /mir
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreHLMS.lib OgreMain.lib OgreOverlay.lib OgreProperty.lib OgreRTShaderSystem.lib OgreGLSupport.lib
+    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreMain.lib OgreOverlay.lib OgreProperty.lib OgreRTShaderSystem.lib OgreGLSupport.lib
     robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib\OGRE" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" Codec_STBI.lib Plugin_ParticleFX.lib RenderSystem_Direct3D11.lib RenderSystem_GL.lib RenderSystem_GL3Plus.lib
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI.dll OgreBites.dll OgreHLMS.dll OgreMain.dll OgreOverlay.dll OgreProperty.dll OgreRTShaderSystem.dll Plugin_ParticleFX.dll RenderSystem_Direct3D11.dll RenderSystem_GL.dll RenderSystem_GL3Plus.dll
+    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI.dll OgreBites.dll OgreMain.dll OgreOverlay.dll OgreProperty.dll OgreRTShaderSystem.dll Plugin_ParticleFX.dll RenderSystem_Direct3D11.dll RenderSystem_GL.dll RenderSystem_GL3Plus.dll
     robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\Dependencies\include\SDL2" "%CWD%\thirdparty\manual-build\precompiled\sdl2\include\SDL2" /mir
     robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\Dependencies\lib" "%CWD%\thirdparty\manual-build\precompiled\sdl2\lib" SDL2.lib SDL2main.lib
     robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\Dependencies\bin" "%CWD%\thirdparty\manual-build\precompiled\sdl2\bin" SDL2.dll
@@ -350,10 +350,10 @@ if "%BUILD_OGRE%" == "y" (
     cmake %OGRE_CMAKE_PARAMS% -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
     ninja
     ninja install
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreHLMS_d.lib OgreMain_d.lib OgreOverlay_d.lib OgreProperty_d.lib OgreRTShaderSystem_d.lib OgreGLSupport_d.lib
+    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreMain_d.lib OgreOverlay_d.lib OgreProperty_d.lib OgreRTShaderSystem_d.lib OgreGLSupport_d.lib
     robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib\OGRE" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" Codec_STBI_d.lib Plugin_ParticleFX_d.lib RenderSystem_Direct3D11_d.lib RenderSystem_GL_d.lib RenderSystem_GL3Plus_d.lib
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI_d.dll Plugin_ParticleFX_d.dll OgreHLMS_d.dll OgreMain_d.dll OgreOverlay_d.dll OgreProperty_d.dll OgreRTShaderSystem_d.dll RenderSystem_Direct3D11_d.dll RenderSystem_GL_d.dll RenderSystem_GL3Plus_d.dll
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI_d.pdb Plugin_ParticleFX_d.pdb OgreHLMS_d.pdb OgreMain_d.pdb OgreOverlay_d.pdb OgreProperty_d.pdb OgreRTShaderSystem_d.pdb RenderSystem_Direct3D11_d.pdb RenderSystem_GL_d.pdb RenderSystem_GL3Plus_d.pdb
+    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI_d.dll Plugin_ParticleFX_d.dll OgreMain_d.dll OgreOverlay_d.dll OgreProperty_d.dll OgreRTShaderSystem_d.dll RenderSystem_Direct3D11_d.dll RenderSystem_GL_d.dll RenderSystem_GL3Plus_d.dll
+    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI_d.pdb Plugin_ParticleFX_d.pdb OgreMain_d.pdb OgreOverlay_d.pdb OgreProperty_d.pdb OgreRTShaderSystem_d.pdb RenderSystem_Direct3D11_d.pdb RenderSystem_GL_d.pdb RenderSystem_GL3Plus_d.pdb
     cd %CWD%
 )
 
