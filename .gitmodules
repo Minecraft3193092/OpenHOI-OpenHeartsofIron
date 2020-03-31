@@ -1,4 +1,5 @@
 [submodule "thirdparty/ogre-package"]
 	path = thirdparty/ogre-package
 	url = https://github.com/openhoi/ogre-package
+	branch = v1.12.5
 	ignore = dirty
