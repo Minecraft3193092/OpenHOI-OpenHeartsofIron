@@ -299,6 +299,7 @@ echo %LINEBEG% OpenAL...
 set OPENAL_BRANCH=openal-soft-1.19.1
 if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%" (
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openal 2>nul
+  mkdir %CWD%\thirdparty\manual-build\precompiled\openal
   type nul >>thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%
   if not exist thirdparty\manual-build\lib\openal (
       git clone https://github.com/kcat/openal-soft --branch %OPENAL_BRANCH% thirdparty\manual-build\lib\openal
@@ -325,6 +326,7 @@ echo %LINEBEG% zlib...
 set ZLIB_VERSION=1.2.11.8900
 if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%" (
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\zlib 2>nul
+  mkdir %CWD%\thirdparty\manual-build\precompiled\zlib
   type nul >>thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%
   set ZLIB_NAME=zlib-msvc-x64
   nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
@@ -401,16 +403,21 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\cgal\lib\CGAL-vc142-mt-%
   robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thirdparty\manual-build\lib\cgal\include\CGAL" compiler_config.h
   cd %CWD%
 )
-goto end
 
 echo %LINEBEG% Lua...
-set LUA_NAME=lua
 set LUA_VERSION=5.3.5.1
-nuget install %LUA_NAME% -Version %LUA_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\lua\include" /mir
-robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\lib\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\lib" lua.lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.redist.%LUA_VERSION%\build\native\bin\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\bin" lua.dll
-cd %CWD%
+if not exist "%CWD%\thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA_VERSION%" (
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\lua 2>nul
+  mkdir %CWD%\thirdparty\manual-build\precompiled\lua
+  type nul >>thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA_VERSION%
+  set LUA_NAME=lua
+  nuget install %LUA_NAME% -Version %LUA_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\lua" 2>nul
+  robocopy "thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\lua\include" /mir
+  robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\lib\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\lib" lua.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.redist.%LUA_VERSION%\build\native\bin\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\bin" lua.dll
+  cd %CWD%
+)
 
 goto comment
 echo %LINEBEG% Protocol Buffers...

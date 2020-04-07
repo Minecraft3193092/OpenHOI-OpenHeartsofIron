@@ -73,7 +73,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
         printf " $CHECKMARK Arch Linux is supported. Using \e[1mpacman\e[0m install system...\n"
 
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
-        PACKAGES="base-devel git cmake pkgconf boost cgal openssl openal zlib sdl2 clang rapidjson lua"
+        PACKAGES="base-devel git cmake ninja pkgconf boost cgal openssl openal zlib sdl2 clang rapidjson lua"
         AUR_PACKAGES=("ogre")
     elif [ $DISTRO == "debian" ] || [ $DISTRO == "ubuntu" ]; then
         if [ $DISTRO == "ubuntu" ]; then
@@ -84,7 +84,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         #CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake git pkg-config build-essential uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format snapd rapidjson-dev liblua5.3-dev"
+        PACKAGES="cmake git pkg-config build-essential ninja-build uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format snapd rapidjson-dev liblua5.3-dev"
         OGRE_CUSTOM_PACKAGE=true
         INSTALL_SNAPCRAFT=true
     else
