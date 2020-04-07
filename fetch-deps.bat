@@ -170,7 +170,7 @@ if not exist thirdparty\manual-build\precompiled (
 endlocal
 
 echo %LINEBEG% GMP / MPFR...
-if not exist thirdparty\manual-build\precompiled\gmp\include\gmp.h (
+if not exist "%CWD%\thirdparty\manual-build\precompiled\gmp\include\gmp.h" (
   powershell -Command "Invoke-WebRequest https://dependencies.openhoi.net/gmp_10-mpfr_4.7z -OutFile %CWD%\thirdparty\manual-build\lib\gmp-mpfr.7z"
   7z x "%CWD%\thirdparty\manual-build\lib\gmp-mpfr.7z" -o"%CWD%\thirdparty\manual-build\precompiled\gmp"
 )
@@ -282,69 +282,86 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_SYS_NAM
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_SYS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_SYS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_SYS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_SYS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
-goto end
 
 echo %LINEBEG% OpenSSL...
-set OPENSSL_NAME=openssl-vc140-vc141-x86_64
-set OPENSSL_VERSION=1.1.4
-nuget install %OPENSSL_NAME% -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
-setlocal enableextensions
-mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\lib"
-mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\bin"
-endlocal
-copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib"
-copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libssl.lib"
-copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libcrypto-1_1-x64.dll"
-copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll"
-robocopy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\openssl\include" /mir
+if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll" (
+  set OPENSSL_NAME=openssl-vc140-vc141-x86_64
+  set OPENSSL_VERSION=1.1.4
+  nuget install %OPENSSL_NAME% -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  setlocal enableextensions
+  mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\lib"
+  mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\bin"
+  endlocal
+  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib"
+  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libssl.lib"
+  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libcrypto-1_1-x64.dll"
+  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll"
+  robocopy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\openssl\include" /mir
+)
 
 echo %LINEBEG% OpenAL...
 set OPENAL_BRANCH=openal-soft-1.19.1
-if not exist thirdparty\manual-build\lib\openal (
-    git clone https://github.com/kcat/openal-soft --branch %OPENAL_BRANCH% thirdparty\manual-build\lib\openal
-) else (
-    git -C thirdparty\manual-build\lib\openal reset --hard
-    git -C thirdparty\manual-build\lib\openal fetch --tags
-    git -C thirdparty\manual-build\lib\openal checkout %OPENAL_BRANCH%
-    git -C thirdparty\manual-build\lib\openal pull
+if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%" (
+  @del /s /q /f thirdparty\manual-build\precompiled\openal\openhoi-branch-* 2>nul
+  type nul >>thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%
+  if not exist thirdparty\manual-build\lib\openal (
+      git clone https://github.com/kcat/openal-soft --branch %OPENAL_BRANCH% thirdparty\manual-build\lib\openal
+  ) else (
+      git -C thirdparty\manual-build\lib\openal reset --hard
+      git -C thirdparty\manual-build\lib\openal fetch --tags
+      git -C thirdparty\manual-build\lib\openal checkout %OPENAL_BRANCH%
+      git -C thirdparty\manual-build\lib\openal pull
+  )
+  cd thirdparty\manual-build\lib\openal
+  @rd /s /q build 2>nul
+  git reset --hard
+  cd build
+  cmake -DALSOFT_TESTS=OFF -DALSOFT_UTILS=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja ..
+  ninja
+  robocopy "%CD%" "%CWD%\thirdparty\manual-build\precompiled\openal\lib" OpenAL32.lib
+  robocopy "%CD%" "%CWD%\thirdparty\manual-build\precompiled\openal\bin" OpenAL32.dll
+  cd ..
+  robocopy "include" "%CWD%\thirdparty\manual-build\precompiled\openal\include" /mir
+  cd %CWD%
 )
-cd thirdparty\manual-build\lib\openal
-@rd /s /q build 2>nul
-git reset --hard
-cd build
-cmake -DALSOFT_TESTS=OFF -DALSOFT_UTILS=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-ninja
-robocopy "%CD%" "%CWD%\thirdparty\manual-build\precompiled\openal\lib" OpenAL32.lib
-robocopy "%CD%" "%CWD%\thirdparty\manual-build\precompiled\openal\bin" OpenAL32.dll
-cd ..
-robocopy "include" "%CWD%\thirdparty\manual-build\precompiled\openal\include" /mir
-cd %CWD%
 
 echo %LINEBEG% zlib...
-set ZLIB_NAME=zlib-msvc-x64
 set ZLIB_VERSION=1.2.11.8900
-nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
-robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
-robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
-
-echo %LINEBEG% Eigen...
-set EIGEN_BRANCH=3.3.7
-if not exist thirdparty\manual-build\lib\eigen (
-    git clone https://github.com/eigenteam/eigen-git-mirror --branch %EIGEN_BRANCH% thirdparty\manual-build\lib\eigen
-) else (
-    git -C thirdparty\manual-build\lib\eigen reset --hard
-    git -C thirdparty\manual-build\lib\eigen fetch
-    git -C thirdparty\manual-build\lib\eigen checkout %EIGEN_BRANCH%
-    git -C thirdparty\manual-build\lib\eigen pull
+set ZLIB_FETCH=y
+if exist "%CWD%\thirdparty\manual-build\precompiled\zlib\include\version.h" (
+  rem find /c /i "#define BOOST_LIB_VERSION ""%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%""" "%CWD%\thirdparty\manual-build\precompiled\boost\include\boost\version.hpp"
+  if %errorLevel% == 0 (
+    set ZLIB_FETCH=n
+  )
 )
-cd thirdparty\manual-build\lib\eigen
-@rd /s /q build 2>nul
-mkdir build
-cd build
-cmake -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-ninja
-cd %CWD%
+if "%ZLIB_FETCH%" == "y" (
+  set ZLIB_NAME=zlib-msvc-x64
+  nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
+)
+goto end
+
+
+  echo %LINEBEG% Eigen...
+  set EIGEN_BRANCH=3.3.7
+  if not exist thirdparty\manual-build\lib\eigen (
+      git clone https://github.com/eigenteam/eigen-git-mirror --branch %EIGEN_BRANCH% thirdparty\manual-build\lib\eigen
+  ) else (
+      git -C thirdparty\manual-build\lib\eigen reset --hard
+      git -C thirdparty\manual-build\lib\eigen fetch
+      git -C thirdparty\manual-build\lib\eigen checkout %EIGEN_BRANCH%
+      git -C thirdparty\manual-build\lib\eigen pull
+  )
+  cd thirdparty\manual-build\lib\eigen
+  @rd /s /q build 2>nul
+  mkdir build
+  cd build
+  cmake -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja ..
+  ninja
+  cd %CWD%
+)
 
 echo %LINEBEG% CGAL...
 @rd /s /q thirdparty\manual-build\lib\cgal 2>nul
