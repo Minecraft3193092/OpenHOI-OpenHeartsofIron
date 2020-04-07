@@ -105,11 +105,6 @@ fi
 
 
 
-# Update submodules
-git submodule update --init --recursive --remote
-
-
-
 
 # Install all required packages...
 if [ $INSTALLSYSTEM ]; then
