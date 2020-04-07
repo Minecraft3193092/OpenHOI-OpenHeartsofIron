@@ -169,12 +169,6 @@ if not exist thirdparty\manual-build\precompiled (
 )
 endlocal
 
-echo %LINEBEG% GMP / MPFR...
-if not exist "%CWD%\thirdparty\manual-build\precompiled\gmp\include\gmp.h" (
-  powershell -Command "Invoke-WebRequest https://dependencies.openhoi.net/gmp_10-mpfr_4.7z -OutFile %CWD%\thirdparty\manual-build\lib\gmp-mpfr.7z"
-  7z x "%CWD%\thirdparty\manual-build\lib\gmp-mpfr.7z" -o"%CWD%\thirdparty\manual-build\precompiled\gmp"
-)
-
 echo %LINEBEG% Boost...
 set BOOST_NAME=boost
 set BOOST_VERSION_MAJOR=1
@@ -189,6 +183,7 @@ if exist "%CWD%\thirdparty\manual-build\precompiled\boost\include\boost\version.
 )
 if "%BOOST_FETCH_INCLUDES%" == "y" (
   nuget install %BOOST_NAME% -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\boost\include" 2>nul
   robocopy "thirdparty\manual-build\lib\%BOOST_NAME%.%BOOST_VERSION%.0\lib\native\include" "%CWD%\thirdparty\manual-build\precompiled\boost\include" /mir
 )
 set BOOST_PO_NAME=boost_program_options-vc141
@@ -288,6 +283,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x
   set OPENSSL_NAME=openssl-vc140-vc141-x86_64
   set OPENSSL_VERSION=1.1.4
   nuget install %OPENSSL_NAME% -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openssl 2>nul
   setlocal enableextensions
   mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\lib"
   mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\bin"
@@ -302,7 +298,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x
 echo %LINEBEG% OpenAL...
 set OPENAL_BRANCH=openal-soft-1.19.1
 if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%" (
-  @del /s /q /f thirdparty\manual-build\precompiled\openal\openhoi-branch-* 2>nul
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openal 2>nul
   type nul >>thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%
   if not exist thirdparty\manual-build\lib\openal (
       git clone https://github.com/kcat/openal-soft --branch %OPENAL_BRANCH% thirdparty\manual-build\lib\openal
@@ -328,7 +324,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%O
 echo %LINEBEG% zlib...
 set ZLIB_VERSION=1.2.11.8900
 if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%" (
-  @del /s /q /f thirdparty\manual-build\precompiled\zlib\openhoi-version-* 2>nul
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\zlib 2>nul
   type nul >>thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%
   set ZLIB_NAME=zlib-msvc-x64
   nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
@@ -366,91 +362,46 @@ if "%EIGEN_REQUIRE_BUILD%" == "y" (
   cd %CWD%
 )
 
+echo %LINEBEG% GMP / MPFR...
+if not exist "%CWD%\thirdparty\manual-build\precompiled\gmp\include\gmp.h" (
+  powershell -Command "Invoke-WebRequest https://dependencies.openhoi.net/gmp_10-mpfr_4.7z -OutFile %CWD%\thirdparty\manual-build\lib\gmp-mpfr.7z"
+  @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\gmp" 2>nul
+  7z x "%CWD%\thirdparty\manual-build\lib\gmp-mpfr.7z" -o"%CWD%\thirdparty\manual-build\precompiled\gmp"
+)
+
 echo %LINEBEG% CGAL...
-rem We need to download the source ZIP because the directory structure is different to the GitHub/development version
-rem See https://www.cgal.org/download/windows.html
 set CGAL_VERSION=5.0.2
-echo Downloading CGAL v%CGAL_VERSION%...
-powershell -Command "Invoke-WebRequest https://github.com/CGAL/cgal/releases/download/releases/CGAL-%CGAL_VERSION%/CGAL-%CGAL_VERSION%.zip -OutFile %CWD%\thirdparty\manual-build\lib\cgal.zip"
-echo Expanding CGAL v%CGAL_VERSION% ZIP archive...
-powershell -Command "Expand-Archive -Force %CWD%\thirdparty\manual-build\lib\cgal.zip %CWD%\thirdparty\manual-build\lib"
-move "%CWD%\thirdparty\manual-build\lib\CGAL-%CGAL_VERSION%" "%CWD%\thirdparty\manual-build\lib\cgal"
-cd %CWD%\thirdparty\manual-build\lib\cgal
-@rd /s /q build 2>nul
-mkdir build
-cd build
-set CWD_FS=%CWD:\=/%
-if /I "%CI%" neq "true" (
-    cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=%CWD_FS%/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=%CWD_FS%/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/lib/eigen -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
+if not exist "%CWD%\thirdparty\manual-build\precompiled\cgal\lib\CGAL-vc142-mt-%CGAL_VERSION%.lib" (
+  rem We need to download the source ZIP because the directory structure is different to the GitHub/development version
+  rem See https://www.cgal.org/download/windows.html
+  echo Downloading CGAL v%CGAL_VERSION%...
+  powershell -Command "Invoke-WebRequest https://github.com/CGAL/cgal/releases/download/releases/CGAL-%CGAL_VERSION%/CGAL-%CGAL_VERSION%.zip -OutFile %CWD%\thirdparty\manual-build\lib\cgal.zip"
+  echo Expanding CGAL v%CGAL_VERSION% ZIP archive...
+  powershell -Command "Expand-Archive -Force %CWD%\thirdparty\manual-build\lib\cgal.zip %CWD%\thirdparty\manual-build\lib"
+  @rd /s /q %CWD%\thirdparty\manual-build\lib\cgal 2>nul
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\cgal 2>nul
+  move "%CWD%\thirdparty\manual-build\lib\CGAL-%CGAL_VERSION%" "%CWD%\thirdparty\manual-build\lib\cgal"
+  cd %CWD%\thirdparty\manual-build\lib\cgal
+  mkdir build
+  cd build
+  set CWD_FS=%CWD:\=/%
+  if /I "%CI%" neq "true" (
+    cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=%CWD_FS%/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=%CWD_FS%/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/lib/eigen -D CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE=TRUE -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
     ninja
     ninja install
     cd ..
     @rd /s /q build 2>nul
     mkdir build
     cd build
+  )
+  cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=%CWD_FS%/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=%CWD_FS%/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/lib/eigen -DCMAKE_BUILD_TYPE=Release -G Ninja ..
+  ninja
+  ninja install
+  robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thirdparty\manual-build\precompiled\cgal\include\CGAL" compiler_config.h
+  robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thirdparty\manual-build\lib\cgal\include\CGAL" compiler_config.h
+  cd %CWD%
 )
-cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=%CWD_FS%/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=%CWD_FS%/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/lib/eigen -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-ninja
-ninja install
-robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thirdparty\manual-build\precompiled\cgal\include\CGAL" compiler_config.h
-robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thirdparty\manual-build\lib\cgal\include\CGAL" compiler_config.h
-cd %CWD%
-
 goto end
-
-
-if "%BUILD_OGRE%" == "y" (
-    echo %LINEBEG% OGRE...
-    set OGRE_VERSION=1.12.5
-    if not exist thirdparty\manual-build\lib\ogre3d (
-        git clone https://github.com/OGRECave/ogre --branch v%OGRE_VERSION% thirdparty\manual-build\lib\ogre3d
-    ) else (
-        git -C thirdparty\manual-build\lib\ogre3d reset --hard
-        git -C thirdparty\manual-build\lib\ogre3d fetch
-        git -C thirdparty\manual-build\lib\ogre3d checkout v%OGRE_VERSION%
-        git -C thirdparty\manual-build\lib\ogre3d pull
-    )
-    cd thirdparty\manual-build\lib\ogre3d
-    @rd /s /q Components\Overlay\src\imgui 2>nul
-    mklink /D Components\Overlay\src\imgui %CWD%\thirdparty\ogre-package\imgui
-    @rd /s /q build 2>nul
-    mkdir build
-    cd build
-    set OGRE_CMAKE_PARAMS=-DOGRE_BUILD_TESTS=OFF -DOGRE_BUILD_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES=OFF -DOGRE_INSTALL_SAMPLES_SOURCE=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_BUILD_TOOLS=OFF -DOGRE_INSTALL_TOOLS=OFF -DOGRE_INSTALL_DOCS=OFF -DOGRE_INSTALL_PDB=OFF -DOGRE_CONFIG_DOUBLE=OFF -DOGRE_CONFIG_ENABLE_DDS=ON -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_CONFIG_ENABLE_ZIP=OFF -DOGRE_CONFIG_ENABLE_ETC=OFF -DOGRE_STATIC=OFF -DOGRE_COPY_DEPENDENCIES=OFF -DOGRE_INSTALL_DEPENDENCIES=OFF -DZLIB_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\zlib\include" -DZLIB_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\zlib\lib\zlib.lib" -DOGRE_BUILD_PLUGIN_BSP=OFF -DOGRE_BUILD_PLUGIN_OCTREE=OFF -DOGRE_BUILD_PLUGIN_PCZ=OFF -DOGRE_BUILD_PLUGIN_PFX=ON -DOGRE_BUILD_PLUGIN_DOT_SCENE=OFF -DOGRE_BUILD_COMPONENT_PAGING=OFF -DOGRE_BUILD_COMPONENT_MESHLODGENERATOR=OFF -DOGRE_BUILD_COMPONENT_TERRAIN=OFF -DOGRE_BUILD_COMPONENT_RTSHADERSYSTEM=ON -DOGRE_BUILD_COMPONENT_VOLUME=OFF -DOGRE_BUILD_COMPONENT_BITES=OFF -DOGRE_BUILD_RENDERSYSTEM_GL=ON -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON -DOGRE_BUILD_RENDERSYSTEM_D3D9=OFF -DOGRE_BUILD_COMPONENT_OVERLAY_IMGUI=ON
-    rem Build Release
-    cmake %OGRE_CMAKE_PARAMS% -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-    ninja
-    ninja install
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\include" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\include" /mir
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreMain.lib OgreOverlay.lib OgreProperty.lib OgreRTShaderSystem.lib OgreGLSupport.lib
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib\OGRE" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" Codec_STBI.lib Plugin_ParticleFX.lib RenderSystem_Direct3D11.lib RenderSystem_GL.lib RenderSystem_GL3Plus.lib
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI.dll OgreBites.dll OgreMain.dll OgreOverlay.dll OgreProperty.dll OgreRTShaderSystem.dll Plugin_ParticleFX.dll RenderSystem_Direct3D11.dll RenderSystem_GL.dll RenderSystem_GL3Plus.dll
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\Dependencies\include\SDL2" "%CWD%\thirdparty\manual-build\precompiled\sdl2\include\SDL2" /mir
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\Dependencies\lib" "%CWD%\thirdparty\manual-build\precompiled\sdl2\lib" SDL2.lib SDL2main.lib
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\Dependencies\bin" "%CWD%\thirdparty\manual-build\precompiled\sdl2\bin" SDL2.dll
-    rem Build Debug
-    cmake %OGRE_CMAKE_PARAMS% -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
-    ninja
-    ninja install
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" OgreMain_d.lib OgreOverlay_d.lib OgreProperty_d.lib OgreRTShaderSystem_d.lib OgreGLSupport_d.lib
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\lib\OGRE" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\lib" Codec_STBI_d.lib Plugin_ParticleFX_d.lib RenderSystem_Direct3D11_d.lib RenderSystem_GL_d.lib RenderSystem_GL3Plus_d.lib
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\sdk\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI_d.dll Plugin_ParticleFX_d.dll OgreMain_d.dll OgreOverlay_d.dll OgreProperty_d.dll OgreRTShaderSystem_d.dll RenderSystem_Direct3D11_d.dll RenderSystem_GL_d.dll RenderSystem_GL3Plus_d.dll
-    robocopy "%CWD%\thirdparty\manual-build\lib\ogre3d\build\bin" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\bin" Codec_STBI_d.pdb Plugin_ParticleFX_d.pdb OgreMain_d.pdb OgreOverlay_d.pdb OgreProperty_d.pdb OgreRTShaderSystem_d.pdb RenderSystem_Direct3D11_d.pdb RenderSystem_GL_d.pdb RenderSystem_GL3Plus_d.pdb
-    cd %CWD%
-)
-
-echo %LINEBEG% RapidJSON...
-set RAPIDJSON_BRANCH=v1.1.0
-if not exist thirdparty\manual-build\lib\rapidjson (
-    git clone https://github.com/Tencent/rapidjson/ --branch %RAPIDJSON_BRANCH% thirdparty\manual-build\lib\rapidjson
-) else (
-    git -C thirdparty\manual-build\lib\rapidjson reset --hard
-    git -C thirdparty\manual-build\lib\rapidjson fetch
-    git -C thirdparty\manual-build\lib\rapidjson checkout %EIGEN_BRANCH%
-    git -C thirdparty\manual-build\lib\rapidjson pull
-)
-robocopy "%CWD%\thirdparty\manual-build\lib\rapidjson\include" "%CWD%\thirdparty\manual-build\precompiled\rapidjson\include" /mir
-cd %CWD%
 
 echo %LINEBEG% Lua...
 set LUA_NAME=lua
