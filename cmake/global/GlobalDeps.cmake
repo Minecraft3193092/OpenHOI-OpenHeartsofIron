@@ -15,17 +15,10 @@ endif()
 find_package(Boost 1.65 REQUIRED COMPONENTS program_options locale)
 
 
-set(OGRE_NIX_MANUAL_BUILD FALSE)
 set(OGRE_NIX_PREBUILD FALSE)
 if(NOT WIN32)
    set(OpenGL_GL_PREFERENCE GLVND)
-   # TODO: Need to check in fetch-deps.sh if we need a manual build or not
-   if(EXISTS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/lib/ogre3d/CMakeLists.txt)
-       set(OGRE_NIX_MANUAL_BUILD TRUE)
-   else()
-       # Debian/Ubuntu!
-       set(OGRE_NIX_PREBUILD TRUE)
-   endif()
+   set(OGRE_NIX_PREBUILD TRUE)
 else()
    set(OGRE_ROOT_DIR ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/ogre3d)
 endif()

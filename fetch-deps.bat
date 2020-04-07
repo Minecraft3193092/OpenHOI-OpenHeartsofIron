@@ -475,19 +475,36 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\gamenetworkingsockets\op
   cd %CWD%
 )
 
-echo %LINEBEG% OGRE...
+echo %LINEBEG% RapidJSON...
+set RAPIDJSON_BRANCH=v1.1.0
+if not exist "%CWD%\thirdparty\manual-build\precompiled\rapidjson\openhoi-branch-%RAPIDJSON_BRANCH%" (
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\rapidjson 2>nul
+  if not exist thirdparty\manual-build\lib\rapidjson (
+      git clone https://github.com/Tencent/rapidjson --branch %RAPIDJSON_BRANCH% thirdparty\manual-build\lib\rapidjson
+  ) else (
+      git -C thirdparty\manual-build\lib\rapidjson reset --hard
+      git -C thirdparty\manual-build\lib\rapidjson fetch
+      git -C thirdparty\manual-build\lib\rapidjson checkout %RAPIDJSON_BRANCH%
+      git -C thirdparty\manual-build\lib\rapidjson pull
+  )
+  robocopy "%CWD%\thirdparty\manual-build\lib\rapidjson\include" "%CWD%\thirdparty\manual-build\precompiled\rapidjson\include" /mir
+  type nul >>"%CWD%\thirdparty\manual-build\precompiled\rapidjson\openhoi-branch-%RAPIDJSON_BRANCH%"
+  cd %CWD%
+)
+
+echo %LINEBEG% OGRE / SDL2...
 for /f "tokens=1,2,3 delims=." %%a IN ("%OGRE_VERSION%") do (
   set OGRE_VERSION_MAJOR=%%a
   set OGRE_VERSION_MINOR=%%b
   set OGRE_VERSION_PATCH=%%c
 )
 set OGRE_FETCH=y
-if exist "%CWD%\thirdparty\manual-build\precompiled\ogre\include\OGRE\OgreBuildSettings.h" (
-  find /c /i "#define OGRE_VERSION_MAJOR %OGRE_VERSION_MAJOR%" "%CWD%\thirdparty\manual-build\precompiled\ogre\include\OGRE\OgreBuildSettings.h"
+if exist "%CWD%\thirdparty\manual-build\precompiled\ogre3d\include\OGRE\OgreBuildSettings.h" (
+  find /c /i "#define OGRE_VERSION_MAJOR %OGRE_VERSION_MAJOR%" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\include\OGRE\OgreBuildSettings.h"
   if %errorLevel% == 0 (
-    find /c /i "#define OGRE_VERSION_MINOR %OGRE_VERSION_MINOR%" "%CWD%\thirdparty\manual-build\precompiled\ogre\include\OGRE\OgreBuildSettings.h"
+    find /c /i "#define OGRE_VERSION_MINOR %OGRE_VERSION_MINOR%" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\include\OGRE\OgreBuildSettings.h"
     if %errorLevel% == 0 (
-      find /c /i "#define OGRE_VERSION_PATCH %OGRE_VERSION_PATCH%" "%CWD%\thirdparty\manual-build\precompiled\ogre\include\OGRE\OgreBuildSettings.h"
+      find /c /i "#define OGRE_VERSION_PATCH %OGRE_VERSION_PATCH%" "%CWD%\thirdparty\manual-build\precompiled\ogre3d\include\OGRE\OgreBuildSettings.h"
       if %errorLevel% == 0 (
         set OGRE_FETCH=n
       )
@@ -496,8 +513,27 @@ if exist "%CWD%\thirdparty\manual-build\precompiled\ogre\include\OGRE\OgreBuildS
 )
 if "%OGRE_FETCH%" == "y" (
   powershell -Command "Invoke-WebRequest https://dependencies.openhoi.net/ogre/ogre_msvc_%OGRE_VERSION%.7z -OutFile %CWD%\thirdparty\manual-build\lib\ogre.7z"
-  @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\ogre" 2>nul
-  7z x "%CWD%\thirdparty\manual-build\lib\ogre.7z" -o"%CWD%\thirdparty\manual-build\precompiled\ogre"
+  @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\ogre3d" 2>nul
+  @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\sdl2" 2>nul
+  7z x "%CWD%\thirdparty\manual-build\lib\ogre.7z" -o"%CWD%\thirdparty\manual-build\precompiled"
+)
+
+echo %LINEBEG% ImGui...
+set OGRE_PACKAGE_BRANCH=v%OGRE_VERSION%
+if not exist "%CWD%\thirdparty\manual-build\precompiled\imgui\openhoi-branch-%OGRE_PACKAGE_BRANCH%" (
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\imgui 2>nul
+  if not exist thirdparty\manual-build\lib\imgui (
+      git clone --recurse-submodules https://github.com/openhoi/ogre-package --branch %OGRE_PACKAGE_BRANCH% thirdparty\manual-build\lib\ogre-package
+  ) else (
+      git -C thirdparty\manual-build\lib\ogre-package reset --hard
+      git -C thirdparty\manual-build\lib\ogre-package fetch
+      git -C thirdparty\manual-build\lib\ogre-package checkout %OGRE_PACKAGE_BRANCH%
+      git -C thirdparty\manual-build\lib\ogre-package pull
+      git -C thirdparty\manual-build\lib\ogre-package submodule update --init --recursive
+  )
+  robocopy "%CWD%\thirdparty\manual-build\lib\ogre-package\imgui" "%CWD%\thirdparty\manual-build\precompiled\imgui" /mir
+  type nul >>"%CWD%\thirdparty\manual-build\precompiled\imgui\openhoi-branch-%OGRE_PACKAGE_BRANCH%"
+  cd %CWD%
 )
 
 
