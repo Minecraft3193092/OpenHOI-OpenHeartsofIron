@@ -157,6 +157,10 @@ if "%SCRIPT_INSTALLED_SOMETHING%" == "y" (
 @rem Install required libs...
 echo %LINEBEG% Checking for required libraries...
 
+for /F "tokens=1* delims==" %%A in (prebuilt-dep-versions) do (
+  set %%A=%%B
+)
+
 setlocal enableextensions
 if not exist thirdparty\manual-build (
   mkdir thirdparty\manual-build
@@ -300,7 +304,6 @@ set OPENAL_BRANCH=openal-soft-1.19.1
 if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%" (
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openal 2>nul
   mkdir %CWD%\thirdparty\manual-build\precompiled\openal
-  type nul >>thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%
   if not exist thirdparty\manual-build\lib\openal (
       git clone https://github.com/kcat/openal-soft --branch %OPENAL_BRANCH% thirdparty\manual-build\lib\openal
   ) else (
@@ -315,10 +318,11 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%O
   cd build
   cmake -DALSOFT_TESTS=OFF -DALSOFT_UTILS=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja ..
   ninja
-  robocopy "%CD%" "%CWD%\thirdparty\manual-build\precompiled\openal\lib" OpenAL32.lib
-  robocopy "%CD%" "%CWD%\thirdparty\manual-build\precompiled\openal\bin" OpenAL32.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\openal\build" "%CWD%\thirdparty\manual-build\precompiled\openal\lib" OpenAL32.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\openal\build" "%CWD%\thirdparty\manual-build\precompiled\openal\bin" OpenAL32.dll
   cd ..
   robocopy "include" "%CWD%\thirdparty\manual-build\precompiled\openal\include" /mir
+  type nul >>thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%
   cd %CWD%
 )
 
@@ -419,46 +423,82 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA
   cd %CWD%
 )
 
-goto comment
 echo %LINEBEG% Protocol Buffers...
-set PROTOBUF_BRANCH=v3.11.2
-if not exist thirdparty\manual-build\lib\protobuf (
-    git clone https://github.com/protocolbuffers/protobuf --branch %PROTOBUF_BRANCH% thirdparty\manual-build\lib\protobuf
-) else (
-    git -C thirdparty\manual-build\lib\protobuf reset --hard
-    git -C thirdparty\manual-build\lib\protobuf fetch --tags
-    git -C thirdparty\manual-build\lib\protobuf checkout %PROTOBUF_BRANCH%
-    git -C thirdparty\manual-build\lib\protobuf pull
+set PROTOBUF_BRANCH=v3.11.4
+if not exist "%CWD%\thirdparty\manual-build\precompiled\protobuf\openhoi-branch-%PROTOBUF_BRANCH%" (
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\protobuf 2>nul
+  mkdir %CWD%\thirdparty\manual-build\precompiled\protobuf
+  if not exist thirdparty\manual-build\lib\protobuf (
+      git clone https://github.com/protocolbuffers/protobuf --branch %PROTOBUF_BRANCH% thirdparty\manual-build\lib\protobuf
+  ) else (
+      git -C thirdparty\manual-build\lib\protobuf reset --hard
+      git -C thirdparty\manual-build\lib\protobuf fetch --tags
+      git -C thirdparty\manual-build\lib\protobuf checkout %PROTOBUF_BRANCH%
+      git -C thirdparty\manual-build\lib\protobuf pull
+  )
+  cd thirdparty\manual-build\lib\protobuf\cmake
+  @rd /s /q build 2>nul
+  mkdir build
+  cd build
+  cmake -DCMAKE_BUILD_TYPE=Release -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=ON -DZLIB_LIBRARY="%CWD%\thirdparty\manual-build\precompiled\zlib\lib\zlib.lib" -DZLIB_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\zlib\include" -G Ninja ..
+  ninja
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\protobuf 2>nul
+  robocopy "%CWD%\thirdparty\manual-build\lib\protobuf\cmake\build" "%CWD%\thirdparty\manual-build\precompiled\protobuf\lib" libprotobuf.lib libprotobuf-lite.lib libprotoc.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\protobuf\cmake\build" "%CWD%\thirdparty\manual-build\precompiled\protobuf\bin" protoc.exe libprotobuf.dll libprotobuf-lite.dll libprotoc.dll
+  copy "%CWD%\thirdparty\manual-build\precompiled\zlib\bin\zlib.dll" "%CWD%\thirdparty\manual-build\precompiled\protobuf\bin\zlib.dll" 
+  robocopy "%CWD%\thirdparty\manual-build\lib\protobuf\src" "%CWD%\thirdparty\manual-build\precompiled\protobuf\include" /mir
+  type nul >>"%CWD%\thirdparty\manual-build\precompiled\protobuf\openhoi-branch-%PROTOBUF_BRANCH%"
+  cd %CWD%
 )
-cd thirdparty\manual-build\lib\protobuf\cmake
-@rd /s /q build 2>nul
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=OFF -G Ninja ..
-ninja
-robocopy "%CD%" "%CWD%\thirdparty\manual-build\precompiled\protobuf\lib" libprotobuf.lib
-cd ..\..
-robocopy "%CD%\src" "%CWD%\thirdparty\manual-build\precompiled\protobuf\include" /mir
-cd %CWD%
 
 echo %LINEBEG% GameNetworkingSockets...
-set GAMENETWORKINGSOCKETS_BRANCH=master
-if not exist thirdparty\manual-build\lib\gamenetworkingsockets (
-    git clone https://github.com/ValveSoftware/GameNetworkingSockets --branch %GAMENETWORKINGSOCKETS_BRANCH% thirdparty\manual-build\lib\gamenetworkingsockets
-) else (
-    git -C thirdparty\manual-build\lib\gamenetworkingsockets reset --hard
-    git -C thirdparty\manual-build\lib\gamenetworkingsockets fetch --tags
-    git -C thirdparty\manual-build\lib\gamenetworkingsockets checkout %GAMENETWORKINGSOCKETS_BRANCH%
-    git -C thirdparty\manual-build\lib\gamenetworkingsockets pull
+set GAMENETWORKINGSOCKETS_BRANCH=v1.1.0
+if not exist "%CWD%\thirdparty\manual-build\precompiled\gamenetworkingsockets\openhoi-branch-%GAMENETWORKINGSOCKETS_BRANCH%" (
+  @rd /s /q %CWD%\thirdparty\manual-build\precompiled\gamenetworkingsockets 2>nul
+  if not exist thirdparty\manual-build\lib\gamenetworkingsockets (
+      git clone https://github.com/ValveSoftware/GameNetworkingSockets --branch %GAMENETWORKINGSOCKETS_BRANCH% thirdparty\manual-build\lib\gamenetworkingsockets
+  ) else (
+      git -C thirdparty\manual-build\lib\gamenetworkingsockets reset --hard
+      git -C thirdparty\manual-build\lib\gamenetworkingsockets fetch --tags
+      git -C thirdparty\manual-build\lib\gamenetworkingsockets checkout %GAMENETWORKINGSOCKETS_BRANCH%
+      git -C thirdparty\manual-build\lib\gamenetworkingsockets pull
+  )
+  cd thirdparty\manual-build\lib\gamenetworkingsockets
+  @rd /s /q build 2>nul
+  mkdir build
+  cd build
+  cmake -DCMAKE_BUILD_TYPE=Release -DProtobuf_USE_STATIC_LIBS=OFF -DProtobuf_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\protobuf\lib\libprotobuf.lib" -DProtobuf_PROTOC_EXECUTABLE="%CWD%\thirdparty\manual-build\precompiled\protobuf\bin\protoc.exe" -DProtobuf_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\protobuf\include" -DOPENSSL_CRYPTO_LIBRARY="%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib" -DOPENSSL_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\openssl\include" -DOPENSSL_ROOT_DIR="%CWD%\thirdparty\manual-build\precompiled\openssl" -G Ninja ..
+  ninja
+  robocopy "%CWD%\thirdparty\manual-build\lib\gamenetworkingsockets\build\src" "%CWD%\thirdparty\manual-build\precompiled\gamenetworkingsockets\lib" GameNetworkingSockets_s.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\gamenetworkingsockets\include" "%CWD%\thirdparty\manual-build\precompiled\gamenetworkingsockets\include" /mir
+  type nul >>"%CWD%\thirdparty\manual-build\precompiled\gamenetworkingsockets\openhoi-branch-%GAMENETWORKINGSOCKETS_BRANCH%"
+  cd %CWD%
 )
-cd thirdparty\manual-build\lib\gamenetworkingsockets
-@rd /s /q build 2>nul
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DProtobuf_USE_STATIC_LIBS=ON -DProtobuf_LIBRARY_RELEASE="%CWD%\thirdparty\manual-build\precompiled\protobuf\lib\libprotobuf.lib" -DProtobuf_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\protobuf\include" -DOPENSSL_CRYPTO_LIBRARY="%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib" -DOPENSSL_INCLUDE_DIR="%CWD%\thirdparty\manual-build\precompiled\openssl\include" -DOPENSSL_ROOT_DIR="%CWD%\thirdparty\manual-build\precompiled\openssl" -G Ninja ..
-ninja
-:comment
-cd %CWD%
+
+echo %LINEBEG% OGRE...
+for /f "tokens=1,2,3 delims=." %%a IN ("%OGRE_VERSION%") do (
+  set OGRE_VERSION_MAJOR=%%a
+  set OGRE_VERSION_MINOR=%%b
+  set OGRE_VERSION_PATCH=%%c
+)
+set OGRE_FETCH=y
+if exist "%CWD%\thirdparty\manual-build\precompiled\ogre\include\OGRE\OgreBuildSettings.h" (
+  find /c /i "#define OGRE_VERSION_MAJOR %OGRE_VERSION_MAJOR%" "%CWD%\thirdparty\manual-build\precompiled\ogre\include\OGRE\OgreBuildSettings.h"
+  if %errorLevel% == 0 (
+    find /c /i "#define OGRE_VERSION_MINOR %OGRE_VERSION_MINOR%" "%CWD%\thirdparty\manual-build\precompiled\ogre\include\OGRE\OgreBuildSettings.h"
+    if %errorLevel% == 0 (
+      find /c /i "#define OGRE_VERSION_PATCH %OGRE_VERSION_PATCH%" "%CWD%\thirdparty\manual-build\precompiled\ogre\include\OGRE\OgreBuildSettings.h"
+      if %errorLevel% == 0 (
+        set OGRE_FETCH=n
+      )
+    )
+  )
+)
+if "%OGRE_FETCH%" == "y" (
+  powershell -Command "Invoke-WebRequest https://dependencies.openhoi.net/ogre/ogre_msvc_%OGRE_VERSION%.7z -OutFile %CWD%\thirdparty\manual-build\lib\ogre.7z"
+  @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\ogre" 2>nul
+  7z x "%CWD%\thirdparty\manual-build\lib\ogre.7z" -o"%CWD%\thirdparty\manual-build\precompiled\ogre"
+)
 
 
 
