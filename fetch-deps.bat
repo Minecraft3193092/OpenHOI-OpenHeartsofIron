@@ -327,24 +327,27 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%O
 
 echo %LINEBEG% zlib...
 set ZLIB_VERSION=1.2.11.8900
-set ZLIB_FETCH=y
-if exist "%CWD%\thirdparty\manual-build\precompiled\zlib\include\version.h" (
-  rem find /c /i "#define BOOST_LIB_VERSION ""%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%""" "%CWD%\thirdparty\manual-build\precompiled\boost\include\boost\version.hpp"
-  if %errorLevel% == 0 (
-    set ZLIB_FETCH=n
-  )
-)
-if "%ZLIB_FETCH%" == "y" (
+if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%" (
+  @del /s /q /f thirdparty\manual-build\precompiled\zlib\openhoi-version-* 2>nul
+  type nul >>thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%
   set ZLIB_NAME=zlib-msvc-x64
   nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
   robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
 )
-goto end
 
-
-  echo %LINEBEG% Eigen...
+echo %LINEBEG% Eigen...
+set EIGEN_VERSION_MAJOR=3
+set EIGEN_BRANCH=%EIGEN_VERSION_MAJOR%.3.7
+set EIGEN_REQUIRE_BUILD=y
+if exist "%CWD%\thirdparty\manual-build\lib\eigen\build\Eigen%EIGEN_VERSION_MAJOR%ConfigVersion.cmake" (
+  find /c /i "set(PACKAGE_VERSION ""%EIGEN_BRANCH%"")" "%CWD%\thirdparty\manual-build\lib\eigen\build\Eigen%EIGEN_VERSION_MAJOR%ConfigVersion.cmake"
+  if %errorLevel% == 0 (
+    set EIGEN_REQUIRE_BUILD=n
+  )
+)
+if "%EIGEN_REQUIRE_BUILD%" == "y" (
   set EIGEN_BRANCH=3.3.7
   if not exist thirdparty\manual-build\lib\eigen (
       git clone https://github.com/eigenteam/eigen-git-mirror --branch %EIGEN_BRANCH% thirdparty\manual-build\lib\eigen
@@ -364,7 +367,6 @@ goto end
 )
 
 echo %LINEBEG% CGAL...
-@rd /s /q thirdparty\manual-build\lib\cgal 2>nul
 rem We need to download the source ZIP because the directory structure is different to the GitHub/development version
 rem See https://www.cgal.org/download/windows.html
 set CGAL_VERSION=5.0.2
@@ -393,6 +395,9 @@ ninja install
 robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thirdparty\manual-build\precompiled\cgal\include\CGAL" compiler_config.h
 robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thirdparty\manual-build\lib\cgal\include\CGAL" compiler_config.h
 cd %CWD%
+
+goto end
+
 
 if "%BUILD_OGRE%" == "y" (
     echo %LINEBEG% OGRE...
