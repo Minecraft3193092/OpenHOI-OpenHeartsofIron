@@ -160,7 +160,6 @@ for /F "tokens=1* delims==" %%A in (prebuilt-dep-versions) do (
   set %%A=%%B
 )
 
-setlocal enableextensions
 if not exist thirdparty\manual-build (
   mkdir thirdparty\manual-build
 )
@@ -170,7 +169,6 @@ if not exist thirdparty\manual-build\lib (
 if not exist thirdparty\manual-build\precompiled (
     mkdir thirdparty\manual-build\precompiled
 )
-endlocal
 
 echo %LINEBEG% Boost...
 set BOOST_NAME=boost
@@ -286,14 +284,14 @@ set OPENSSL_VERSION=1.1.4
 if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\openhoi-version-%OPENSSL_VERSION%" (
   set OPENSSL_NAME=openssl-vc140-vc141-x86_64
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openssl 2>nul
-  nuget install %OPENSSL_NAME% -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  nuget install !OPENSSL_NAME! -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
   mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\lib"
   mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\bin"
-  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib"
-  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libssl.lib"
-  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libcrypto-1_1-x64.dll"
-  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll"
-  robocopy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\openssl\include" /mir
+  copy "%CWD%\thirdparty\manual-build\lib\!OPENSSL_NAME!.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib"
+  copy "%CWD%\thirdparty\manual-build\lib\!OPENSSL_NAME!.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libssl.lib"
+  copy "%CWD%\thirdparty\manual-build\lib\!OPENSSL_NAME!.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libcrypto-1_1-x64.dll"
+  copy "%CWD%\thirdparty\manual-build\lib\!OPENSSL_NAME!.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll"
+  robocopy "%CWD%\thirdparty\manual-build\lib\!OPENSSL_NAME!.%OPENSSL_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\openssl\include" /mir
   type nul >>thirdparty\manual-build\precompiled\openssl\openhoi-version-%OPENSSL_VERSION%
   cd %CWD%
 )
@@ -321,7 +319,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%O
   robocopy "%CWD%\thirdparty\manual-build\lib\openal\build" "%CWD%\thirdparty\manual-build\precompiled\openal\bin" OpenAL32.dll
   cd ..
   robocopy "include" "%CWD%\thirdparty\manual-build\precompiled\openal\include" /mir
-  type nul >>thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%
+  type nul >>"%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%"
   cd %CWD%
 )
 
@@ -332,10 +330,10 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZL
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\zlib 2>nul
   mkdir %CWD%\thirdparty\manual-build\precompiled\zlib
   type nul >>thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%
-  nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
-  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
-  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
-  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
+  nuget install !ZLIB_NAME! -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\!ZLIB_NAME!.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\!ZLIB_NAME!.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\!ZLIB_NAME!.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
 )
 
 echo %LINEBEG% Eigen...
@@ -351,11 +349,11 @@ if exist "%CWD%\thirdparty\manual-build\lib\eigen\build\Eigen%EIGEN_VERSION_MAJO
 if "%EIGEN_REQUIRE_BUILD%" == "y" (
   set EIGEN_BRANCH=3.3.7
   if not exist thirdparty\manual-build\lib\eigen (
-      git clone https://github.com/eigenteam/eigen-git-mirror --branch %EIGEN_BRANCH% thirdparty\manual-build\lib\eigen
+      git clone https://github.com/eigenteam/eigen-git-mirror --branch !EIGEN_BRANCH! thirdparty\manual-build\lib\eigen
   ) else (
       git -C thirdparty\manual-build\lib\eigen reset --hard
       git -C thirdparty\manual-build\lib\eigen fetch
-      git -C thirdparty\manual-build\lib\eigen checkout %EIGEN_BRANCH%
+      git -C thirdparty\manual-build\lib\eigen checkout !EIGEN_BRANCH!
       git -C thirdparty\manual-build\lib\eigen pull
   )
   cd thirdparty\manual-build\lib\eigen
@@ -391,7 +389,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\cgal\lib\CGAL-vc142-mt-%
   cd build
   set CWD_FS=%CWD:\=/%
   if /I "%CI%" neq "true" (
-    cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=%CWD_FS%/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=%CWD_FS%/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/lib/eigen -D CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE=TRUE -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
+    cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=!CWD_FS!/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=!CWD_FS!/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=!CWD_FS!/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=!CWD_FS!/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=!CWD_FS!/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=!CWD_FS!/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=!CWD_FS!/thirdparty/manual-build/lib/eigen -D CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE=TRUE -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
     ninja
     ninja install
     cd ..
@@ -399,7 +397,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\cgal\lib\CGAL-vc142-mt-%
     mkdir build
     cd build
   )
-  cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=%CWD_FS%/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=%CWD_FS%/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=%CWD_FS%/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=%CWD_FS%/thirdparty/manual-build/lib/eigen -DCMAKE_BUILD_TYPE=Release -G Ninja ..
+  cmake -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON -DCGAL_HEADER_ONLY=OFF -DWITH_CGAL_Qt5=OFF -DCMAKE_INSTALL_PREFIX=!CWD_FS!/thirdparty/manual-build/precompiled/cgal -DBOOST_INCLUDEDIR=!CWD_FS!/thirdparty/manual-build/precompiled/boost/include -DGMP_INCLUDE_DIR=!CWD_FS!/thirdparty/manual-build/precompiled/gmp/include -DGMP_LIBRARIES=!CWD_FS!/thirdparty/manual-build/precompiled/gmp/lib/libgmp-10.lib -DMPFR_INCLUDE_DIR=!CWD_FS!/thirdparty/manual-build/precompiled/gmp/include -DMPFR_LIBRARIES=!CWD_FS!/thirdparty/manual-build/precompiled/gmp/lib/libmpfr-4.lib -DWITH_Eigen3=ON -DEIGEN3_INCLUDE_DIR=!CWD_FS!/thirdparty/manual-build/lib/eigen -DCMAKE_BUILD_TYPE=Release -G Ninja ..
   ninja
   ninja install
   robocopy "%CWD%\thirdparty\manual-build\lib\cgal\build\include\CGAL" "%CWD%\thirdparty\manual-build\precompiled\cgal\include\CGAL" compiler_config.h
@@ -414,11 +412,11 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\lua 2>nul
   mkdir %CWD%\thirdparty\manual-build\precompiled\lua
   type nul >>thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA_VERSION%
-  nuget install %LUA_NAME% -Version %LUA_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  nuget install !LUA_NAME! -Version %LUA_VERSION% -OutputDirectory thirdparty\manual-build\lib
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\lua" 2>nul
-  robocopy "thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\lua\include" /mir
-  robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\lib\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\lib" lua.lib
-  robocopy "%CWD%\thirdparty\manual-build\lib\%LUA_NAME%.redist.%LUA_VERSION%\build\native\bin\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\bin" lua.dll
+  robocopy "thirdparty\manual-build\lib\!LUA_NAME!.%LUA_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\lua\include" /mir
+  robocopy "%CWD%\thirdparty\manual-build\lib\!LUA_NAME!.%LUA_VERSION%\build\native\lib\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\lib" lua.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\!LUA_NAME!.redist.%LUA_VERSION%\build\native\bin\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\bin" lua.dll
   cd %CWD%
 )
 
