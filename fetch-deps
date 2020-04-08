@@ -47,17 +47,14 @@ fi
 # If we support it, we can also automatically download all required dependencies
 printf "$LINEBEG Checking for operating system type...\n"
 
-INSTALLSYSTEMS=(PACMAN APTGET HOMEBREW PKG)
+INSTALLSYSTEMS=(PACMAN APTGET HOMEBREW PKG YUM)
 isa=${#INSTALLSYSTEMS[@]}
 for ((i=0; i < $isa; i++)); do
     ISE_NAME=${INSTALLSYSTEMS[i]}
     declare -r ${ISE_NAME}=$i
 done
 
-INSTALL_SNAPCRAFT=false
-OGRE_MANUAL_BUILD=false
-OGRE_CUSTOM_PACKAGE=false
-
+OGRE_PACKAGE_FILETYPE=".tar.gz"
 if [ $OSTYPE == "linux-gnu" ]; then
     # Linux
     printf " $CHECKMARK Linux is supported, but we need to check for your installed distribution...\n"
@@ -74,21 +71,29 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
         PACKAGES="base-devel git cmake ninja pkgconf boost cgal openssl openal zlib sdl2 clang rapidjson lua"
-        AUR_PACKAGES=("ogre")
-    elif [ $DISTRO == "debian" ] || [ $DISTRO == "ubuntu" ]; then
+        DIST_IDENTIFIER="arch_latest"
+    elif [[ $DISTRO == "debian" ]] || [[ $DISTRO == "ubuntu" ]]; then
         if [ $DISTRO == "ubuntu" ]; then
             printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
         else
             printf " $CHECKMARK Debian is supported. Using \e[1mapt-get\e[0m install system...\n"
         fi
 
-        #CODENAME=`lsb_release --codename | cut -f2`
+        CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake git pkg-config build-essential ninja-build uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format snapd rapidjson-dev liblua5.3-dev"
-        OGRE_CUSTOM_PACKAGE=true
-        INSTALL_SNAPCRAFT=true
+        PACKAGES="cmake git pkg-config build-essential ninja-build uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format rapidjson-dev liblua5.3-devd"
+        DIST_IDENTIFIER="${DISTRO}_$DISTRO_$CODENAME"
+        OGRE_PACKAGE_FILETYPE=".deb"
+    elif [[ $DISTRO == "fedora" ]]; then
+        printf " $CHECKMARK Fedora is supported. Using \e[1yum\e[0m install system...\n"
+
+        VERSION=`lsb_release --release | cut -f2`
+        INSTALLSYSTEM=${INSTALLSYSTEMS[$YUM]}
+        PACKAGES="git cmake rpm-build freetype-devel freeimage-devel SDL2-devel libX11-devel zlib-devel ninja-build"
+        DIST_IDENTIFIER="${DISTRO}_$DISTRO_$VERSION"
+        OGRE_PACKAGE_FILETYPE=".rpm"
     else
-        printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
+        printf " $CROSSMARK Your distribution '$DISTRO' is not supported. Aborting.\n"
         exit 1 
     fi
 elif [[ $MACOS == true ]]; then
@@ -96,9 +101,8 @@ elif [[ $MACOS == true ]]; then
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
     PACKAGES=(cmake boost cgal zlib openssl openal-soft freeimage freetype sdl2 clang-format rapidjson lua)
-    OGRE_MANUAL_BUILD=true
 else
-    printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
+    printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting.\n"
     exit 1 
 fi
 
@@ -109,6 +113,10 @@ fi
 # Install all required packages...
 if [ $INSTALLSYSTEM ]; then
     printf "$LINEBEG Installing required packages...\n"
+
+    source prebuilt-dep-versions
+    OGRE_PACKAGE_FILENAME=ogre_${DIST_IDENTIFIER}_$OGRE_VERSION$OGRE_PACKAGE_FILETYPE
+    wget /tmp/$OGRE_PACKAGE_FILENAME
 
     if [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$PACMAN]} ]; then
         sudo pacman -Syu --noconfirm
@@ -130,54 +138,42 @@ if [ $INSTALLSYSTEM ]; then
                 sudo pacman -U $(ls build/pacman_aur/$i/*.pkg.tar.xz | head -1) --noconfirm
             done
         fi
+        
+        # TODO: ogre package
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$APTGET]} ]; then
         sudo apt-get update -qy
         sudo apt-get upgrade -qy
         sudo apt-get install -qy --no-install-recommends $PACKAGES
-	    sudo apt-get clean
+        sudo dpkg -i /tmp/$OGRE_PACKAGE_FILENAME
+        sudo apt-get clean
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$PKG]} ]; then
         sudo freebsd-update fetch --not-running-from-cron
         sudo freebsd-update install --not-running-from-cron
         env ASSUME_ALWAYS_YES=YES pkg bootstrap
         sudo pkg -N install $PACKAGES
+        
+        # TODO: ogre package
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$HOMEBREW]} ]; then
         command -v brew >/dev/null 2>&1 || { /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; }
         for i in "${PACKAGES[@]}"
         do
             brew ls --versions $i && brew upgrade $i || brew install $i
         done
+        
+        # TODO: ogre package
+    elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$YUM]} ]; then
+        sudo yum -y update
+        sudo yum -y install $PACKAGES
+        sum rpm -ivh /tmp/$OGRE_PACKAGE_FILENAME
+        sudo package-cleanup --leaves --all
     fi
 
-    if [ $INSTALL_SNAPCRAFT = true ]; then
-        command -v snapcraft >/dev/null 2>&1 || { sudo snap install --classic snapcraft; }
-    fi
-
-    if [ $OGRE_MANUAL_BUILD = true ]; then
-        printf "$LINEBG Building OGRE...\n"
-        cd $CWD/thirdparty/ogre-package
-        source package y # y = "Build only"
-        cd $CWD
-    elif [ $OGRE_CUSTOM_PACKAGE = true ]; then
-        if [ $OSTYPE == "linux-gnu" ]; then
-            if [ $DISTRO == "debian" ]; then
-                # TODO: DEB
-                TODO="1"
-            elif [ $DISTRO == "ubuntu" ]; then
-                # TODO: PPA
-                TODO="1"
-            else
-                printf " $CROSSMARK Your Linux distro '$DISTRO' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n" 
-            fi
-        else
-            printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting. \e[91mYou may have to install all dependencies manually.\e[0m\n"
-            exit 1 
-        fi
-    fi
-    
     printf " $CHECKMARK Finished! Please check the above command line output in order to verify that everything was okay.\n"
 fi
 
 cd $CWD
+
+
 
 
 # Cleanup
