@@ -121,7 +121,7 @@ if [ $INSTALLSYSTEM ]; then
 
     source prebuilt-dep-versions
     OGRE_PACKAGE_FILENAME=ogre_${DIST_IDENTIFIER}_$OGRE_VERSION$OGRE_PACKAGE_FILETYPE
-    wget /tmp/$OGRE_PACKAGE_FILENAME
+    wget https://dependencies.openhoi.net/ogre/$OGRE_PACKAGE_FILENAME -P /tmp/$OGRE_PACKAGE_FILENAME
 
     if [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$PACMAN]} ]; then
         sudo pacman -Syu --noconfirm
@@ -184,7 +184,9 @@ cd $CWD
 # Fetch and copy ImGui
 printf "$LINEBEG ImGui...\n"
 if [ ! -f thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION ]; then
-  rm thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION
+  if [ -d thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION ]; then
+    rm -rf thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION;
+  fi
   if [ ! -f thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION ]; then
       git clone --recurse-submodules https://github.com/openhoi/ogre-package --branch v$OGRE_VERSION thirdparty/manual-build/lib/ogre-package
   else
@@ -194,7 +196,6 @@ if [ ! -f thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSIO
       git -C thirdparty/manual-build/lib/ogre-package pull
       git -C thirdparty/manual-build/lib/ogre-package submodule update --init --recursive
   fi
-  robocopy "%CWD%\thirdparty\manual-build\lib\ogre-package\imgui" "%CWD%\thirdparty\manual-build\precompiled\imgui" /mir
   cp -R thirdparty/manual-build/lib/ogre-package/imgui thirdparty/manual-build/precompiled/imgui
   touch thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION
 fi
