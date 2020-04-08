@@ -286,6 +286,7 @@ echo %LINEBEG% OpenSSL...
 if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll" (
   set OPENSSL_NAME=openssl-vc140-vc141-x86_64
   set OPENSSL_VERSION=1.1.4
+  timeout /T 1 /nobreak
   nuget install %OPENSSL_NAME% -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openssl 2>nul
   setlocal enableextensions
