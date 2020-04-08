@@ -181,8 +181,20 @@ cd $CWD
 
 
 
-# Cleanup
-rm -R thirdparty/ogre-package/ogre/Components/Overlay/src/imgui
-git -C thirdparty/ogre-package/imgui reset --hard
-git -C thirdparty/ogre-package/imgui pull --rebase origin docking
-git -C thirdparty/ogre-package/ogre reset --hard v$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH
+# Fetch and copy ImGui
+printf "$LINEBEG ImGui...\n"
+if [ ! -f thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION ]; then
+  rm thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION
+  if [ ! -f thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION ]; then
+      git clone --recurse-submodules https://github.com/openhoi/ogre-package --branch v$OGRE_VERSION thirdparty/manual-build/lib/ogre-package
+  else
+      git -C thirdparty/manual-build/lib/ogre-package reset --hard
+      git -C thirdparty/manual-build/lib/ogre-package fetch
+      git -C thirdparty/manual-build/lib/ogre-package checkout v$OGRE_VERSION
+      git -C thirdparty/manual-build/lib/ogre-package pull
+      git -C thirdparty/manual-build/lib/ogre-package submodule update --init --recursive
+  fi
+  robocopy "%CWD%\thirdparty\manual-build\lib\ogre-package\imgui" "%CWD%\thirdparty\manual-build\precompiled\imgui" /mir
+  cp -R thirdparty/manual-build/lib/ogre-package/imgui thirdparty/manual-build/precompiled/imgui
+  touch thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION
+)
