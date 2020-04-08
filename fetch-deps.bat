@@ -283,18 +283,18 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_SYS_NAM
 
 echo %LINEBEG% OpenSSL...
 set OPENSSL_VERSION=1.1.4
-if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\openhoi-version-!OPENSSL_VERSION!" (
+if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\openhoi-version-%OPENSSL_VERSION%" (
   set OPENSSL_NAME=openssl-vc140-vc141-x86_64
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openssl 2>nul
-  nuget install %OPENSSL_NAME% -Version !OPENSSL_VERSION! -OutputDirectory thirdparty\manual-build\lib
+  nuget install %OPENSSL_NAME% -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
   mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\lib"
   mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\bin"
-  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.!OPENSSL_VERSION!\build\native\lib\vc141\x64\libcrypto.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib"
-  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.!OPENSSL_VERSION!\build\native\lib\vc141\x64\libssl.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libssl.lib"
-  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.!OPENSSL_VERSION!\build\native\lib\vc141\x64\libcrypto-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libcrypto-1_1-x64.dll"
-  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.!OPENSSL_VERSION!\build\native\lib\vc141\x64\libssl-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll"
-  robocopy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.!OPENSSL_VERSION!\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\openssl\include" /mir
-  type nul >>thirdparty\manual-build\precompiled\openssl\openhoi-version-!OPENSSL_VERSION!
+  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib"
+  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libssl.lib"
+  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libcrypto-1_1-x64.dll"
+  copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll"
+  robocopy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\openssl\include" /mir
+  type nul >>thirdparty\manual-build\precompiled\openssl\openhoi-version-%OPENSSL_VERSION%
   cd %CWD%
 )
 
@@ -304,11 +304,11 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%O
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openal 2>nul
   mkdir %CWD%\thirdparty\manual-build\precompiled\openal
   if not exist thirdparty\manual-build\lib\openal (
-      git clone https://github.com/kcat/openal-soft --branch !OPENAL_BRANCH! thirdparty\manual-build\lib\openal
+      git clone https://github.com/kcat/openal-soft --branch %OPENAL_BRANCH% thirdparty\manual-build\lib\openal
   ) else (
       git -C thirdparty\manual-build\lib\openal reset --hard
       git -C thirdparty\manual-build\lib\openal fetch --tags
-      git -C thirdparty\manual-build\lib\openal checkout !OPENAL_BRANCH!
+      git -C thirdparty\manual-build\lib\openal checkout %OPENAL_BRANCH%
       git -C thirdparty\manual-build\lib\openal pull
   )
   cd thirdparty\manual-build\lib\openal
@@ -321,7 +321,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%O
   robocopy "%CWD%\thirdparty\manual-build\lib\openal\build" "%CWD%\thirdparty\manual-build\precompiled\openal\bin" OpenAL32.dll
   cd ..
   robocopy "include" "%CWD%\thirdparty\manual-build\precompiled\openal\include" /mir
-  type nul >>thirdparty\manual-build\precompiled\openal\openhoi-branch-!OPENAL_BRANCH!
+  type nul >>thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%
   cd %CWD%
 )
 
@@ -332,10 +332,10 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZL
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\zlib 2>nul
   mkdir %CWD%\thirdparty\manual-build\precompiled\zlib
   type nul >>thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%
-  nuget install %ZLIB_NAME% -Version !ZLIB_VERSION! -OutputDirectory thirdparty\manual-build\lib
-  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.!ZLIB_VERSION!\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
-  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.!ZLIB_VERSION!\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
-  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.!ZLIB_VERSION!\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
+  nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
 )
 
 echo %LINEBEG% Eigen...
@@ -542,5 +542,5 @@ set FETCH_FINISHED=y
 :end
 
 if "%FETCH_FINISHED%" == "y" (
-    echo %CHECKMARK% Finished! Please check the above command line output in order to verify that everything was okay.
+    echo %CHECKMARK% Finished% Please check the above command line output in order to verify that everything was okay.
 )
