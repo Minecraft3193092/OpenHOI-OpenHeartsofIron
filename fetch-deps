@@ -201,6 +201,7 @@ if [ ! -f thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSIO
       git -C thirdparty/manual-build/lib/ogre-package pull
       git -C thirdparty/manual-build/lib/ogre-package submodule update --init --recursive
   fi
-  cp -R thirdparty/manual-build/lib/ogre-package/imgui thirdparty/manual-build/precompiled/imgui
+  mkdir --parents thirdparty/manual-build/precompiled/imgui
+  cp -R thirdparty/manual-build/lib/ogre-package/imgui/* thirdparty/manual-build/precompiled/imgui
   touch thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION
 fi
