@@ -410,10 +410,10 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\cgal\lib\CGAL-vc142-mt-%
 echo %LINEBEG% Lua...
 set LUA_VERSION=5.3.5.1
 if not exist "%CWD%\thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA_VERSION%" (
+  set LUA_NAME=lua
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\lua 2>nul
   mkdir %CWD%\thirdparty\manual-build\precompiled\lua
   type nul >>thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA_VERSION%
-  set LUA_NAME=lua
   nuget install %LUA_NAME% -Version %LUA_VERSION% -OutputDirectory thirdparty\manual-build\lib
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\lua" 2>nul
   robocopy "thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\lua\include" /mir
