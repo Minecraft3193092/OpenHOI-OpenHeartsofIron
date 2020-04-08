@@ -86,7 +86,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake git pkg-config build-essential ninja-build uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format rapidjson-dev liblua5.3-devd"
+        PACKAGES="cmake git pkg-config build-essential ninja-build uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format rapidjson-dev liblua5.3-dev"
         DIST_IDENTIFIER="${DISTRO}_$DISTRO_$CODENAME"
         OGRE_PACKAGE_FILETYPE=".deb"
     elif [[ $DISTRO == "fedora" ]]; then
