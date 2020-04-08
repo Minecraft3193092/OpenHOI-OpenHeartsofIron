@@ -382,7 +382,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\cgal\lib\CGAL-vc142-mt-%
   rem We need to download the source ZIP because the directory structure is different to the GitHub/development version
   rem See https://www.cgal.org/download/windows.html
   echo Downloading CGAL v%CGAL_VERSION%...
-  powershell -Command "Invoke-WebRequest https://github.com/CGAL/cgal/releases/download/releases/CGAL-%CGAL_VERSION%/CGAL-%CGAL_VERSION%.zip -OutFile %CWD%\thirdparty\manual-build\lib\cgal.zip"
+  powershell -Command "$progressPreference = 'silentlyContinue'; Invoke-WebRequest https://github.com/CGAL/cgal/releases/download/releases/CGAL-%CGAL_VERSION%/CGAL-%CGAL_VERSION%.zip -OutFile %CWD%\thirdparty\manual-build\lib\cgal.zip"
   echo Expanding CGAL v%CGAL_VERSION% ZIP archive...
   powershell -Command "Expand-Archive -Force %CWD%\thirdparty\manual-build\lib\cgal.zip %CWD%\thirdparty\manual-build\lib"
   @rd /s /q %CWD%\thirdparty\manual-build\lib\cgal 2>nul
@@ -513,7 +513,7 @@ if exist "%CWD%\thirdparty\manual-build\precompiled\ogre3d\include\OGRE\OgreBuil
   )
 )
 if "%OGRE_FETCH%" == "y" (
-  powershell -Command "Invoke-WebRequest https://dependencies.openhoi.net/ogre/ogre_msvc_%OGRE_VERSION%.7z -OutFile %CWD%\thirdparty\manual-build\lib\ogre.7z"
+  powershell -Command "$progressPreference = 'silentlyContinue'; Invoke-WebRequest https://dependencies.openhoi.net/ogre/ogre_msvc_%OGRE_VERSION%.7z -OutFile %CWD%\thirdparty\manual-build\lib\ogre.7z"
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\ogre3d" 2>nul
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\sdl2" 2>nul
   7z x "%CWD%\thirdparty\manual-build\lib\ogre.7z" -o"%CWD%\thirdparty\manual-build\precompiled"
