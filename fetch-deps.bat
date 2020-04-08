@@ -186,6 +186,7 @@ if exist "%CWD%\thirdparty\manual-build\precompiled\boost\include\boost\version.
   )
 )
 if "%BOOST_FETCH_INCLUDES%" == "y" (
+  timeout /T 1 /nobreak
   nuget install %BOOST_NAME% -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\boost\include" 2>nul
   robocopy "thirdparty\manual-build\lib\%BOOST_NAME%.%BOOST_VERSION%.0\lib\native\include" "%CWD%\thirdparty\manual-build\precompiled\boost\include" /mir
@@ -194,6 +195,7 @@ set BOOST_PO_NAME=boost_program_options-vc141
 set BOOST_LIBS_INSTALLED=n
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_PO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -203,6 +205,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_PO_NAME
 set BOOST_LS_NAME=boost_log_setup-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -212,6 +215,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LS_NAME
 set BOOST_LOC_NAME=boost_locale-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LOC_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -221,6 +225,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LOC_NAM
 set BOOST_DT_NAME=boost_date_time-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_DT_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -230,6 +235,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_DT_NAME
 set BOOST_FS_NAME=boost_filesystem-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_FS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -239,6 +245,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_FS_NAME
 set BOOST_TH_NAME=boost_thread-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_TH_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -248,6 +255,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_TH_NAME
 set BOOST_RE_NAME=boost_regex-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_RE_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -257,6 +265,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_RE_NAME
 set BOOST_CR_NAME=boost_chrono-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_CR_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -266,6 +275,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_CR_NAME
 set BOOST_ATO_NAME=boost_atomic-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_ATO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -275,6 +285,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_ATO_NAM
 set BOOST_SYS_NAME=boost_system-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_SYS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
+    timeout /T 1 /nobreak
     nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
@@ -334,6 +345,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZL
   mkdir %CWD%\thirdparty\manual-build\precompiled\zlib
   type nul >>thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%
   set ZLIB_NAME=zlib-msvc-x64
+  timeout /T 1 /nobreak
   nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
@@ -416,6 +428,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA
   mkdir %CWD%\thirdparty\manual-build\precompiled\lua
   type nul >>thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA_VERSION%
   set LUA_NAME=lua
+  timeout /T 1 /nobreak
   nuget install %LUA_NAME% -Version %LUA_VERSION% -OutputDirectory thirdparty\manual-build\lib
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\lua" 2>nul
   robocopy "thirdparty\manual-build\lib\%LUA_NAME%.%LUA_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\lua\include" /mir
