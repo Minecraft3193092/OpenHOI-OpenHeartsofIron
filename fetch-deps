@@ -122,6 +122,11 @@ if [ $INSTALLSYSTEM ]; then
     source prebuilt-dep-versions
     OGRE_PACKAGE_FILENAME=ogre_${DIST_IDENTIFIER}_$OGRE_VERSION$OGRE_PACKAGE_FILETYPE
     wget https://dependencies.openhoi.net/ogre/$OGRE_PACKAGE_FILENAME -P /tmp
+    WGET_RETVAL=$?
+    if [[ $WGET_RETVAL -ne 0 ]]; then
+      printf " $CROSSMARK Unable to download OGRE3D dependency. Aborting.\n"
+      exit 1
+    fi
 
     if [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$PACMAN]} ]; then
         sudo pacman -Syu --noconfirm
