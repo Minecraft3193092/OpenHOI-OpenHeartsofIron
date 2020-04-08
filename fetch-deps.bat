@@ -384,7 +384,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\cgal\lib\CGAL-vc142-mt-%
   echo Downloading CGAL v%CGAL_VERSION%...
   powershell -Command "$progressPreference = 'silentlyContinue'; Invoke-WebRequest https://github.com/CGAL/cgal/releases/download/releases/CGAL-%CGAL_VERSION%/CGAL-%CGAL_VERSION%.zip -OutFile %CWD%\thirdparty\manual-build\lib\cgal.zip"
   echo Expanding CGAL v%CGAL_VERSION% ZIP archive...
-  powershell -Command "Expand-Archive -Force %CWD%\thirdparty\manual-build\lib\cgal.zip %CWD%\thirdparty\manual-build\lib"
+  powershell -Command "$progressPreference = 'silentlyContinue'; Expand-Archive -Force %CWD%\thirdparty\manual-build\lib\cgal.zip %CWD%\thirdparty\manual-build\lib"
   @rd /s /q %CWD%\thirdparty\manual-build\lib\cgal 2>nul
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\cgal 2>nul
   move "%CWD%\thirdparty\manual-build\lib\CGAL-%CGAL_VERSION%" "%CWD%\thirdparty\manual-build\lib\cgal"
