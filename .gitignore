@@ -11,3 +11,6 @@ build*/
 # Eclipse
 .project
 .cproject
+
+# Dockerfiles
+docker/

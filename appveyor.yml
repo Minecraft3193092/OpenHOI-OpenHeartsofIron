@@ -1,6 +1,6 @@
 shallow_clone: true
 image: Visual Studio 2019
-clone_depth: 1
+clone_depth: 3
 platform: x64
 before_build:
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64

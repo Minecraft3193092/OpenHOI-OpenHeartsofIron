@@ -1,0 +1,53 @@
+os: linux
+dist: bionic
+language: minimal
+jobs:
+  include:
+    - name: Debian Buster (10 LTS)
+      env:
+        - DOCKER_DIST=debian
+        - DOCKER_DIST_VERSION=buster
+    - name: Ubuntu Bionic Beaver (18.04 LTS)
+      env:
+        - DOCKER_DIST=ubuntu
+        - DOCKER_DIST_VERSION=bionic
+    - name: Ubuntu Disco Dingo (19.04)
+      env:
+        - DOCKER_DIST=ubuntu
+        - DOCKER_DIST_VERSION=disco
+    - name: Ubuntu Eoan Ermine (19.10)
+      env:
+        - DOCKER_DIST=ubuntu
+        - DOCKER_DIST_VERSION=eoan
+    - name: Ubuntu Focal Fossa (20.04 LTS)
+      env:
+        - DOCKER_DIST=ubuntu
+        - DOCKER_DIST_VERSION=focal
+    - name: Fedora (31)
+      env:
+        - DOCKER_DIST=fedora
+        - DOCKER_DIST_VERSION=31
+notifications:
+  email: false
+git:
+  depth: 3
+before_install:
+  # Update Docker
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  # Fetch docker files
+  - git clone https://github.com/openhoi/docker
+install:
+  # Specifiy docker image name
+  - DOCKER_IMAGE_NAME=openhoi-ogre:${DOCKER_DIST}-${DOCKER_DIST_VERSION}
+  # Get and update our desired Dockerfile
+  - cp docker/${DOCKER_DIST} Dockerfile
+  - sed -i "s/DOCKER_DIST_VERSION/$DOCKER_DIST_VERSION/g" Dockerfile
+  # Build docker image
+  - docker build -t $DOCKER_IMAGE_NAME .
+  # Run docker image
+  - docker run $DOCKER_IMAGE_NAME
+
+ 
