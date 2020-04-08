@@ -88,15 +88,21 @@ source_group("Header Files\\thirdparty\\stb_vorbis" FILES ${STBVORBIS_INCLUDES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis)
 
 # Add third-party library ImGui
-list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui.h
+list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imconfig.h
+                           ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui.h
                            ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui_internal.h
+                           ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imstb_rectpack.h
+                           ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imstb_textedit.h
                            ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/examples/imgui_impl_sdl.h)
 source_group("Header Files\\thirdparty\\imgui" FILES ${IMGUI_INCLUDES})
 set(THIRDPARTY_INCLUDES ${THIRDPARTY_INCLUDES} ${IMGUI_INCLUDES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui
                                     ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/examples)
 
-list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/examples/imgui_impl_sdl.cpp)
+list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui.cpp
+                          ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui_draw.cpp
+                          ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui_widgets.cpp
+                          ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/examples/imgui_impl_sdl.cpp)
 source_group("Source Files\\thirdparty\\imgui" FILES ${IMGUI_SOURCES})
 set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${IMGUI_SOURCES})
 
