@@ -187,7 +187,7 @@ cd $CWD
 
 
 # Fetch and copy ImGui
-printf "$LINEBEG ImGui...\n"
+printf "$LINEBEG Fetching required version of ImGui...\n"
 if [ ! -f thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION ]; then
   if [ -d thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION ]; then
     rm -rf thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION;
