@@ -411,12 +411,12 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA
   set LUA_NAME=lua
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\lua 2>nul
   mkdir %CWD%\thirdparty\manual-build\precompiled\lua
-  type nul >>thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA_VERSION%
   nuget install !LUA_NAME! -Version %LUA_VERSION% -OutputDirectory thirdparty\manual-build\lib
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\lua" 2>nul
   robocopy "thirdparty\manual-build\lib\!LUA_NAME!.%LUA_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\lua\include" /mir
   robocopy "%CWD%\thirdparty\manual-build\lib\!LUA_NAME!.%LUA_VERSION%\build\native\lib\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\lib" lua.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\!LUA_NAME!.redist.%LUA_VERSION%\build\native\bin\v142\x64\Release" "%CWD%\thirdparty\manual-build\precompiled\lua\bin" lua.dll
+  type nul >>"%CWD%\thirdparty\manual-build\precompiled\lua\openhoi-version-%LUA_VERSION%"
   cd %CWD%
 )
 
