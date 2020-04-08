@@ -1,1 +1,2 @@
+docker-run text eol=lf
 fetch-deps text eol=lf

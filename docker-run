@@ -1,0 +1,10 @@
+#!/bin/bash
+
+chmod +x fetch-deps
+./fetch-deps
+
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -G Ninja ..
+ninja
+ninja test
