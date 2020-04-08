@@ -86,7 +86,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake git pkg-config build-essential ninja-build uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format rapidjson-dev liblua5.3-dev"
+        PACKAGES="cmake git pkg-config build-essential ninja-build uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format rapidjson-dev liblua5.3-dev libfreetype6 libfreeimage3"
         DIST_IDENTIFIER="${DISTRO}_$DISTRO_$CODENAME"
         OGRE_PACKAGE_FILETYPE=".deb"
     elif [[ $DISTRO == "fedora" ]]; then
@@ -94,7 +94,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         VERSION=`lsb_release --release | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$YUM]}
-        PACKAGES="git cmake rpm-build freetype-devel freeimage-devel SDL2-devel libX11-devel zlib-devel ninja-build"
+        PACKAGES="git cmake rpm-build freetype freeimage SDL2-devel zlib-devel ninja-build"
         DIST_IDENTIFIER="${DISTRO}_$DISTRO_$VERSION"
         OGRE_PACKAGE_FILETYPE=".rpm"
     else
