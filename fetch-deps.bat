@@ -193,7 +193,7 @@ set BOOST_PO_NAME=boost_program_options-vc141
 set BOOST_LIBS_INSTALLED=n
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_PO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_PO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_PO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -202,7 +202,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_PO_NAME
 set BOOST_LS_NAME=boost_log_setup-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_LS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -211,7 +211,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LS_NAME
 set BOOST_LOC_NAME=boost_locale-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LOC_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LOC_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_LOC_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -220,7 +220,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LOC_NAM
 set BOOST_DT_NAME=boost_date_time-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_DT_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_DT_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_DT_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -229,7 +229,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_DT_NAME
 set BOOST_FS_NAME=boost_filesystem-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_FS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_FS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_FS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -238,7 +238,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_FS_NAME
 set BOOST_TH_NAME=boost_thread-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_TH_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_TH_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_TH_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -247,7 +247,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_TH_NAME
 set BOOST_RE_NAME=boost_regex-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_RE_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_RE_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_RE_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -256,7 +256,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_RE_NAME
 set BOOST_CR_NAME=boost_chrono-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_CR_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_CR_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_CR_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -265,7 +265,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_CR_NAME
 set BOOST_ATO_NAME=boost_atomic-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_ATO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_ATO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_ATO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -274,7 +274,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_ATO_NAM
 set BOOST_SYS_NAME=boost_system-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_SYS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
-      nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
+    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
     set BOOST_LIBS_INSTALLED=y
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_SYS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_SYS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
@@ -282,11 +282,11 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_SYS_NAM
 )
 
 echo %LINEBEG% OpenSSL...
-if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll" (
+set OPENSSL_VERSION=1.1.4
+if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\openhoi-version-%OPENSSL_VERSION%" (
   set OPENSSL_NAME=openssl-vc140-vc141-x86_64
-  set OPENSSL_VERSION=1.1.4
-  nuget install %OPENSSL_NAME% -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openssl 2>nul
+  nuget install %OPENSSL_NAME% -Version %OPENSSL_VERSION% -OutputDirectory thirdparty\manual-build\lib
   mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\lib"
   mkdir "%CWD%\thirdparty\manual-build\precompiled\openssl\bin"
   copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto.lib" "%CWD%\thirdparty\manual-build\precompiled\openssl\lib\libcrypto.lib"
@@ -294,6 +294,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x
   copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libcrypto-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libcrypto-1_1-x64.dll"
   copy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\lib\vc141\x64\libssl-1_1-x64.dll" "%CWD%\thirdparty\manual-build\precompiled\openssl\bin\libssl-1_1-x64.dll"
   robocopy "%CWD%\thirdparty\manual-build\lib\%OPENSSL_NAME%.%OPENSSL_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\openssl\include" /mir
+  type nul >>thirdparty\manual-build\precompiled\openssl\openhoi-version-%OPENSSL_VERSION%
+  cd %CWD%
 )
 
 echo %LINEBEG% OpenAL...
@@ -326,10 +328,10 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%O
 echo %LINEBEG% zlib...
 set ZLIB_VERSION=1.2.11.8900
 if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%" (
+  set ZLIB_NAME=zlib-msvc-x64
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\zlib 2>nul
   mkdir %CWD%\thirdparty\manual-build\precompiled\zlib
   type nul >>thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%
-  set ZLIB_NAME=zlib-msvc-x64
   nuget install %ZLIB_NAME% -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
