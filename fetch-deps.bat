@@ -327,15 +327,15 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%O
 
 echo %LINEBEG% zlib...
 set ZLIB_VERSION=1.2.11.8900
-if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-!ZLIB_VERSION!" (
+if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%" (
   set ZLIB_NAME=zlib-msvc-x64
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\zlib 2>nul
   mkdir %CWD%\thirdparty\manual-build\precompiled\zlib
-  type nul >>thirdparty\manual-build\precompiled\zlib\openhoi-version-!ZLIB_VERSION!
-  nuget install %ZLIB_NAME% -Version !ZLIB_VERSION! -OutputDirectory thirdparty\manual-build\lib
-  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.!ZLIB_VERSION!\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
-  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.!ZLIB_VERSION!\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
-  robocopy "%CWD%\thirdparty\manual-build\lib\%ZLIB_NAME%.!ZLIB_VERSION!\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
+  type nul >>thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%
+  nuget install !ZLIB_NAME! -Version %ZLIB_VERSION% -OutputDirectory thirdparty\manual-build\lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\!ZLIB_NAME!.%ZLIB_VERSION%\build\native\lib_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\lib" zlib.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\!ZLIB_NAME!.%ZLIB_VERSION%\build\native\bin_release" "%CWD%\thirdparty\manual-build\precompiled\zlib\bin" zlib.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\!ZLIB_NAME!.%ZLIB_VERSION%\build\native\include" "%CWD%\thirdparty\manual-build\precompiled\zlib\include" /mir
 )
 
 echo %LINEBEG% Eigen...
