@@ -371,7 +371,7 @@ if "%EIGEN_REQUIRE_BUILD%" == "y" (
 
 echo %LINEBEG% GMP / MPFR...
 if not exist "%CWD%\thirdparty\manual-build\precompiled\gmp\include\gmp.h" (
-  powershell -Command "Invoke-WebRequest https://dependencies.openhoi.net/gmp_10-mpfr_4.7z -OutFile %CWD%\thirdparty\manual-build\lib\gmp-mpfr.7z"
+  powershell -Command "$progressPreference = 'silentlyContinue'; Invoke-WebRequest https://dependencies.openhoi.net/gmp_10-mpfr_4.7z -OutFile %CWD%\thirdparty\manual-build\lib\gmp-mpfr.7z"
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\gmp" 2>nul
   7z x "%CWD%\thirdparty\manual-build\lib\gmp-mpfr.7z" -o"%CWD%\thirdparty\manual-build\precompiled\gmp"
 )
