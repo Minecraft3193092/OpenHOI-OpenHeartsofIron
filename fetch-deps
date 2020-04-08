@@ -121,7 +121,7 @@ if [ $INSTALLSYSTEM ]; then
 
     source prebuilt-dep-versions
     OGRE_PACKAGE_FILENAME=ogre_${DIST_IDENTIFIER}_$OGRE_VERSION$OGRE_PACKAGE_FILETYPE
-    wget https://dependencies.openhoi.net/ogre/$OGRE_PACKAGE_FILENAME -P /tmp/$OGRE_PACKAGE_FILENAME
+    wget https://dependencies.openhoi.net/ogre/$OGRE_PACKAGE_FILENAME -P /tmp
 
     if [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$PACMAN]} ]; then
         sudo pacman -Syu --noconfirm
