@@ -197,15 +197,6 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_PO_NAME
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_PO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_PO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_PO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_PO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
-set BOOST_LS_NAME=boost_log_setup-vc141
-if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
-  if "%BOOST_LIBS_INSTALLED%" == "n" (
-    nuget install boost-vc141 -Version %BOOST_VERSION% -OutputDirectory thirdparty\manual-build\lib
-    set BOOST_LIBS_INSTALLED=y
-  )
-  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_LS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
-  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_LS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
-)
 set BOOST_LOC_NAME=boost_locale-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LOC_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
   if "%BOOST_LIBS_INSTALLED%" == "n" (
@@ -512,7 +503,11 @@ if "%OGRE_FETCH%" == "y" (
   powershell -Command "$progressPreference = 'silentlyContinue'; Invoke-WebRequest https://dependencies.openhoi.net/ogre/ogre_msvc_%OGRE_VERSION%.7z -OutFile %CWD%\thirdparty\manual-build\lib\ogre.7z"
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\ogre3d" 2>nul
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\sdl2" 2>nul
+  @del %CWD%\dist\materials\glsl\win64\*.* 2>nul
+  @del %CWD%\dist\materials\hlsl\win64\*.* 2>nul
   7z x "%CWD%\thirdparty\manual-build\lib\ogre.7z" -o"%CWD%\thirdparty\manual-build\precompiled"
+  robocopy "%CWD%\thirdparty\manual-build\precompiled\ogre3d\materials\glsl" "%CWD%\dist\materials\glsl\win64" *.glsl
+  robocopy "%CWD%\thirdparty\manual-build\precompiled\ogre3d\materials\hlsl" "%CWD%\dist\materials\hlsl\win64" *.hlsl *.cg
 )
 
 echo %LINEBEG% ImGui...

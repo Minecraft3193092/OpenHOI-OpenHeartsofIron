@@ -1,17 +1,15 @@
-// Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
+// Copyright 2018-2020 the openhoi authors. See COPYING.md for legal info.
 
 #include "gui/debug_console.hpp"
 
 #include <hoibase/helper/unique_id.hpp>
-
-#include "gui/gui_manager.hpp"
 
 namespace openhoi {
 
 // Creates the debug console
 DebugConsole::DebugConsole() {
   // Do not show the console by default
-  showConsole = false;
+  setVisible(false);
 
   // create empty input buffer
   memset(inputBuffer, 0, sizeof(inputBuffer));
@@ -25,9 +23,6 @@ DebugConsole::~DebugConsole() {
   // Clear log
   clearLog();
 }
-
-// Toggle debug console
-void DebugConsole::toggle() { showConsole = !showConsole; }
 
 // Add log to debug console
 void DebugConsole::addLog(Ogre::LogMessageLevel lml, const char* fmt, ...) {
@@ -47,10 +42,10 @@ void DebugConsole::clearLog() {
 
 // Draw the debug console (inherited from GuiElement)
 void DebugConsole::draw() {
-  if (!showConsole) return;
+  if (!isVisible()) return;
 
   ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-  if (!ImGui::Begin("Debug console", &showConsole,
+  if (!ImGui::Begin("Debug console", &this->visible,
                     ImGuiWindowFlags_NoDocking)) {
     ImGui::End();
     return;

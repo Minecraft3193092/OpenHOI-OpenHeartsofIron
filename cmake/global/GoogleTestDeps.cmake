@@ -8,7 +8,7 @@ set(GOOGLE_TEST_GIT_REPO https://github.com/google/googletest.git)
 set(GOOGLE_TEST_GIT_TAG release-${GTEST_VERSION})
 
 # Fetch GTest
-if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 30.11)
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.11)
   # Include FetchContent module
   include(FetchContent)
 

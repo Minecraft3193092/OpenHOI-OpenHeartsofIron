@@ -272,9 +272,16 @@ void AudioManager::playSound(std::string sound, float volume) {
   } else {
     Ogre::LogManager::getSingletonPtr()->logMessage(
         (boost::format("Unable to play sound effect '%s' as it was not found") %
-         soundPtr->getFileName())
+         sound)
             .str());
   }
+}
+
+// Play the sound effect (no background music) identified by it's name with
+// the configured effects volume
+void AudioManager::playSound(std::string sound) {
+  Options* options = GameManager::getInstance().getOptions();
+  playSound(sound, options->getEffectsVolume());
 }
 
 // Generate OpenAL source from the provided sound and play it with the given

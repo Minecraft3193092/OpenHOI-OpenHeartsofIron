@@ -43,6 +43,7 @@ filesystem::path FileAccess::gameConfigDirectory;
 filesystem::path FileAccess::gameAssetRootDirectory;
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
 filesystem::path FileAccess::ogrePluginDirectory;
+filesystem::path FileAccess::ogreMediaDirectory;
 #endif
 
 // Get the current user's home directory. If it cannot be found, an exception
@@ -322,5 +323,33 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
   return filesystem::path();
 #endif
 }
+
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+// Gets the OGRE media directory. If it cannot be found, an exception will
+// be thrown.
+filesystem::path FileAccess::getOgreMediaRootDirectory() {
+  // Check if we have already fetched the game asset directory
+  if (FileAccess::ogreMediaDirectory.empty()) {
+    // Yeah, this is not thread-safe..
+
+    std::array<std::string, 2> possibleMediaPaths = {
+        "/usr/share/OGRE/Media", "/usr/local/share/OGRE/Media"};
+
+    filesystem::path possibleDir;
+    for (std::string& dir : possibleMediaPaths) {
+      possibleDir = filesystem::path(dir);
+      if (filesystem::is_directory(possibleDir)) {
+        FileAccess::ogreMediaDirectory = filesystem::canonical(possibleDir);
+        break;
+      }
+    }
+  }
+
+  if (!filesystem::is_directory(FileAccess::ogreMediaDirectory))
+    throw std::runtime_error("Unable to find game media root directory");
+
+  return FileAccess::ogreMediaDirectory;
+}
+#endif
 
 }  // namespace openhoi

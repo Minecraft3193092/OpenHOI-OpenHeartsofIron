@@ -48,6 +48,10 @@ class AudioManager final {
   // the given volume
   void playSound(std::string sound, float volume);
 
+  // Play the sound effect (no background music) identified by it's name with
+  // the configured effects volume
+  void playSound(std::string sound);
+
   // Update audio stats (e.g. progress of background music)
   void updateStats();
 

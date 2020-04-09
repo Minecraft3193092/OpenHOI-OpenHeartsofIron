@@ -1,4 +1,4 @@
-// Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
+// Copyright 2018-2020 the openhoi authors. See COPYING.md for legal info.
 
 #pragma once
 
@@ -61,17 +61,17 @@ class Options final {
   // Sets the effects volume
   void setEffectsVolume(float const& effectsVolume);
 
- private:
-  // Load options from file
-  void loadFromFile();
-
   std::string videoMode;
   byte fullScreenAntiAliasing;
   WindowMode windowMode;
   bool verticalSync;
   std::string audioDevice;
-  float musicVolume;
-  float effectsVolume;
+  int musicVolume;
+  int effectsVolume;
+
+ private:
+  // Load options from file
+  void loadFromFile();
 };
 
 }  // namespace openhoi

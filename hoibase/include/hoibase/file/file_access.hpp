@@ -48,6 +48,12 @@ class OPENHOI_LIB_EXPORT FileAccess final {
   // relatively to the executables, an empty path is returned.
   static filesystem::path getOgrePluginDirectory();
 
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+  // Gets the OGRE media directory. If it cannot be found, an exception will
+  // be thrown.
+  static filesystem::path getOgreMediaRootDirectory();
+#endif
+
   // Read the provided file to the provided data pointer. The file length is
   // returned or -1 in case the file could not be read.
   static long readFile(filesystem::path file, unsigned char** data);
@@ -72,6 +78,9 @@ class OPENHOI_LIB_EXPORT FileAccess final {
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
   // Cached OGRE plugin directory
   static filesystem::path ogrePluginDirectory;
+
+  // Cached OGRE media directory
+  static filesystem::path ogreMediaDirectory;
 #endif
 };
 

@@ -1,4 +1,4 @@
-// Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
+// Copyright 2018-2020 the openhoi authors. See COPYING.md for legal info.
 
 #include "game_manager.hpp"
 
@@ -146,6 +146,11 @@ StateManager* const& GameManager::getStateManager() const {
 // Gets the GUI manager
 GuiManager* const& GameManager::getGuiManager() const { return guiManager; }
 
+// Gets the audio manager
+AudioManager* const& GameManager::getAudioManager() const {
+  return audioManager;
+}
+
 // Gets the OGRE root
 Ogre::Root* const& GameManager::getRoot() const { return root; }
 
@@ -190,8 +195,8 @@ void GameManager::run() {
 
 // Request game exit
 void GameManager::requestExit() {
-  root->queueEndRendering(true);
   exiting = true;
+  root->queueEndRendering(true);
 }
 
 // Gets the full path to the provided OGRE plugin
@@ -443,6 +448,9 @@ void GameManager::destroyWindow() {
 // Locate resources
 void GameManager::locateResources() {
   filesystem::path assetRoot = FileAccess::getAssetRootDirectory();
+#ifndef OPENHOI_OS_WINDOWS
+  filesystem::path mediaRoot = FileAccess::getOgreMediaRootDirectory();
+#endif
 
   // Declare all font resources
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
@@ -458,15 +466,39 @@ void GameManager::locateResources() {
       (assetRoot / "graphics" / "flags").u8string(), "FileSystem",
       OPENHOI_RSG_FLAG_TEXTURES);
 
-  // Declare all material resources
+  // Declare all material/shader resources
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
       (assetRoot / "materials").u8string(), "FileSystem", Ogre::RGN_DEFAULT);
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
       (assetRoot / "materials" / "glsl").u8string(), "FileSystem",
       Ogre::RGN_DEFAULT);
+#ifdef OPENHOI_OS_WINDOWS
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "materials" / "glsl" / "win64").u8string(), "FileSystem",
+      Ogre::RGN_DEFAULT);
+#elif defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (mediaRoot / "RTShaderLib" / "GLSL").u8string(), "FileSystem",
+      Ogre::RGN_DEFAULT);
+#endif
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
       (assetRoot / "materials" / "hlsl").u8string(), "FileSystem",
       Ogre::RGN_DEFAULT);
+#ifdef OPENHOI_OS_WINDOWS
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "materials" / "hlsl" / "win64").u8string(), "FileSystem",
+      Ogre::RGN_DEFAULT);
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (assetRoot / "materials" / "win64").u8string(), "FileSystem",
+      Ogre::RGN_DEFAULT);
+#elif defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (mediaRoot / "RTShaderLib" / "HLSL_Cg").u8string(), "FileSystem",
+      Ogre::RGN_DEFAULT);
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+      (mediaRoot / "RTShaderLib" / "materials").u8string(), "FileSystem",
+      Ogre::RGN_DEFAULT);
+#endif
 
   // Declare all particle resources
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
@@ -540,8 +572,13 @@ void GameManager::pollEvents() {
         fingerMoved(event);
         break;
       case SDL_WINDOWEVENT:
-        if (event.window.event != SDL_WINDOWEVENT_RESIZED) continue;
+        if (event.window.event == SDL_WINDOWEVENT_CLOSE)
+          exiting = true;
+        else if (event.window.event != SDL_WINDOWEVENT_RESIZED)
+          continue;
+
         if (event.window.windowID != SDL_GetWindowID(window.sdl)) continue;
+
         window.ogre->windowMovedOrResized();
         break;
       case SDL_QUIT:

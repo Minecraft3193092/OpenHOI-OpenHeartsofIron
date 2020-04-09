@@ -1,9 +1,10 @@
-// Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
+// Copyright 2018-2020 the openhoi authors. See COPYING.md for legal info.
 
 #pragma once
 
 #include <OgreRectangle2D.h>
 
+#include "gui/options_dialog.hpp"
 #include "state.hpp"
 
 namespace openhoi {
@@ -41,6 +42,7 @@ class MenuState final : public State {
 
   std::string backgroundImageName;
   Ogre::Rectangle2D* backgroundImageRect;
+  std::unique_ptr<OptionsDialog> optionsDialog;
 };
 
 }  // namespace openhoi

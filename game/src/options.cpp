@@ -32,8 +32,8 @@ Options::Options()
       windowMode(WindowMode::BORDERLESS),
       verticalSync(false),
       audioDevice(""),
-      musicVolume(0.35f),
-      effectsVolume(1.0f) {
+      musicVolume(35),
+      effectsVolume(70) {
   // Load options from file, overwriting the defaults set before
   loadFromFile();
 }
@@ -65,9 +65,9 @@ void Options::loadFromFile() {
   if (doc[TOSTRING(OPTION_KEY_AUDIO_DEVICE)].IsString())
     audioDevice = doc[TOSTRING(OPTION_KEY_AUDIO_DEVICE)].GetString();
   if (doc[TOSTRING(OPTION_KEY_MUSIC_VOLUME)].IsFloat())
-    musicVolume = doc[TOSTRING(OPTION_KEY_MUSIC_VOLUME)].GetFloat();
+    musicVolume = doc[TOSTRING(OPTION_KEY_MUSIC_VOLUME)].GetInt();
   if (doc[TOSTRING(OPTION_KEY_EFFECTS_VOLUME)].IsFloat())
-    effectsVolume = doc[TOSTRING(OPTION_KEY_EFFECTS_VOLUME)].GetFloat();
+    effectsVolume = doc[TOSTRING(OPTION_KEY_EFFECTS_VOLUME)].GetInt();
 }
 
 // Save options to file
@@ -139,20 +139,25 @@ void Options::setAudioDevice(std::string const& audioDevice) {
 }
 
 // Gets the music volume
-float const& Options::getMusicVolume() const { return musicVolume; }
+float const& Options::getMusicVolume() const {
+  return (float)(musicVolume / 100.0f);
+}
 
 // Sets the music volume
 void Options::setMusicVolume(float const& musicVolume) {
-  this->musicVolume = musicVolume > 1.0f ? 1.0f : std::max(musicVolume, 0.0f);
+  this->musicVolume =
+      musicVolume > 1.0f ? 100 : (int)(std::max(musicVolume, 0.0f) * 100);
 }
 
 // Gets the effects volume
-float const& Options::getEffectsVolume() const { return effectsVolume; }
+float const& Options::getEffectsVolume() const {
+  return (float)(effectsVolume / 100.0f);
+}
 
 // Sets the effects volume
 void Options::setEffectsVolume(float const& effectsVolume) {
   this->effectsVolume =
-      effectsVolume > 1.0f ? 1.0f : std::max(effectsVolume, 0.0f);
+      effectsVolume > 1.0f ? 100 : (int)(std::max(effectsVolume, 0.0f) * 100);
 }
 
 }  // namespace openhoi

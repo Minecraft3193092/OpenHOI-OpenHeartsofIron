@@ -60,12 +60,17 @@ list(APPEND GAME_SOURCES ${GRAPHIC_SOURCES})
 # Add gui code
 list(APPEND GUI_INCLUDES include/gui/debug_console.hpp
                          include/gui/gui_element.hpp
-                         include/gui/gui_manager.hpp)
+                         include/gui/gui_manager.hpp
+                         include/gui/imgui_helper.hpp
+                         include/gui/options_dialog.hpp)
 source_group("Header Files\\gui" FILES ${GUI_INCLUDES})
 list(APPEND GAME_INCLUDES ${GUI_INCLUDES})
 
 list(APPEND GUI_SOURCES src/gui/debug_console.cpp
-                        src/gui/gui_manager.cpp)
+                        src/gui/gui_element.cpp
+                        src/gui/gui_manager.cpp
+                        src/gui/imgui_helper.cpp
+                        src/gui/options_dialog.cpp)
 source_group("Source Files\\gui" FILES ${GUI_SOURCES})
 list(APPEND GAME_SOURCES ${GUI_SOURCES})
 
@@ -88,9 +93,7 @@ source_group("Header Files\\thirdparty\\stb_vorbis" FILES ${STBVORBIS_INCLUDES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis)
 
 # Add third-party library ImGui
-list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imconfig.h
-                           ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui.h
-                           ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui_internal.h
+list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui_internal.h
                            ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imstb_rectpack.h
                            ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imstb_textedit.h
                            ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/examples/imgui_impl_sdl.h)

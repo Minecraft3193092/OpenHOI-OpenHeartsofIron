@@ -21,9 +21,6 @@ class DebugConsole final : public GuiElement {
   // Destroys the debug console
   ~DebugConsole();
 
-  // Toggle debug console
-  void toggle();
-
   // Add log to debug console
   void addLog(Ogre::LogMessageLevel lml, const char* fmt, ...);
 
@@ -37,7 +34,6 @@ class DebugConsole final : public GuiElement {
   // Command line input callback
   int textEditCallback(ImGuiInputTextCallbackData* data);
 
-  bool showConsole;
   char inputBuffer[256];
   std::vector<std::string> items;
   std::vector<std::string> history;

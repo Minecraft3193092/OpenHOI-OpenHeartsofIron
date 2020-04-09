@@ -1,9 +1,8 @@
-// Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
+// Copyright 2018-2020 the openhoi authors. See COPYING.md for legal info.
 
 #include "hoibase/helper/debug.hpp"
 
 #include <OgreException.h>
-
 #include <boost/stacktrace.hpp>
 
 #include "hoibase/helper/os.hpp"

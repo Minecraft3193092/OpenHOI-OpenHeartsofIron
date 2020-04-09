@@ -16,6 +16,7 @@
 #include "game_manager.hpp"
 #include "graphic/texture_helper.hpp"
 #include "gui/gui_manager.hpp"
+#include "gui/imgui_helper.hpp"
 
 namespace openhoi {
 
@@ -25,6 +26,8 @@ void MenuState::startup() {
 
   backgroundImageName =
       OPENHOI_BUILD_DYNAMIC_OBJECT_NAME("Main_Menu_Background");
+
+  optionsDialog.reset(new OptionsDialog());
 }
 
 // Called when the state is shutting down
@@ -186,23 +189,28 @@ void MenuState::updateGui() {
              originalButtonStyle.z, 0.8f);
 
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  ImGui::Button("Singleplayer", buttonSize);
+  ImGuiHelper::Button("Singleplayer", buttonSize);
 
   buttonLeftPos += buttonSpacing + buttonSize.x;
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  ImGui::Button("Multiplayer", buttonSize);
+  ImGuiHelper::Button("Multiplayer", buttonSize);
 
   buttonLeftPos += buttonSpacing + buttonSize.x;
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  ImGui::Button("Options", buttonSize);
+  if (ImGuiHelper::Button("Options", buttonSize)) {
+    if (!optionsDialog->isVisible()) {
+      // optionsDialog->reset(); --> Reset position and size -> Center it!
+      optionsDialog->toggle();
+    }
+  }
 
   buttonLeftPos += buttonSpacing + buttonSize.x;
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  ImGui::Button("Credits", buttonSize);
+  ImGuiHelper::Button("Credits", buttonSize);
 
   buttonLeftPos += buttonSpacing + buttonSize.x;
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  if (ImGui::Button("Quit", buttonSize)) gameManager.requestExit();
+  if (ImGuiHelper::Button("Quit", buttonSize)) gameManager.requestExit();
 
   ImGui::GetStyle().Colors[ImGuiCol_Button] = originalButtonStyle;
   ImGui::PopFont();
@@ -229,6 +237,11 @@ void MenuState::updateGui() {
   ImGui::Text(version.c_str(), nullptr);
   ImGui::End();
   ImGui::PopStyleVar();
+
+  // ----------------------------------------------------------------------------
+
+  // Draw dialogs (if visible)
+  optionsDialog->draw();
 }
 
 // Used to remove the scene
