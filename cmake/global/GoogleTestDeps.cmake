@@ -37,10 +37,22 @@ else()
     GIT_TAG ${GOOGLE_TEST_GIT_TAG}
     SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/googletest-src"
     BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/googletest-build"
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-    TEST_COMMAND  ""
+    INSTALL_COMMAND """"
   )
+  
+  ExternalProject_Get_Property(googletest binary_dir)
+  
+  add_library(gtest UNKNOWN IMPORTED)
+  add_library(gtest_main UNKNOWN IMPORTED)
+  
+  set_target_properties(gtest PROPERTIES
+    IMPORTED_LOCATION ${binary_dir}/libgtest.a
+  )
+  set_target_properties(gtest_main PROPERTIES
+      IMPORTED_LOCATION ${binary_dir}/libgtest_main.a
+  )
+  
+  add_dependencies(gtest googletest)
+  add_dependencies(gtest_main googletest)
 endif()
 
