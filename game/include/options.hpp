@@ -50,13 +50,13 @@ class Options final {
   void setAudioDevice(std::string const& soundDevice);
 
   // Gets the music volume
-  float const& getMusicVolume() const;
+  float getMusicVolume();
 
   // Sets the music volume
   void setMusicVolume(float const& musicVolume);
 
   // Gets the effects volume
-  float const& getEffectsVolume() const;
+  float getEffectsVolume();
 
   // Sets the effects volume
   void setEffectsVolume(float const& effectsVolume);
