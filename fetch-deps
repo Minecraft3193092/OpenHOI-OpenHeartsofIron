@@ -177,7 +177,7 @@ if [ $INSTALLSYSTEM ]; then
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$YUM]} ]; then
         sudo yum -y update
         sudo yum -y install $PACKAGES
-        sum rpm -ivh /tmp/$OGRE_PACKAGE_FILENAME
+        sum rpm -Uvh /tmp/$OGRE_PACKAGE_FILENAME
         sudo package-cleanup --leaves --all
     fi
 
