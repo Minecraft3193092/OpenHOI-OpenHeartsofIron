@@ -99,10 +99,7 @@ set(THIRDPARTY_INCLUDES ${THIRDPARTY_INCLUDES} ${IMGUI_INCLUDES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui
                                     ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/examples)
 
-list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui.cpp
-                          ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui_draw.cpp
-                          ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui_widgets.cpp
-                          ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/examples/imgui_impl_sdl.cpp)
+list(APPEND IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/examples/imgui_impl_sdl.cpp)
 source_group("Source Files\\thirdparty\\imgui" FILES ${IMGUI_SOURCES})
 set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${IMGUI_SOURCES})
 

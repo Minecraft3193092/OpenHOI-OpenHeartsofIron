@@ -8,7 +8,7 @@ set(GOOGLE_TEST_GIT_REPO https://github.com/google/googletest.git)
 set(GOOGLE_TEST_GIT_TAG release-${GTEST_VERSION})
 
 # Fetch GTest
-if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.11)
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 30.11)
   # Include FetchContent module
   include(FetchContent)
 
@@ -29,30 +29,24 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.11)
           
   FetchContent_MakeAvailable(googletest)
 else()
+  # Legacy process:
   # Include ExternalProject module
-  include(ExternalProject)
-  
-  ExternalProject_Add(googletest
-    GIT_REPOSITORY ${GOOGLE_TEST_GIT_REPO}
-    GIT_TAG ${GOOGLE_TEST_GIT_TAG}
-    SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/googletest-src"
-    BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/googletest-build"
-    INSTALL_COMMAND """"
-  )
-  
-  ExternalProject_Get_Property(googletest binary_dir)
-  
-  add_library(gtest UNKNOWN IMPORTED)
-  add_library(gtest_main UNKNOWN IMPORTED)
-  
-  set_target_properties(gtest PROPERTIES
-    IMPORTED_LOCATION ${binary_dir}/libgtest.a
-  )
-  set_target_properties(gtest_main PROPERTIES
-      IMPORTED_LOCATION ${binary_dir}/libgtest_main.a
-  )
-  
-  add_dependencies(gtest googletest)
-  add_dependencies(gtest_main googletest)
+  configure_file(${PROJECT_SOURCE_DIR}/cmake/global/GoogleTestCMakeLists.txt.in googletest-download/CMakeLists.txt)
+  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+                  RESULT_VARIABLE result
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+  if(result)
+    message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+  endif()
+  execute_process(COMMAND ${CMAKE_COMMAND} --build .
+                  RESULT_VARIABLE result
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+  if(result)
+    message(FATAL_ERROR "Build step for googletest failed: ${result}")
+  endif()
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
+                   ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
+                   EXCLUDE_FROM_ALL)
 endif()
 

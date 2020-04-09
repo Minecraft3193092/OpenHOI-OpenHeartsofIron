@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 2.8.2)
+
+project(googletest NONE)
+
+include(ExternalProject)
+ExternalProject_Add(googletest
+  GIT_REPOSITORY    ${GOOGLE_TEST_GIT_REPO}
+  GIT_TAG           ${GOOGLE_TEST_GIT_TAG}
+  SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/googletest-src"
+  BINARY_DIR        "${CMAKE_CURRENT_BINARY_DIR}/googletest-build"
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND     ""
+  INSTALL_COMMAND   ""
+  TEST_COMMAND      ""
+)
