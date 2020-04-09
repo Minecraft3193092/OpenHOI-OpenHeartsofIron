@@ -503,8 +503,8 @@ if "%OGRE_FETCH%" == "y" (
   powershell -Command "$progressPreference = 'silentlyContinue'; Invoke-WebRequest https://dependencies.openhoi.net/ogre/ogre_msvc_%OGRE_VERSION%.7z -OutFile %CWD%\thirdparty\manual-build\lib\ogre.7z"
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\ogre3d" 2>nul
   @rd /s /q "%CWD%\thirdparty\manual-build\precompiled\sdl2" 2>nul
-  @del %CWD%\dist\materials\glsl\win64\*.* 2>nul
-  @del %CWD%\dist\materials\hlsl\win64\*.* 2>nul
+  @del /q %CWD%\dist\materials\glsl\win64\*.* 2>nul
+  @del /q %CWD%\dist\materials\hlsl\win64\*.* 2>nul
   7z x "%CWD%\thirdparty\manual-build\lib\ogre.7z" -o"%CWD%\thirdparty\manual-build\precompiled"
   robocopy "%CWD%\thirdparty\manual-build\precompiled\ogre3d\materials\glsl" "%CWD%\dist\materials\glsl\win64" *.glsl
   robocopy "%CWD%\thirdparty\manual-build\precompiled\ogre3d\materials\hlsl" "%CWD%\dist\materials\hlsl\win64" *.hlsl *.cg
