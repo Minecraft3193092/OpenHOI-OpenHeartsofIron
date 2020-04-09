@@ -1,11 +1,12 @@
 // Copyright 2020 the openhoi authors. See COPYING.md for legal info.
 
 #include "gui/options_dialog.hpp"
+
+#include <OgreRenderWindow.h>
+
 #include "game_manager.hpp"
 #include "gui/imgui_helper.hpp"
 #include "options.hpp"
-
-#include <OgreRenderWindow.h>
 
 namespace openhoi {
 

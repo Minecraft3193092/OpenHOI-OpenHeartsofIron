@@ -48,6 +48,10 @@ class OPENHOI_LIB_EXPORT FileAccess final {
   // relatively to the executables, an empty path is returned.
   static filesystem::path getOgrePluginDirectory();
 
+  // Gets the OGRE library and plugin extension. This can be something like
+  // ".so.1.12.5-openhoi" or an empty string.
+  static std::string getOgreLibraryFileExtension();
+
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
   // Gets the OGRE media directory. If it cannot be found, an exception will
   // be thrown.
@@ -76,11 +80,17 @@ class OPENHOI_LIB_EXPORT FileAccess final {
   static filesystem::path gameAssetRootDirectory;
 
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+  // Gets the path where our used libOgreMain resides
+  static filesystem::path getOgreMainLibPath();
+
   // Cached OGRE plugin directory
   static filesystem::path ogrePluginDirectory;
 
   // Cached OGRE media directory
   static filesystem::path ogreMediaDirectory;
+
+  // Cached OGRE library file extension
+  static std::string ogreLibraryFileExtension;
 #endif
 };
 

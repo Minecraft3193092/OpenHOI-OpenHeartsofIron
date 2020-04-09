@@ -3,6 +3,7 @@
 #include "hoibase/helper/debug.hpp"
 
 #include <OgreException.h>
+
 #include <boost/stacktrace.hpp>
 
 #include "hoibase/helper/os.hpp"

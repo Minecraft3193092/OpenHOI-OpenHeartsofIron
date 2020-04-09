@@ -31,7 +31,10 @@ find_path(
 
 set (FINDOGRE_VERSION 1.12.5)
 if(${OGRE_NIX_PREBUILD})
+    set(LIB_PREFIX lib)
     set(NON_PREFIX_SUFFIX .so.${FINDOGRE_VERSION}-openhoi)
+    set(NON_PREFIX_SUFFIX_A .a) # TODO: We need to adjust the build process here in order to produce e.g. .a.1.12.5-openhoi
+    #set(NON_PREFIX_SUFFIX_A .a.${FINDOGRE_VERSION}-openhoi)
     set(CMAKE_FIND_LIBRARY_SUFFIXES_BAK ${CMAKE_FIND_LIBRARY_SUFFIXES})
     list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ${NON_PREFIX_SUFFIX})
 endif()
@@ -39,7 +42,7 @@ endif()
 # Find library files
 find_library(
     OGRE_MAIN_LIBRARY
-    NAMES OgreMain
+    NAMES ${LIB_PREFIX}OgreMain${NON_PREFIX_SUFFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
     ${OGRE_ROOT_DIR}/lib/macosx/Release
@@ -95,7 +98,7 @@ find_library(
 
 find_library(
     OGRE_OVERLAY_LIBRARY
-    NAMES OgreOverlay
+    NAMES ${LIB_PREFIX}OgreOverlay${NON_PREFIX_SUFFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
     ${OGRE_ROOT_DIR}/lib/macosx/Release
@@ -110,7 +113,7 @@ find_library(
 
 find_library(
     OGRE_PROPERTY_LIBRARY
-    NAMES OgreProperty
+    NAMES ${LIB_PREFIX}OgreProperty${NON_PREFIX_SUFFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
     ${OGRE_ROOT_DIR}/lib/macosx/Release
@@ -125,7 +128,7 @@ find_library(
 
 find_library(
     OGRE_RTSHADERSYSTEM_LIBRARY
-    NAMES OgreRTShaderSystem
+    NAMES ${LIB_PREFIX}OgreRTShaderSystem${NON_PREFIX_SUFFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
     ${OGRE_ROOT_DIR}/lib/macosx/Release
@@ -140,7 +143,7 @@ find_library(
 
 find_library(
     OGRE_GLSUPPORT_LIBRARY
-    NAMES OgreGLSupport
+    NAMES ${LIB_PREFIX}OgreGLSupport${NON_PREFIX_SUFFIX_A}
     PATHS
     $ENV{PROGRAMFILES}/lib
     ${OGRE_ROOT_DIR}/lib/macosx/Release

@@ -121,6 +121,9 @@ if [ $INSTALLSYSTEM ]; then
 
     source prebuilt-dep-versions
     OGRE_PACKAGE_FILENAME=ogre_${DIST_IDENTIFIER}_$OGRE_VERSION$OGRE_PACKAGE_FILETYPE
+    if [ -f /tmp/$OGRE_PACKAGE_FILENAME ]; then
+      rm /tmp/$OGRE_PACKAGE_FILENAME;
+    fi
     wget https://dependencies.openhoi.net/ogre/$OGRE_PACKAGE_FILENAME -P /tmp
     WGET_RETVAL=$?
     if [[ $WGET_RETVAL -ne 0 ]]; then

@@ -203,9 +203,11 @@ void GameManager::requestExit() {
 std::string GameManager::getPluginPath(std::string pluginName) {
   filesystem::path pluginDirectory = FileAccess::getOgrePluginDirectory();
   if (!pluginDirectory.empty()) {
-    return (pluginDirectory / pluginName).u8string();
+    return (pluginDirectory /
+            (pluginName + FileAccess::getOgreLibraryFileExtension()))
+        .u8string();
   } else {
-    return pluginName;
+    return pluginName + FileAccess::getOgreLibraryFileExtension();
   }
 }
 
@@ -476,15 +478,9 @@ void GameManager::locateResources() {
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
       (assetRoot / "materials" / "glsl" / "win64").u8string(), "FileSystem",
       Ogre::RGN_DEFAULT);
-#elif defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
-  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-      (mediaRoot / "RTShaderLib" / "GLSL").u8string(), "FileSystem",
-      Ogre::RGN_DEFAULT);
-#endif
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
       (assetRoot / "materials" / "hlsl").u8string(), "FileSystem",
       Ogre::RGN_DEFAULT);
-#ifdef OPENHOI_OS_WINDOWS
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
       (assetRoot / "materials" / "hlsl" / "win64").u8string(), "FileSystem",
       Ogre::RGN_DEFAULT);
@@ -493,10 +489,7 @@ void GameManager::locateResources() {
       Ogre::RGN_DEFAULT);
 #elif defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-      (mediaRoot / "RTShaderLib" / "HLSL_Cg").u8string(), "FileSystem",
-      Ogre::RGN_DEFAULT);
-  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-      (mediaRoot / "RTShaderLib" / "materials").u8string(), "FileSystem",
+      (mediaRoot / "RTShaderLib" / "GLSL").u8string(), "FileSystem",
       Ogre::RGN_DEFAULT);
 #endif
 

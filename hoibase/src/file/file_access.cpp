@@ -2,6 +2,7 @@
 
 #include "hoibase/file/file_access.hpp"
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/format.hpp>
 
 #include "hoibase/helper/os.hpp"
@@ -44,6 +45,7 @@ filesystem::path FileAccess::gameAssetRootDirectory;
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
 filesystem::path FileAccess::ogrePluginDirectory;
 filesystem::path FileAccess::ogreMediaDirectory;
+std::string FileAccess::ogreLibraryFileExtension;
 #endif
 
 // Get the current user's home directory. If it cannot be found, an exception
@@ -264,18 +266,8 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
   if (FileAccess::ogrePluginDirectory.empty()) {
     // Yeah, this is not thread-safe..
 
-    // Get path where our used libOgreMain resides. We will then use this base
-    // path in order to locate the directory where the OGRE plugins are stored:
-    Dl_info dlInfo;
-    dladdr((void*)Ogre::LogManager::getSingletonPtr, &dlInfo);
-
-    // Create filesystem::path from dlInfo.dli_fname.
-    // dlInfo.dli_fname can be something like:
-    //  - /usr/local/lib/libOgreMain.so.1.12.5-openhoi
-    //  - /usr/local/lib/libOgreMain.so.1.12.4
-    //  - /usr/lib/x86_64-linux-gnu/libOgreMain.so
-    //  - etc.
-    filesystem::path libFilePath = filesystem::path(dlInfo.dli_fname);
+    // Get the path where our used libOgreMain resides
+    filesystem::path libFilePath = FileAccess::getOgreMainLibPath();
 
     // Extract the directory where the file "dlInfo.dli_fname" is stored at
     filesystem::path libDir = libFilePath.parent_path();
@@ -324,7 +316,49 @@ filesystem::path FileAccess::getOgrePluginDirectory() {
 #endif
 }
 
+// Gets the OGRE library and plugin extension. This can be something like
+// ".so.1.12.5-openhoi" or an empty string.
+std::string FileAccess::getOgreLibraryFileExtension() {
 #if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+  // Check if we have already fetched the OGRE plugin directory
+  if (FileAccess::ogreLibraryFileExtension.empty()) {
+    // Yeah, this is not thread-safe..
+
+    // Get the path where our used libOgreMain resides
+    filesystem::path libFilePath = FileAccess::getOgreMainLibPath();
+
+    // Build the expected file name based on the dlInfo.dli_fname. We want to
+    // use the same extension (e.g. ".so.1.12.5-openhoi")
+    filesystem::path fileNameOnly = libFilePath.filename();
+    size_t dotIndex = fileNameOnly.u8string().find(".");
+    if (dotIndex != std::string::npos)
+      FileAccess::ogreLibraryFileExtension =
+          fileNameOnly.u8string().substr(dotIndex);
+  }
+
+  return FileAccess::ogreLibraryFileExtension;
+#else
+  return std::string();
+#endif
+}
+
+#if defined(OPENHOI_OS_LINUX) || defined(OPENHOI_OS_BSD)
+// Gets the path where our used libOgreMain resides
+filesystem::path FileAccess::getOgreMainLibPath() {
+  // Get path where our used libOgreMain resides. We will then use this base
+  // path in order to locate the directory where the OGRE plugins are stored:
+  Dl_info dlInfo;
+  dladdr((void*)Ogre::LogManager::getSingletonPtr, &dlInfo);
+
+  // Create filesystem::path from dlInfo.dli_fname and return it.
+  // dlInfo.dli_fname can be something like:
+  //  - /usr/local/lib/libOgreMain.so.1.12.5-openhoi
+  //  - /usr/local/lib/libOgreMain.so.1.12.4
+  //  - /usr/lib/x86_64-linux-gnu/libOgreMain.so
+  //  - etc.
+  return filesystem::path(dlInfo.dli_fname);
+}
+
 // Gets the OGRE media directory. If it cannot be found, an exception will
 // be thrown.
 filesystem::path FileAccess::getOgreMediaRootDirectory() {
