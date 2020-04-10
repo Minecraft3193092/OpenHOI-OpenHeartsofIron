@@ -9,6 +9,7 @@
 #include <OgreOverlayManager.h>
 #include <OgrePrerequisites.h>
 #include <OgreTextureManager.h>
+#include <boost/locale.hpp>
 
 #include <algorithm>
 #include <cassert>
@@ -165,7 +166,7 @@ void MenuState::updateGui() {
   ImGui::SetNextWindowSize(buttonAreaSize, ImGuiCond_Always);
   ImGui::SetNextWindowContentSize(buttonAreaSize);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-  ImGui::Begin("Game Menu Buttons", NULL,
+  ImGui::Begin("Game_Menu_Buttons", NULL,
                ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
                    ImGuiWindowFlags_NoBringToFrontOnFocus |
                    ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |
@@ -189,15 +190,18 @@ void MenuState::updateGui() {
              originalButtonStyle.z, 0.8f);
 
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  ImGuiHelper::Button("Singleplayer", buttonSize);
+  ImGuiHelper::Button(boost::locale::translate("Singleplayer").str().c_str(),
+                      buttonSize);
 
   buttonLeftPos += buttonSpacing + buttonSize.x;
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  ImGuiHelper::Button("Multiplayer", buttonSize);
+  ImGuiHelper::Button(boost::locale::translate("Multiplayer").str().c_str(),
+                      buttonSize);
 
   buttonLeftPos += buttonSpacing + buttonSize.x;
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  if (ImGuiHelper::Button("Options", buttonSize)) {
+  if (ImGuiHelper::Button(boost::locale::translate("Options").str().c_str(),
+                          buttonSize)) {
     if (!optionsDialog->isVisible()) {
       // optionsDialog->reset(); --> Reset position and size -> Center it!
       optionsDialog->toggle();
@@ -206,11 +210,14 @@ void MenuState::updateGui() {
 
   buttonLeftPos += buttonSpacing + buttonSize.x;
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  ImGuiHelper::Button("Credits", buttonSize);
+  ImGuiHelper::Button(boost::locale::translate("Credits").str().c_str(),
+                      buttonSize);
 
   buttonLeftPos += buttonSpacing + buttonSize.x;
   ImGui::SetCursorPos(ImVec2(buttonLeftPos, buttonTopPos));
-  if (ImGuiHelper::Button("Quit", buttonSize)) gameManager.requestExit();
+  if (ImGuiHelper::Button(boost::locale::translate("Quit").str().c_str(),
+                          buttonSize))
+    gameManager.requestExit();
 
   ImGui::GetStyle().Colors[ImGuiCol_Button] = originalButtonStyle;
   ImGui::PopFont();
@@ -229,7 +236,7 @@ void MenuState::updateGui() {
   ImGui::SetNextWindowSize(textSize, ImGuiCond_Always);
   ImGui::SetNextWindowContentSize(textSize);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-  ImGui::Begin("Game Menu Version", nullptr,
+  ImGui::Begin("Game_Menu_Version", nullptr,
                ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
                    ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse |
                    ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar |

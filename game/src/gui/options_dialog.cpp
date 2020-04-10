@@ -3,6 +3,7 @@
 #include "gui/options_dialog.hpp"
 
 #include <OgreRenderWindow.h>
+#include <boost/locale.hpp>
 
 #include "game_manager.hpp"
 #include "gui/imgui_helper.hpp"
@@ -41,23 +42,26 @@ void OptionsDialog::draw() {
   Options* options = gameManager.getOptions();
 
   // Render window
-  ImGui::Begin("Options", &this->visible,
+  ImGui::Begin(boost::locale::translate("Options").str().c_str(),
+               &this->visible,
                ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse);
 
-  if (ImGui::BeginTabBar("OptionsTabs", ImGuiTabBarFlags_None)) {
-    if (ImGui::BeginTabItem("Player")) {
+  if (ImGui::BeginTabBar("Options_Tabs", ImGuiTabBarFlags_None)) {
+    if (ImGui::BeginTabItem(boost::locale::translate("Player").str().c_str())) {
       ImGui::Text("This is the player tab!\nblah blah blah blah blah");
       ImGui::EndTabItem();
     }
-    if (ImGui::BeginTabItem("Video")) {
+    if (ImGui::BeginTabItem(boost::locale::translate("Video").str().c_str())) {
       ImGui::Text("This is the video tab!\nblah blah blah blah blah");
       ImGui::EndTabItem();
     }
-    if (ImGui::BeginTabItem("Audio")) {
-      ImGuiHelper::SliderInt("Music volume", &options->musicVolume, 0, 100,
-                             "%d %%");
-      ImGuiHelper::SliderInt("Effects volume", &options->effectsVolume, 0, 100,
-                             "%d %%");
+    if (ImGui::BeginTabItem(boost::locale::translate("Audio").str().c_str())) {
+      ImGuiHelper::SliderInt(
+          boost::locale::translate("Music volume").str().c_str(),
+          &options->musicVolume, 0, 100, "%d %%");
+      ImGuiHelper::SliderInt(
+          boost::locale::translate("Effects volume").str().c_str(),
+          &options->effectsVolume, 0, 100, "%d %%");
       ImGui::EndTabItem();
     }
     ImGui::EndTabBar();

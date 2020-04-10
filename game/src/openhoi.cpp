@@ -50,12 +50,15 @@ int main(int argc, const char* argv[])
   auto mutexHandle = CreateMutex(NULL, FALSE, TEXT(OPENHOI_UNIQUE_HANDLE));
   auto lastError = GetLastError();
   if (mutexHandle == nullptr || lastError == ERROR_ALREADY_EXISTS) {
-    MessageBox(nullptr,
-               "You cannot run " OPENHOI_GAME_NAME
-               " twice! Please stop the currently running instance "
-               "of " OPENHOI_GAME_NAME
-               " before you try to run the game executable.",
-               OPENHOI_GAME_NAME, MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+    MessageBox(
+        nullptr,
+        (boost::locale::format(boost::locale::translate(
+             "You cannot run {1} twice! Please stop the currently running "
+             "instance of {1} before you try to run the game executable.")) %
+         OPENHOI_GAME_NAME)
+            .str()
+            .c_str(),
+        OPENHOI_GAME_NAME, MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
     exit(exitStatus);
   }
 #else
@@ -63,7 +66,10 @@ int main(int argc, const char* argv[])
   // access the user's home directory
   if (geteuid() == 0) {
     std::cerr << "Please do not run " OPENHOI_GAME_NAME
-                 " with root permissions!"
+                 " with root permissions!" boost::locale::format(
+                     boost::locale::translate(
+                         "Please do not run {1}  with root permissions!")) %
+                     OPENHOI_GAME_NAME
               << std::endl;
     exit(exitStatus);
   }
@@ -75,11 +81,12 @@ int main(int argc, const char* argv[])
   int mutexFd;
   mutexFd = open(lockFilePath, O_CREAT | O_EXCL, 0600);
   if (mutexFd < 0) {
-    std::cerr << "You cannot run " OPENHOI_GAME_NAME
-                 " twice! Please stop the currently running instance "
-                 "of " OPENHOI_GAME_NAME
-                 " before you try to run the game executable."
-              << std::endl;
+    std::cerr
+        << boost::locale::format(boost::locale::translate(
+               "You cannot run {1} twice! Please stop the currently running "
+               "instance of {1} before you try to run the game executable.")) %
+               OPENHOI_GAME_NAME
+        << std::endl;
     exit(exitStatus);
   }
   struct sigaction sigAction;
@@ -94,7 +101,8 @@ int main(int argc, const char* argv[])
   try {
     // Initialize locale generator
     boost::locale::generator localeGenerator;
-    std::string i18nDirectory = (FileAccess::getAssetRootDirectory() / "i18n").string();
+    std::string i18nDirectory =
+        (FileAccess::getAssetRootDirectory() / "i18n").string();
     localeGenerator.add_messages_path(i18nDirectory);
     localeGenerator.add_messages_domain("openhoi");
     // Create system default locale
@@ -115,9 +123,13 @@ int main(int argc, const char* argv[])
     // Handle exception
     std::string exception = Debug::prettyPrintException(&e);
 #ifdef OPENHOI_OS_WINDOWS
-    MessageBox(nullptr, exception.c_str(), boost::locale::translate("An exception has occured").str().c_str(), MB_OK | MB_ICONERROR | MB_TASKMODAL);
+    MessageBox(
+        nullptr, exception.c_str(),
+        boost::locale::translate("An exception has occured").str().c_str(),
+        MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
-    std::cerr << boost::locale::translate("An exception has occured") << ":" << std::endl
+    std::cerr << boost::locale::translate("An exception has occured") << ":"
+              << std::endl
               << exception << std::endl;
 #endif
   }

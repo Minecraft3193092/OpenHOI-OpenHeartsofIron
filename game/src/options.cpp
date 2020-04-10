@@ -139,9 +139,7 @@ void Options::setAudioDevice(std::string const& audioDevice) {
 }
 
 // Gets the music volume
-float Options::getMusicVolume() {
-  return (float)(musicVolume / 100.0f);
-}
+float Options::getMusicVolume() { return (float)(musicVolume / 100.0f); }
 
 // Sets the music volume
 void Options::setMusicVolume(float const& musicVolume) {
@@ -150,9 +148,7 @@ void Options::setMusicVolume(float const& musicVolume) {
 }
 
 // Gets the effects volume
-float Options::getEffectsVolume() {
-  return (float)(effectsVolume / 100.0f);
-}
+float Options::getEffectsVolume() { return (float)(effectsVolume / 100.0f); }
 
 // Sets the effects volume
 void Options::setEffectsVolume(float const& effectsVolume) {
