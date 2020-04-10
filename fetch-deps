@@ -178,7 +178,6 @@ if [ $INSTALLSYSTEM ]; then
         sudo yum -y update
         sudo yum -y install $PACKAGES
         sudo yum -y localinstall /tmp/$OGRE_PACKAGE_FILENAME
-        sudo rpm -ql ogre
         sudo package-cleanup --leaves --all
     fi
 
