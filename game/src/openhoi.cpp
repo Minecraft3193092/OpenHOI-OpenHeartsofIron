@@ -1,5 +1,6 @@
 // Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
 
+#include <boost/locale.hpp>
 #include <hoibase/file/file_access.hpp>
 #include <hoibase/helper/debug.hpp>
 #include <hoibase/helper/os.hpp>
@@ -23,7 +24,7 @@ using namespace openhoi;
 const char* lockFilePath;
 
 // Handle SIGINT (release lock file)
-void sigintHandler(int /*sig*/) {
+void sigintHandler(int /*nSignum*/, siginfo_t* /*si*/, void* /*vcontext*/) {
   unlink(lockFilePath);
   _exit(EXIT_FAILURE);  // exit() is not safe in a signal handler, the we use
                         // _exit()
@@ -71,7 +72,6 @@ int main(int argc, const char* argv[])
   filesystem::path tempDirectory = FileAccess::getTempDirectory();
   filesystem::path lockFile = tempDirectory / OPENHOI_UNIQUE_HANDLE;
   lockFilePath = lockFile.c_str();
-  struct sigaction sigAction;
   int mutexFd;
   mutexFd = open(lockFilePath, O_CREAT | O_EXCL, 0600);
   if (mutexFd < 0) {
@@ -82,13 +82,30 @@ int main(int argc, const char* argv[])
               << std::endl;
     exit(exitStatus);
   }
-  sigAction.sa_handler = sigintHandler;
-  sigemptyset(&sigAction.sa_mask);
-  sigAction.sa_flags = 0;
+  struct sigaction sigAction;
+  memset(&sigAction, 0, sizeof(struct sigaction));
+  sigAction.sa_flags = SA_SIGINFO;
+  sigAction.sa_sigaction = sigintHandler;
   sigaction(SIGINT, &sigAction, NULL);
+  sigaction(SIGTERM, &sigAction, NULL);
+  sigaction(SIGSEGV, &sigAction, NULL);
 #endif
 
   try {
+    boost::locale::generator localeGenerator;
+
+    // Specify location of dictionaries
+    std::string i18nDirectory = (FileAccess::getAssetRootDirectory() / "i18n").string();
+    localeGenerator.add_messages_path(i18nDirectory);
+    localeGenerator.add_messages_domain("openhoi");
+
+    // Create system default locale
+    std::locale loc = localeGenerator("");
+    // Make it system global
+    loc = std::locale::global(loc);
+    // Set as default locale for console output
+    loc = std::cout.imbue(loc);
+
     // Initialize game manager
     GameManager& gameManager = GameManager::getInstance();
 
@@ -100,8 +117,7 @@ int main(int argc, const char* argv[])
     // Handle exception
     std::string exception = Debug::prettyPrintException(&e);
 #ifdef OPENHOI_OS_WINDOWS
-    MessageBox(nullptr, exception.c_str(), "An exception has occured",
-               MB_OK | MB_ICONERROR | MB_TASKMODAL);
+    MessageBox(nullptr, exception.c_str(), "An exception has occured", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
     std::cerr << "An exception has occured:" << std::endl
               << exception << std::endl;
