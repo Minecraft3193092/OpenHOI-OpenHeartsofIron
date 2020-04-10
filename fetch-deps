@@ -177,8 +177,7 @@ if [ $INSTALLSYSTEM ]; then
     elif [ $INSTALLSYSTEM == ${INSTALLSYSTEMS[$YUM]} ]; then
         sudo yum -y update
         sudo yum -y install $PACKAGES
-        sudo rpm -Uvh /tmp/$OGRE_PACKAGE_FILENAME
-        sudo rpm -ql ogre | head
+        sudo yum localinstall /tmp/$OGRE_PACKAGE_FILENAME
         sudo package-cleanup --leaves --all
     fi
 
