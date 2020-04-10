@@ -117,9 +117,9 @@ int main(int argc, const char* argv[])
     // Handle exception
     std::string exception = Debug::prettyPrintException(&e);
 #ifdef OPENHOI_OS_WINDOWS
-    MessageBox(nullptr, exception.c_str(), "An exception has occured", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+    MessageBox(nullptr, exception.c_str(), boost::locale::translate("An exception has occured").str().c_str(), MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
-    std::cerr << "An exception has occured:" << std::endl
+    std::cerr << boost::locale::translate("An exception has occured") << ":" << std::endl
               << exception << std::endl;
 #endif
   }
