@@ -196,6 +196,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_PO_NAME
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_PO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_PO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_PO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_PO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_PO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_PO_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_PO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_PO_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
 set BOOST_LOC_NAME=boost_locale-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LOC_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
@@ -205,6 +207,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_LOC_NAM
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LOC_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_LOC_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LOC_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_LOC_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LOC_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_LOC_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_LOC_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_LOC_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
 set BOOST_DT_NAME=boost_date_time-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_DT_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
@@ -214,6 +218,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_DT_NAME
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_DT_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_DT_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_DT_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_DT_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_DT_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_DT_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_DT_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_DT_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
 set BOOST_FS_NAME=boost_filesystem-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_FS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
@@ -223,6 +229,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_FS_NAME
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_FS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_FS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_FS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_FS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_FS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_FS_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_FS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_FS_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
 set BOOST_TH_NAME=boost_thread-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_TH_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
@@ -232,6 +240,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_TH_NAME
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_TH_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_TH_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_TH_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_TH_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_TH_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_TH_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_TH_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_TH_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
 set BOOST_RE_NAME=boost_regex-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_RE_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
@@ -241,6 +251,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_RE_NAME
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_RE_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_RE_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_RE_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_RE_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_RE_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_RE_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_RE_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_RE_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
 set BOOST_CR_NAME=boost_chrono-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_CR_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
@@ -250,6 +262,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_CR_NAME
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_CR_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_CR_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_CR_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_CR_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_CR_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_CR_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_CR_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_CR_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
 set BOOST_ATO_NAME=boost_atomic-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_ATO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
@@ -259,6 +273,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_ATO_NAM
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_ATO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_ATO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_ATO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_ATO_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_ATO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_ATO_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_ATO_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_ATO_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
 set BOOST_SYS_NAME=boost_system-vc141
 if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_SYS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib" (
@@ -268,6 +284,8 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\boost\lib\%BOOST_SYS_NAM
   )
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_SYS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_SYS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
   robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_SYS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_SYS_NAME%-mt-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_SYS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\lib" %BOOST_SYS_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.lib
+  robocopy "%CWD%\thirdparty\manual-build\lib\%BOOST_SYS_NAME%.%BOOST_VERSION%.0\lib\native" "%CWD%\thirdparty\manual-build\precompiled\boost\bin" %BOOST_SYS_NAME%-mt-gd-x64-%BOOST_VERSION_MAJOR%_%BOOST_VERSION_MINOR%.dll
 )
 
 echo %LINEBEG% OpenSSL...
