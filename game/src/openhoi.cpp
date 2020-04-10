@@ -92,13 +92,11 @@ int main(int argc, const char* argv[])
 #endif
 
   try {
+    // Initialize locale generator
     boost::locale::generator localeGenerator;
-
-    // Specify location of dictionaries
     std::string i18nDirectory = (FileAccess::getAssetRootDirectory() / "i18n").string();
     localeGenerator.add_messages_path(i18nDirectory);
     localeGenerator.add_messages_domain("openhoi");
-
     // Create system default locale
     std::locale loc = localeGenerator("");
     // Make it system global
@@ -124,6 +122,7 @@ int main(int argc, const char* argv[])
 #endif
   }
 
+  // Release mutex / lock file
 #ifdef OPENHOI_OS_WINDOWS
   ReleaseMutex(mutexHandle);
   CloseHandle(mutexHandle);
