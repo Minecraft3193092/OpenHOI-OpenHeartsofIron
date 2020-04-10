@@ -28,7 +28,7 @@ endif()
 if(APPLE)
     find_library(CFLIB CoreFoundation)
 elseif(NOT WIN32)
-    find_package(LibUUID REQUIRED)
+    find_package(Libuuid REQUIRED)
      set(LIBUUID_IMPORTED_TARGET LibUUID::UUID)
 endif()
 
