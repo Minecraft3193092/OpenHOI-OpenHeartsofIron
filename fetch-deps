@@ -178,6 +178,7 @@ if [ $INSTALLSYSTEM ]; then
         sudo yum -y update
         sudo yum -y install $PACKAGES
         sudo rpm -Uvh /tmp/$OGRE_PACKAGE_FILENAME
+        ls -lah /usr/lib
         sudo package-cleanup --leaves --all
     fi
 
