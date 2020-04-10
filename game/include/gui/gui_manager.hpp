@@ -38,7 +38,7 @@ class GuiManager final {
   ImFont* getBigFont();
 
   // Get debug console
-  DebugConsole* getDebugConsole();
+  std::shared_ptr<DebugConsole> const& getDebugConsole() const;
 
  private:
   // Configure GUI
@@ -46,7 +46,7 @@ class GuiManager final {
 
   Ogre::SceneManager* sceneManager;
   SDL_Window* window;
-  DebugConsole* debugConsole;
+  std::shared_ptr<DebugConsole> debugConsole;
   ImFont* defaultFont;
   ImFont* bigFont;
 };

@@ -30,10 +30,10 @@ namespace openhoi {
 // Initializes the game manager
 GameManager::GameManager() {
   // Create options instance and load options from file
-  options = new Options();
+  options = std::make_unique<Options>();
 
   // Initialize logging
-  logManager.reset(OGRE_NEW Ogre::LogManager());
+  logManager = OGRE_NEW Ogre::LogManager();
   std::string logFile = (FileAccess::getUserGameConfigDirectory() /
                          filesystem::path(OPENHOI_GAME_NAME ".log"))
                             .u8string();
@@ -82,7 +82,7 @@ GameManager::GameManager() {
   root->addFrameListener(this);
 
   // Create GUI manager instance
-  guiManager = new GuiManager();
+  guiManager = std::make_unique<GuiManager>();
 
   // Create a generic scene manager
   sceneManager = root->createSceneManager();
@@ -101,20 +101,15 @@ GameManager::GameManager() {
   options->saveToFile();
 
   // Create state manager and startup with menu state
-  stateManager = new StateManager();
+  stateManager = std::make_unique<StateManager>();
   stateManager->startup(new MenuState());
 }
 
 // Destroys the game manager
 GameManager::~GameManager() {
   // Shutdown state manager
-  if (stateManager) {
+  if (stateManager)
     stateManager->requestStateChange(nullptr);
-    delete stateManager;
-  }
-
-  // Destroy GUI manager
-  if (guiManager) delete guiManager;
 
   // Unregister the material manager listener
   Ogre::MaterialManager::getSingleton().setActiveScheme(
@@ -125,29 +120,27 @@ GameManager::~GameManager() {
   // Destroy window
   destroyWindow();
 
-  // Destroy audio manager
-  if (audioManager) delete audioManager;
-
   // Destroy overlay system
   if (overlaySystem) delete overlaySystem;
-
-  // Destroy options
-  if (options) delete options;
 }
 
 // Gets the game options
-Options* const& GameManager::getOptions() const { return options; }
+std::shared_ptr<Options> const& GameManager::getOptions() const {
+  return options;
+}
 
 // Gets the state manager
-StateManager* const& GameManager::getStateManager() const {
+std::unique_ptr<StateManager> const& GameManager::getStateManager() const {
   return stateManager;
 }
 
 // Gets the GUI manager
-GuiManager* const& GameManager::getGuiManager() const { return guiManager; }
+std::unique_ptr<GuiManager> const& GameManager::getGuiManager() const {
+  return guiManager;
+}
 
 // Gets the audio manager
-AudioManager* const& GameManager::getAudioManager() const {
+std::unique_ptr<AudioManager> const& GameManager::getAudioManager() const {
   return audioManager;
 }
 
@@ -214,7 +207,7 @@ std::string GameManager::getPluginPath(std::string pluginName) {
 // Initialize audio
 void GameManager::initializeAudio() {
   // Create audio manager
-  audioManager = new AudioManager();
+  audioManager = std::make_unique<AudioManager>();
 
   // Try to set pre-defined audio device
   if (!options->getAudioDevice().empty()) {

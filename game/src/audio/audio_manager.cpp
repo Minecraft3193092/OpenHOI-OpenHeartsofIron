@@ -280,8 +280,7 @@ void AudioManager::playSound(std::string sound, float volume) {
 // Play the sound effect (no background music) identified by it's name with
 // the configured effects volume
 void AudioManager::playSound(std::string sound) {
-  Options* options = GameManager::getInstance().getOptions();
-  playSound(sound, options->getEffectsVolume());
+  playSound(sound, GameManager::getInstance().getOptions()->getEffectsVolume());
 }
 
 // Generate OpenAL source from the provided sound and play it with the given
@@ -307,7 +306,7 @@ ALuint AudioManager::generateSourceAndPlaySound(std::shared_ptr<Sound> sound,
 
 // Update audio stats (e.g. progress of background music)
 void AudioManager::updateStats() {
-  Options* options = GameManager::getInstance().getOptions();
+  std::shared_ptr<Options> options = GameManager::getInstance().getOptions();
   ALint state;
 
   // Check background audio status

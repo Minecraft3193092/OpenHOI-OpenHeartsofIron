@@ -41,7 +41,7 @@ class MenuState final : public State {
   void createLogo();
 
   std::string backgroundImageName;
-  Ogre::Rectangle2D* backgroundImageRect;
+  std::unique_ptr<Ogre::Rectangle2D> backgroundImageRect;
   std::unique_ptr<OptionsDialog> optionsDialog;
 };
 

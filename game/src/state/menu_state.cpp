@@ -92,7 +92,7 @@ void MenuState::createBackground() {
                1;
     }
   }
-  backgroundImageRect = OGRE_NEW Ogre::Rectangle2D(true);
+  backgroundImageRect = std::make_unique<Ogre::Rectangle2D>(true);
   backgroundImageRect->setCorners(xRatio * -1, yRatio, xRatio, yRatio * -1);
   backgroundImageRect->setMaterial(material);
 
@@ -109,7 +109,7 @@ void MenuState::createBackground() {
   Ogre::SceneNode* node =
       gameManager.getSceneManager()->getRootSceneNode()->createChildSceneNode(
           backgroundImageName);
-  node->attachObject(backgroundImageRect);
+  node->attachObject(backgroundImageRect.get());
 }
 
 // Create logo
@@ -258,8 +258,6 @@ void MenuState::removeScene() {
       .getSceneManager()
       ->getRootSceneNode()
       ->removeAndDestroyChild(backgroundImageName);
-  if (backgroundImageRect) delete backgroundImageRect;
-  backgroundImageRect = nullptr;
 }
 
 }  // namespace openhoi

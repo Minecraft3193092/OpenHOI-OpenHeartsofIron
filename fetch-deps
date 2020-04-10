@@ -94,7 +94,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         VERSION=`lsb_release --release | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$YUM]}
-        PACKAGES="git cmake rpm-build freetype freeimage SDL2-devel zlib-devel ninja-build libX11-devel CGAL-devel boost-devel uuid-devel openal-soft-devel openssl-devel lua-devel rapidjson-devel"
+        PACKAGES="git cmake rpm-build freetype freeimage SDL2-devel zlib-devel ninja-build libX11-devel CGAL-devel boost-devel uuid-devel openal-soft-devel openssl-devel lua-devel rapidjson-devel uuid-devel"
         DIST_IDENTIFIER="${DISTRO}_$DISTRO_$VERSION"
         OGRE_PACKAGE_FILETYPE=".rpm"
     else

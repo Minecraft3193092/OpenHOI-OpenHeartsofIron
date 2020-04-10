@@ -41,16 +41,16 @@ class GameManager final : public Ogre::FrameListener,
   void requestExit();
 
   // Gets the game options
-  Options* const& getOptions() const;
+  std::shared_ptr<Options> const& getOptions() const;
 
   // Gets the state manager
-  StateManager* const& getStateManager() const;
+  std::unique_ptr<StateManager> const& getStateManager() const;
 
   // Gets the GUI manager
-  GuiManager* const& getGuiManager() const;
+  std::unique_ptr<GuiManager> const& getGuiManager() const;
 
   // Gets the audio manager
-  AudioManager* const& getAudioManager() const;
+  std::unique_ptr<AudioManager> const& getAudioManager() const;
 
   // Gets the OGRE root
   Ogre::Root* const& getRoot() const;
@@ -166,17 +166,17 @@ class GameManager final : public Ogre::FrameListener,
   };
 
   bool exiting;
-  Options* options;
-  StateManager* stateManager;
-  AudioManager* audioManager;
-  GuiManager* guiManager;
-  std::unique_ptr<Ogre::LogManager> logManager;
-  Ogre::Root* root;
+  std::shared_ptr<Options> options;
+  std::unique_ptr<StateManager> stateManager;
+  std::unique_ptr<AudioManager> audioManager;
+  std::unique_ptr<GuiManager> guiManager;
   Ogre::OverlaySystem* overlaySystem;
+  Ogre::LogManager* logManager;
+  Ogre::Root* root;
   Ogre::SceneManager* sceneManager;
-  NativeWindowPair window;
   Ogre::Camera* camera;
   Ogre::RTShader::ShaderGenerator* shaderGenerator;
+  NativeWindowPair window;
   std::vector<std::pair<Ogre::LogMessageLevel, std::string>>
       queuedDebugConsoleLogs;
 };

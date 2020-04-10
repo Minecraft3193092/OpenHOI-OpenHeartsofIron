@@ -22,14 +22,11 @@ GuiManager::GuiManager() {
   configureGui();
 
   // Create debug console
-  debugConsole = new DebugConsole();
+  debugConsole = std::make_shared<DebugConsole>();
 }
 
 // Destroys the GUI manager
 GuiManager::~GuiManager() {
-  // Destroy debug console
-  delete debugConsole;
-
   // Destroy ImGui SDL2 implementation
   ImGui_ImplSDL2_Shutdown();
 }
@@ -80,7 +77,9 @@ ImFont* GuiManager::getBigFont() {
 }
 
 // Get debug console
-DebugConsole* GuiManager::getDebugConsole() { return debugConsole; }
+std::shared_ptr<DebugConsole> const& GuiManager::getDebugConsole() const {
+  return debugConsole;
+}
 
 // Render new GUI frame
 void GuiManager::newFrame(const Ogre::FrameEvent& e) {

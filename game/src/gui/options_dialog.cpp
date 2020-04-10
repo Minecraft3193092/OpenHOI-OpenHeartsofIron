@@ -34,12 +34,12 @@ void OptionsDialog::draw() {
   GameManager& gameManager = GameManager::getInstance();
   int windowWidth = gameManager.getRenderWindow()->getWidth();
   int windowHeight = gameManager.getRenderWindow()->getHeight();
-  ImGui::SetNextWindowPos(ImVec2((windowWidth - OPTIONS_DIALOG_WIDTH) / 2,
-                                 (windowHeight - OPTIONS_DIALOG_HEIGHT) / 2),
+  ImGui::SetNextWindowPos(ImVec2((windowWidth - OPTIONS_DIALOG_WIDTH) / 2.0f,
+                                 (windowHeight - OPTIONS_DIALOG_HEIGHT) / 2.0f),
                           ImGuiCond_Appearing);
 
   // Get options
-  Options* options = gameManager.getOptions();
+  std::shared_ptr<Options> options = gameManager.getOptions();
 
   // Render window
   ImGui::Begin(boost::locale::translate("Options").str().c_str(),
