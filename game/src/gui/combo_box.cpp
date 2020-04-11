@@ -58,10 +58,10 @@ const char* ComboBox<KeyType>::getSelectedEntryNameForImGui() const {
 
 template <class KeyType>
 const char* ComboBox<KeyType>::getEntriesForImGui() const {
-  std::string[options.size()] entries;
+  std::string entries[options.size()];
   int i = 0;
-  for (const auto& [std::ignore, value] : options) {
-    entries[i++] = key;
+  for (auto const& entry : options) {
+    entries[i++] = entry.value;
   }
   return entries.c_str();
 }

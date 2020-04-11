@@ -207,8 +207,11 @@ AudioManager::getPossibleDevicesComboBox() const {
   for (auto const& dev : devices) {
     possibleDevices.insert({dev, dev->getFriendlyName()});
   }
-  return std::make_shared<ComboBox<std::shared_ptr<AudioDevice>>>(
-      possibleDevices, selectedDevice);
+
+  ComboBox<std::shared_ptr<AudioDevice>>* x = new ComboBox<std::shared_ptr<AudioDevice>>(possibleDevices, selectedDevice);
+
+  return nullptr; /*return std::make_shared<ComboBox<std::shared_ptr<AudioDevice>>>(
+      possibleDevices, selectedDevice);*/
 }
 
 // Starts the loading of background music
