@@ -52,10 +52,23 @@ void OptionsDialog::draw() {
       ImGui::EndTabItem();
     }
     if (ImGui::BeginTabItem(boost::locale::translate("Video").str().c_str())) {
-      ImGui::Text("This is the video tab!\nblah blah blah blah blah");
       ImGui::EndTabItem();
     }
     if (ImGui::BeginTabItem(boost::locale::translate("Audio").str().c_str())) {
+      // Get audio manager
+      std::shared_ptr<AudioManager> audioManager =
+          gameManager.getAudioManager();
+      // Get list of all possible audio devices (+ the selected one) as a GUI combobox
+      std::shared_ptr<ComboBox<std::shared_ptr<AudioDevice>>>
+          audioDevicesCombo = audioManager->getPossibleDevicesComboBox();
+      std::shared_ptr<AudioDevice> currentDevice = audioManager->getDevice();
+      auto currentItemLabel =
+          currentDevice ? currentDevice->getFriendlyName().c_str() : nullptr;
+      if (ImGuiHelper::BeginCombo(
+              boost::locale::translate("Audio device").str().c_str(),
+              currentItemLabel)) {
+        ImGui::EndCombo();
+      }
       ImGuiHelper::SliderInt(
           boost::locale::translate("Music volume").str().c_str(),
           &options->musicVolume, 0, 100, "%d %%");

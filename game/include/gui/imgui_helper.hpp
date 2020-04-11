@@ -3,6 +3,7 @@
 #pragma once
 
 #include <imgui.h>
+#include <map>
 
 namespace openhoi {
 
@@ -15,6 +16,10 @@ class ImGuiHelper final {
   // openhoi wrapper for ImGui::SliderInt()
   static bool SliderInt(const char* label, int* v, int v_min, int v_max,
                         const char* format = "%d");
+
+  // openhoi wrapper for ImGui::BeginCombo()
+  static bool BeginCombo(const char* label, const char* preview_value,
+                         ImGuiComboFlags flags = 0);
 
  private:
   // Returns if the item was hovered in the last frame

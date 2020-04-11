@@ -41,4 +41,16 @@ bool ImGuiHelper::SliderInt(const char* label, int* v, int v_min, int v_max,
   return clicked;
 }
 
+// openhoi wrapper for ImGui::BeginCombo()
+bool ImGuiHelper::BeginCombo(const char* label, const char* preview_value,
+                             ImGuiComboFlags flags /* = 0 */) {
+  bool opened = ImGui::BeginCombo(label, preview_value, flags);
+  if (ImGui::IsItemClicked()) {
+    GameManager::getInstance().getAudioManager()->playSound(SOUND_CLICK);
+  } else if (ImGui::IsItemHovered() && !isItemHoveredLastFrame()) {
+    GameManager::getInstance().getAudioManager()->playSound(SOUND_HOVER);
+  }
+  return opened;
+}
+
 }  // namespace openhoi

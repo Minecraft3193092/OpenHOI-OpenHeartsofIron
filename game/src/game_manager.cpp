@@ -108,8 +108,7 @@ GameManager::GameManager() {
 // Destroys the game manager
 GameManager::~GameManager() {
   // Shutdown state manager
-  if (stateManager)
-    stateManager->requestStateChange(nullptr);
+  if (stateManager) stateManager->requestStateChange(nullptr);
 
   // Unregister the material manager listener
   Ogre::MaterialManager::getSingleton().setActiveScheme(
@@ -140,7 +139,7 @@ std::unique_ptr<GuiManager> const& GameManager::getGuiManager() const {
 }
 
 // Gets the audio manager
-std::unique_ptr<AudioManager> const& GameManager::getAudioManager() const {
+std::shared_ptr<AudioManager> const& GameManager::getAudioManager() const {
   return audioManager;
 }
 
@@ -207,7 +206,7 @@ std::string GameManager::getPluginPath(std::string pluginName) {
 // Initialize audio
 void GameManager::initializeAudio() {
   // Create audio manager
-  audioManager = std::make_unique<AudioManager>();
+  audioManager = std::make_shared<AudioManager>();
 
   // Try to set pre-defined audio device
   if (!options->getAudioDevice().empty()) {
@@ -220,7 +219,8 @@ void GameManager::initializeAudio() {
   }
 
   // Update last device in options
-  options->setAudioDevice(audioManager->getDevice()->getFriendlyName());
+  std::shared_ptr<AudioDevice> device = audioManager->getDevice();
+  options->setAudioDevice(device ? device->getFriendlyName() : std::string());
 }
 
 // Load and configure the render system

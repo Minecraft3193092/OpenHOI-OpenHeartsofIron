@@ -58,7 +58,8 @@ source_group("Source Files\\graphic" FILES ${GRAPHIC_SOURCES})
 list(APPEND GAME_SOURCES ${GRAPHIC_SOURCES})
 
 # Add gui code
-list(APPEND GUI_INCLUDES include/gui/debug_console.hpp
+list(APPEND GUI_INCLUDES include/gui/combo_box.hpp
+                         include/gui/debug_console.hpp
                          include/gui/gui_element.hpp
                          include/gui/gui_manager.hpp
                          include/gui/imgui_helper.hpp
@@ -66,7 +67,8 @@ list(APPEND GUI_INCLUDES include/gui/debug_console.hpp
 source_group("Header Files\\gui" FILES ${GUI_INCLUDES})
 list(APPEND GAME_INCLUDES ${GUI_INCLUDES})
 
-list(APPEND GUI_SOURCES src/gui/debug_console.cpp
+list(APPEND GUI_SOURCES src/gui/combo_box.cpp
+                        src/gui/debug_console.cpp
                         src/gui/gui_element.cpp
                         src/gui/gui_manager.cpp
                         src/gui/imgui_helper.cpp

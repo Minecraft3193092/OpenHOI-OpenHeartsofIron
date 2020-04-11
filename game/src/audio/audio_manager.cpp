@@ -200,6 +200,17 @@ AudioManager::getPossibleDevices() const {
   return devices;
 }
 
+// Gets all possible devices in a GUI combobox
+std::shared_ptr<ComboBox<std::shared_ptr<AudioDevice>>> const&
+AudioManager::getPossibleDevicesComboBox() const {
+  std::map<std::shared_ptr<AudioDevice>, std::string> possibleDevices;
+  for (auto const& dev : devices) {
+    possibleDevices.insert({dev, dev->getFriendlyName()});
+  }
+  return std::make_shared<ComboBox<std::shared_ptr<AudioDevice>>>(
+      possibleDevices, selectedDevice);
+}
+
 // Starts the loading of background music
 void AudioManager::loadBackgroundMusicAsync(filesystem::path directory) {
   // Invoke the function `loadAndPlayBackgroundMusic` in a separate thread

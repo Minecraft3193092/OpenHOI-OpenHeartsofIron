@@ -50,7 +50,7 @@ class GameManager final : public Ogre::FrameListener,
   std::unique_ptr<GuiManager> const& getGuiManager() const;
 
   // Gets the audio manager
-  std::unique_ptr<AudioManager> const& getAudioManager() const;
+  std::shared_ptr<AudioManager> const& getAudioManager() const;
 
   // Gets the OGRE root
   Ogre::Root* const& getRoot() const;
@@ -168,7 +168,7 @@ class GameManager final : public Ogre::FrameListener,
   bool exiting;
   std::shared_ptr<Options> options;
   std::unique_ptr<StateManager> stateManager;
-  std::unique_ptr<AudioManager> audioManager;
+  std::shared_ptr<AudioManager> audioManager;
   std::unique_ptr<GuiManager> guiManager;
   Ogre::OverlaySystem* overlaySystem;
   Ogre::LogManager* logManager;
