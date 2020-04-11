@@ -65,10 +65,8 @@ int main(int argc, const char* argv[])
   // Don't allow people to run openhoi with root permissions because we will
   // access the user's home directory
   if (geteuid() == 0) {
-    std::cerr << "Please do not run " OPENHOI_GAME_NAME
-                 " with root permissions!" boost::locale::format(
-                     boost::locale::translate(
-                         "Please do not run {1}  with root permissions!")) %
+    std::cerr << boost::locale::format(boost::locale::translate(
+                     "Please do not run {1}  with root permissions!")) %
                      OPENHOI_GAME_NAME
               << std::endl;
     exit(exitStatus);
