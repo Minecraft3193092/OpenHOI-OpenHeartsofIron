@@ -12,7 +12,6 @@
 #include <vector>
 
 #include "audio_device.hpp"
-#include "gui/combo_box.hpp"
 #include "sound.hpp"
 
 namespace openhoi {
@@ -34,9 +33,6 @@ class AudioManager final {
 
   // Gets all possible devices
   std::vector<std::shared_ptr<AudioDevice>> const& getPossibleDevices() const;
-
-  // Gets all possible devices in a GUI combobox
-  std::shared_ptr<ComboBox<std::shared_ptr<AudioDevice>>> const& getPossibleDevicesComboBox() const;
 
   // Starts the loading of background music
   void loadBackgroundMusicAsync(filesystem::path directory);

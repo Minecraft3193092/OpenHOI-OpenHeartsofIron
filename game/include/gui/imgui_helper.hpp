@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include "gui/combo_box.hpp"
+
 #include <imgui.h>
 #include <map>
+#include <memory>
 
 namespace openhoi {
 
@@ -17,9 +20,11 @@ class ImGuiHelper final {
   static bool SliderInt(const char* label, int* v, int v_min, int v_max,
                         const char* format = "%d");
 
-  // openhoi wrapper for ImGui::BeginCombo()
-  static bool BeginCombo(const char* label, const char* preview_value,
-                         ImGuiComboFlags flags = 0);
+  // openhoi wrapper for ImGui::BeginCombo() / ImGui::EndCombo() etc.
+  template <typename KeyType>
+  static bool Combo(const char* label,
+                    std::shared_ptr<ComboBox<KeyType>> comboBox,
+                    ImGuiComboFlags flags = 0);
 
  private:
   // Returns if the item was hovered in the last frame

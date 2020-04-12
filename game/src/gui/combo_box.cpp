@@ -1,21 +1,27 @@
 // Copyright 2020 the openhoi authors. See COPYING.md for legal info.
 
+#include <memory>
+#include <vector>
+
 #include "gui/combo_box.hpp"
+#include "audio/audio_device.hpp"
 
 namespace openhoi {
 
 template <class KeyType>
 ComboBox<KeyType>::ComboBox(){
-  setSelectedEntry(nullptr);
+  setSelectedEntry(std::nullopt);
 };
 
 template <class KeyType>
-ComboBox<KeyType>::ComboBox(std::map<KeyType, std::string> options) : options(options) {
-  setSelectedEntry(nullptr);
+ComboBox<KeyType>::ComboBox(std::map<KeyType, std::string> options)
+    : options(options) {
+  setSelectedEntry(std::nullopt);
 }
 
 template <class KeyType>
-ComboBox<KeyType>::ComboBox(std::map<KeyType, std::string> options, KeyType selectedEntry)
+ComboBox<KeyType>::ComboBox(std::map<KeyType, std::string> options,
+                            KeyType selectedEntry)
     : options(options) {
   setSelectedEntry(selectedEntry);
 }
@@ -26,22 +32,32 @@ std::map<KeyType, std::string> const& ComboBox<KeyType>::getOptions() const {
 }
 
 template <class KeyType>
-void ComboBox<KeyType>::setOptions(std::map<KeyType, std::string> options) const {
+void ComboBox<KeyType>::setOptions(
+    std::map<KeyType, std::string> options) { 
   this->options = options;
 }
 
 template <class KeyType>
-std::pair<KeyType, std::string> const& ComboBox<KeyType>::getSelectedEntry()
-    const {
-  return nullptr;
+std::optional<std::pair<KeyType, std::string>> const&
+ComboBox<KeyType>::getSelectedEntry() const {
+  return this->selectedEntry;
 }
 
 template <class KeyType>
-void ComboBox<KeyType>::setSelectedEntry(KeyType selectedEntry) const {
-  std::pair<KeyType, std::string> newSelected = nullptr;
-  for (auto const& entry : options) {
+std::optional<KeyType> const& ComboBox<KeyType>::getSelectedValue() const {
+  std::optional<KeyType> selected = std::nullopt;
+  if (this->selectedEntry.has_value()) {
+    selected = this->selectedEntry.value().first;
+  }
+  return selected;
+}
+
+template <class KeyType>
+void ComboBox<KeyType>::setSelectedEntry(KeyType selectedEntry) {
+  std::optional<std::pair<KeyType, std::string>> newSelected = std::nullopt;
+  for (std::pair<KeyType, std::string> const& entry : options) {
     if (entry.first == selectedEntry) {
-      newSelected = entry;
+      newSelected = std::optional<std::pair<KeyType, std::string>>(entry);
       break;
     }
   }
@@ -49,21 +65,19 @@ void ComboBox<KeyType>::setSelectedEntry(KeyType selectedEntry) const {
 }
 
 template <class KeyType>
-const char* ComboBox<KeyType>::getSelectedEntryNameForImGui() const {
-  if (selectedEntry) {
-    return selectedEntry.second.c_str();
+void ComboBox<KeyType>::setSelectedEntry(
+    std::optional<std::pair<KeyType, std::string>> selectedEntry) {
+  std::optional<std::pair<KeyType, std::string>> newSelected = std::nullopt;
+  for (std::pair<KeyType, std::string> const& entry : options) {
+    if (entry == selectedEntry) {
+      newSelected = std::optional<std::pair<KeyType, std::string>>(entry);
+      break;
+    }
   }
-  return nullptr;
+  this->selectedEntry = newSelected;
 }
 
-template <class KeyType>
-const char* ComboBox<KeyType>::getEntriesForImGui() const {
-  std::string entries[options.size()];
-  int i = 0;
-  for (auto const& entry : options) {
-    entries[i++] = entry.value;
-  }
-  return entries.c_str();
-}
+// Explicit ComboBox template instantiation
+template class ComboBox<std::shared_ptr<AudioDevice>>;
 
 }  // namespace openhoi

@@ -3,7 +3,9 @@
 #pragma once
 
 #include <imgui.h>
+
 #include <map>
+#include <optional>
 #include <string>
 
 namespace openhoi {
@@ -18,19 +20,20 @@ class ComboBox {
 
   std::map<KeyType, std::string> const& getOptions() const;
 
-  void setOptions(std::map<KeyType, std::string> options) const;
+  void setOptions(std::map<KeyType, std::string> options);
 
-  std::pair<KeyType, std::string> const& getSelectedEntry() const;
+  std::optional<std::pair<KeyType, std::string>> const& getSelectedEntry()
+      const;
 
-  void setSelectedEntry(KeyType selectedEntry) const;
+  std::optional<KeyType> const& getSelectedValue() const;
 
-  const char* getSelectedEntryNameForImGui() const;
+  void setSelectedEntry(KeyType selectedEntry);
 
-  const char* getEntriesForImGui() const;
+  void setSelectedEntry(std::optional<std::pair<KeyType, std::string>> selectedEntry);
 
  private:
   std::map<KeyType, std::string> options;
-  std::pair<KeyType, std::string> selectedEntry;
+  std::optional<std::pair<KeyType, std::string>> selectedEntry;
 };
 
 }  // namespace openhoi

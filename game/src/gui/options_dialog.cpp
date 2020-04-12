@@ -3,6 +3,7 @@
 #include "gui/options_dialog.hpp"
 
 #include <OgreRenderWindow.h>
+
 #include <boost/locale.hpp>
 
 #include "game_manager.hpp"
@@ -58,23 +59,40 @@ void OptionsDialog::draw() {
       // Get audio manager
       std::shared_ptr<AudioManager> audioManager =
           gameManager.getAudioManager();
-      // Get list of all possible audio devices (+ the selected one) as a GUI combobox
-      std::shared_ptr<ComboBox<std::shared_ptr<AudioDevice>>>
-          audioDevicesCombo = audioManager->getPossibleDevicesComboBox();
-      std::shared_ptr<AudioDevice> currentDevice = audioManager->getDevice();
-      auto currentItemLabel =
-          currentDevice ? currentDevice->getFriendlyName().c_str() : nullptr;
-      if (ImGuiHelper::BeginCombo(
-              boost::locale::translate("Audio device").str().c_str(),
-              currentItemLabel)) {
-        ImGui::EndCombo();
+
+      // Get list of all possible audio devices (+ the selected one) as a GUI
+      // combobox
+      std::map<std::shared_ptr<AudioDevice>, std::string> possibleDevices;
+      for (auto const& dev : audioManager->getPossibleDevices()) {
+        possibleDevices.insert({dev, dev->getFriendlyName()});
       }
+      auto audioDeviceCombo =
+          std::make_shared<ComboBox<std::shared_ptr<AudioDevice>>>(
+              possibleDevices, audioManager->getDevice());
+
+      // Render elements
+      ImGuiHelper::Combo<std::shared_ptr<AudioDevice>>(
+          boost::locale::translate("Audio device").str().c_str(),
+          audioDeviceCombo);
+      auto selectedAudioDevice = audioDeviceCombo->getSelectedValue();
+      if (selectedAudioDevice.has_value()) {
+        auto dev = selectedAudioDevice.value();
+        if (dev != audioManager->getDevice()) {
+          audioManager->setDevice(dev);
+          options->setAudioDevice(dev->getFriendlyName());
+        }
+      } else {
+        audioManager->setDevice(nullptr);
+        options->setAudioDevice(nullptr);
+      }
+
       ImGuiHelper::SliderInt(
           boost::locale::translate("Music volume").str().c_str(),
           &options->musicVolume, 0, 100, "%d %%");
       ImGuiHelper::SliderInt(
           boost::locale::translate("Effects volume").str().c_str(),
           &options->effectsVolume, 0, 100, "%d %%");
+
       ImGui::EndTabItem();
     }
     ImGui::EndTabBar();
