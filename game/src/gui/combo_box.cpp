@@ -44,7 +44,7 @@ ComboBox<KeyType>::getSelectedEntry() const {
 }
 
 template <class KeyType>
-std::optional<KeyType> const& ComboBox<KeyType>::getSelectedValue() const {
+std::optional<KeyType> ComboBox<KeyType>::getSelectedValue() {
   std::optional<KeyType> selected = std::nullopt;
   if (this->selectedEntry.has_value()) {
     selected = this->selectedEntry.value().first;

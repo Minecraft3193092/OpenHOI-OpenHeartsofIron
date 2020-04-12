@@ -25,7 +25,7 @@ class ComboBox {
   std::optional<std::pair<KeyType, std::string>> const& getSelectedEntry()
       const;
 
-  std::optional<KeyType> const& getSelectedValue() const;
+  std::optional<KeyType> getSelectedValue();
 
   void setSelectedEntry(KeyType selectedEntry);
 
