@@ -16,7 +16,7 @@
 #  define OSSP_UUID
 #elif __has_include(<uuih.h>)
 #  include <uuid.h>
-#  ifdef (UUID_VERSION)
+#  ifdef UUID_VERSION
 #    define OSSP_UUID
 #  endif
 #else
