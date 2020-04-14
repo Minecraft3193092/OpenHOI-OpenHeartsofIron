@@ -1,4 +1,4 @@
-// Copyright 2018-2019 the openhoi authors. See COPYING.md for legal info.
+// Copyright 2018-2020 the openhoi authors. See COPYING.md for legal info.
 
 #include "hoibase/helper/unique_id.hpp"
 
@@ -13,13 +13,13 @@
 #  include <CoreFoundation/CFUUID.h>
 #else
 #  if __has_include(<uuid/uuid.h>)
-#    include <uuid/uuid.h>  // libuuid, e.g. Debian/Ubuntu
+#    include <uuid/uuid.h>
 #  elif __has_include(<uuid/uuid.h>)
-#    include <ossp/uuid.h>  // ossp-uuid, e.g. Fedora
+#    include <ossp/uuid.h>
 #    define OSSP_UUID
 #  elif __has_include(<uuid.h>)
 #    include <uuid.h>
-#    ifdef UUID_VERSION  // Can be either libuuid or ossp-uuid
+#    ifdef UUID_VERSION
 #      define OSSP_UUID
 #    endif
 #  else
