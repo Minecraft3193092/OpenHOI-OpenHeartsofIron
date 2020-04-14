@@ -26,9 +26,9 @@
 #    error Could not find external UUID library header
 #  endif
 #  ifdef OSSP_UUID
-#    typedef uuid NIX_UUID_TYPE
+typedef uuid NIX_UUID_TYPE
 #  else
-#    typedef uuid_t NIX_UUID_TYPE
+typedef uuid_t NIX_UUID_TYPE
 #  endif
 #endif
 
@@ -64,24 +64,24 @@ std::string UniqueID::generate() {
   std::string uuidString = std::string([uuidNsString UTF8String]);
   CFRelease(uuid);
 #else
-  NIX_UUID_TYPE uuid;
+    NIX_UUID_TYPE uuid;
 
 #  ifndef OSSP_UUID
-  if (uuid_generate_time_safe(uuid) < 0)
-    throw "UUID could not be created";  // TODO: Proper error handling
+    if (uuid_generate_time_safe(uuid) < 0)
+      throw "UUID could not be created";  // TODO: Proper error handling
 
-  char uuidChr[37];
-  uuid_unparse_lower(uuid, uuidChr);
+    char uuidChr[37];
+    uuid_unparse_lower(uuid, uuidChr);
 #  else
-  char* uuidChr;
+    char* uuidChr;
 
-  uuid_create(&uuid);
-  uuid_make(uuid, UUID_MAKE_V4);
-  uuid_export(uuid, UUID_FMT_STR, &uuidChr, NULL);
-  uuid_destroy(uuid);
+    uuid_create(&uuid);
+    uuid_make(uuid, UUID_MAKE_V4);
+    uuid_export(uuid, UUID_FMT_STR, &uuidChr, NULL);
+    uuid_destroy(uuid);
 #  endif
 
-  std::string uuidString = std::string(uuidChr);
+    std::string uuidString = std::string(uuidChr);
 #endif
 
   return uuidString;
