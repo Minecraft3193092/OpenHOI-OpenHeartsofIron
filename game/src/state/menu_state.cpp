@@ -9,9 +9,9 @@
 #include <OgreOverlayManager.h>
 #include <OgrePrerequisites.h>
 #include <OgreTextureManager.h>
-#include <boost/locale.hpp>
 
 #include <algorithm>
+#include <boost/locale.hpp>
 #include <cassert>
 
 #include "game_manager.hpp"

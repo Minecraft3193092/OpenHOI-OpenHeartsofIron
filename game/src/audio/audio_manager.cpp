@@ -170,7 +170,8 @@ bool AudioManager::createContext() {
 void AudioManager::setDevice(std::shared_ptr<AudioDevice> device) {
   if (this->device && device) {
     // Check if the new device is the old device. If yes, do nothing
-    std::string currentDeviceName = std::string(alcGetString(this->device, ALC_DEFAULT_DEVICE_SPECIFIER));
+    std::string currentDeviceName =
+        std::string(alcGetString(this->device, ALC_DEFAULT_DEVICE_SPECIFIER));
     if (currentDeviceName == device->getName()) return;
 
     Ogre::LogManager::getSingletonPtr()->logMessage(
@@ -229,8 +230,8 @@ void AudioManager::loadBackgroundMusicAsync(filesystem::path directory) {
   backgroundMusicThreadFinished = false;
 
   // Invoke the function `loadAndPlayBackgroundMusic` in a separate thread
-  std::thread{&AudioManager::loadAndPlayBackgroundMusic,
-                                   this, directory}.detach();
+  std::thread{&AudioManager::loadAndPlayBackgroundMusic, this, directory}
+      .detach();
 }
 
 // Loads all background audio tracks in a separate track and starts to play them

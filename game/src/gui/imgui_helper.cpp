@@ -41,13 +41,13 @@ bool ImGuiHelper::SliderInt(const char* label, int* v, int v_min, int v_max,
   return clicked;
 }
 
-
 // openhoi wrapper for ImGui::BeginCombo() / ImGui::EndCombo() etc.
 template <typename KeyType>
 bool ImGuiHelper::Combo(const char* label,
                         std::shared_ptr<ComboBox<KeyType>> comboBox,
                         ImGuiComboFlags flags /* = 0 */) {
-  std::optional<std::pair<KeyType, std::string>> selectedEntry = comboBox->getSelectedEntry();
+  std::optional<std::pair<KeyType, std::string>> selectedEntry =
+      comboBox->getSelectedEntry();
   const char* selectedEntryText;
   if (selectedEntry.has_value()) {
     selectedEntryText = selectedEntry.value().second.c_str();
@@ -71,7 +71,7 @@ bool ImGuiHelper::Combo(const char* label,
         selectedEntry = option;
       }
       if (isSelected) {
-        ImGui::SetItemDefaultFocus(); 
+        ImGui::SetItemDefaultFocus();
       }
     }
     ImGui::EndCombo();

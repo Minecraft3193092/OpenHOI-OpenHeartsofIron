@@ -11,16 +11,18 @@
 #  include <codecvt>
 #elif defined(OPENHOI_OS_MACOS)
 #  include <CoreFoundation/CFUUID.h>
-#elif __has_include(<ossp/uuih.h>)
-#  include <ossp/uuid.h>
+#elif __has_include(<uuid/uuid.h>)
+#  include <uuid/uuid.h>  // libuuid, e.g. Debian/Ubuntu
+#elif __has_include(<uuid/uuid.h>)
+#  include <ossp/uuid.h>  // ossp-uuid, e.g. Fedora
 #  define OSSP_UUID
-#elif __has_include(<uuih.h>)
+#elif __has_include(<uuid.h>)
 #  include <uuid.h>
-#  ifdef (UUID_VERSION)
+#  ifdef(UUID_VERSION)  // Can be either libuuid or ossp-uuid
 #    define OSSP_UUID
 #  endif
 #else
-#  include <uuid/uuid.h>
+#  error Could not find external UUID library header
 #endif
 
 namespace openhoi {
@@ -57,20 +59,20 @@ std::string UniqueID::generate() {
 #else
   uuid_t uuid;
 
-# ifndef OSSP_UUID
+#  ifndef OSSP_UUID
   if (uuid_generate_time_safe(uuid) < 0)
     throw "UUID could not be created";  // TODO: Proper error handling
 
   char uuidChr[37];
   uuid_unparse_lower(uuid, uuidChr);
-# else
+#  else
   char* uuidChr;
 
   uuid_create(&uuid);
   uuid_make(uuid, UUID_MAKE_V4);
   uuid_export(uuid, UUID_FMT_STR, &uuidChr, NULL);
   uuid_destroy(uuid);
-# endif
+#  endif
 
   std::string uuidString = std::string(uuidChr);
 #endif
