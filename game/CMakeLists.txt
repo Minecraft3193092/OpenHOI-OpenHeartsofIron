@@ -9,11 +9,6 @@ project(game
 include(GlobalDeps)
 
 if(WIN32)
-    set(ENV{OPENALDIR} ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openal)
-endif()
-find_package(OpenAL REQUIRED)
-
-if(WIN32)
     set(SDL2_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/include/SDL2)
     list(APPEND SDL2_LIBRARIES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/lib/SDL2.lib
                                ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/sdl2/lib/SDL2main.lib)
@@ -94,6 +89,17 @@ list(APPEND STBVORBIS_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis/stb_vor
 source_group("Header Files\\thirdparty\\stb_vorbis" FILES ${STBVORBIS_INCLUDES})
 list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/stb_vorbis)
 
+# Add third-party library MojoAL
+list(APPEND MOJOAL_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/mojoAL/AL/al.h
+                            ${CMAKE_SOURCE_DIR}/thirdparty/mojoAL/AL/alc.h)
+source_group("Header Files\\thirdparty\\mojoal" FILES ${MOJOAL_INCLUDES})
+set(THIRDPARTY_INCLUDES ${THIRDPARTY_INCLUDES} ${MOJOAL_INCLUDES})
+list(APPEND THIRDPARTY_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/thirdparty/mojoAL/AL)
+
+list(APPEND MOJOAL_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/mojoAL/mojoal.c)
+source_group("Source Files\\thirdparty\\mojoal" FILES ${MOJOAL_SOURCES})
+set(THIRDPARTY_SOURCES ${THIRDPARTY_SOURCES} ${MOJOAL_SOURCES})
+
 # Add third-party library ImGui
 list(APPEND IMGUI_INCLUDES ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imgui_internal.h
                            ${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/imgui/imstb_rectpack.h
@@ -127,7 +133,6 @@ target_link_libraries(game hoibase
                            ${FILESYSTEM_LIB}
                            ${OGRE_LIBRARIES}
                            ${SDL2_LIBRARIES}
-                           ${OPENAL_LIBRARY}
                            Boost::dynamic_linking Boost::disable_autolinking Boost::program_options Boost::locale
                            Threads::Threads
                            ${OS_LIBRARIES})
@@ -141,10 +146,12 @@ target_include_directories(game SYSTEM
      PRIVATE
         ${OGRE_INCLUDE_DIRS}
         ${SDL2_INCLUDE_DIRS}
-        ${OPENAL_INCLUDE_DIR}
         ${RAPIDJSON_INCLUDES}
         ${THIRDPARTY_INCLUDE_DIRS})
 
+
+# Set C++ standard
+target_compile_features(game PRIVATE cxx_std_17)
 
 # Set error level
 target_compile_options(game PRIVATE

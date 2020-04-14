@@ -39,6 +39,9 @@ target_include_directories(server SYSTEM
         ${OGRE_INCLUDE_DIRS})
 
 
+# Set C++ standard
+target_compile_features(server PRIVATE cxx_std_17)
+
 # Set error level
 target_compile_options(server PRIVATE
     $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wc++17-compat-pedantic>

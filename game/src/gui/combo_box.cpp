@@ -11,7 +11,7 @@ namespace openhoi {
 template <class KeyType>
 ComboBox<KeyType>::ComboBox(){
   setSelectedEntry(std::nullopt);
-};
+}
 
 template <class KeyType>
 ComboBox<KeyType>::ComboBox(std::map<KeyType, std::string> options)

@@ -68,6 +68,7 @@ bool ImGuiHelper::Combo(const char* label,
       if (ImGui::Selectable(option.second.c_str(), isSelected)) {
         GameManager::getInstance().getAudioManager()->playSound(SOUND_CLICK);
         comboBox->setSelectedEntry(option);
+        selectedEntry = option;
       }
       if (isSelected) {
         ImGui::SetItemDefaultFocus(); 

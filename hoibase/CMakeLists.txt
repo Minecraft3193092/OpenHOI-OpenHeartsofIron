@@ -219,6 +219,9 @@ if(WIN32)
 endif()
 
 
+# Set C++ standard
+target_compile_features(hoibase PRIVATE cxx_std_17)
+
 # Set error level
 target_compile_options(hoibase PRIVATE
     $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -Wc++17-compat-pedantic>

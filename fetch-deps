@@ -75,7 +75,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
         printf " $CHECKMARK Arch Linux is supported. Using \e[1mpacman\e[0m install system...\n"
 
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
-        PACKAGES="base-devel git cmake ninja pkgconf boost cgal openssl openal zlib sdl2 clang rapidjson lua"
+        PACKAGES="base-devel git cmake ninja pkgconf boost cgal openssl zlib sdl2 clang rapidjson lua"
         DIST_IDENTIFIER="arch_latest"
     elif [[ $DISTRO == "debian" ]] || [[ $DISTRO == "ubuntu" ]]; then
         if [ $DISTRO == "ubuntu" ]; then
@@ -86,7 +86,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         CODENAME=`lsb_release --codename | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$APTGET]}
-        PACKAGES="cmake git pkg-config build-essential ninja-build uuid-dev libboost-all-dev libssl-dev libopenal-dev libcgal-dev libsdl2-dev clang-format rapidjson-dev liblua5.3-dev libfreetype6 libfreeimage3 libxaw7-dev libxt-dev"
+        PACKAGES="cmake git pkg-config build-essential ninja-build uuid-dev libboost-all-dev libssl-dev libcgal-dev libsdl2-dev clang-format rapidjson-dev liblua5.3-dev libfreetype6 libfreeimage3 libxaw7-dev libxt-dev"
         DIST_IDENTIFIER="${DISTRO}_$DISTRO_$CODENAME"
         OGRE_PACKAGE_FILETYPE=".deb"
     elif [[ $DISTRO == "fedora" ]]; then
@@ -94,7 +94,7 @@ if [ $OSTYPE == "linux-gnu" ]; then
 
         VERSION=`lsb_release --release | cut -f2`
         INSTALLSYSTEM=${INSTALLSYSTEMS[$YUM]}
-        PACKAGES="git cmake rpm-build freetype freeimage SDL2-devel zlib-devel ninja-build libX11-devel CGAL-devel boost-devel uuid-devel openal-soft-devel openssl-devel lua-devel rapidjson-devel"
+        PACKAGES="git cmake rpm-build freetype freeimage SDL2-devel zlib-devel ninja-build libX11-devel CGAL-devel boost-devel uuid-devel openssl-devel lua-devel rapidjson-devel"
         DIST_IDENTIFIER="${DISTRO}_$DISTRO_$VERSION"
         OGRE_PACKAGE_FILETYPE=".rpm"
     else
@@ -105,7 +105,7 @@ elif [[ $MACOS == true ]]; then
     printf " $CHECKMARK macOS is supported.\n"
     
     INSTALLSYSTEM=${INSTALLSYSTEMS[$HOMEBREW]}
-    PACKAGES=(cmake boost cgal zlib openssl openal-soft freeimage freetype sdl2 clang-format rapidjson lua)
+    PACKAGES=(cmake boost cgal zlib openssl freeimage freetype sdl2 clang-format rapidjson lua)
 else
     printf " $CROSSMARK Your OS '$OSTYPE' is not supported. Aborting.\n"
     exit 1 

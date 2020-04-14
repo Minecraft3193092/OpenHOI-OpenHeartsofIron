@@ -18,14 +18,19 @@ namespace openhoi {
 
 // Initializes the audio manager
 AudioManager::AudioManager()
-    : playingBackgroundMusic(0), device(0), context(0) {
+    : playingBackgroundMusic(0),
+      backgroundMusicThreadFinished(false),
+      backgroundMusicThreadShouldStop(false),
+      backgroundMusicThreadRunning(false),
+      device(0),
+      context(0) {
   // Try to open the default device. Returns NULL in case no device was found
   ALCdevice* tmpDev = alcOpenDevice(NULL);
 
   if (tmpDev) {
     // Get default device name
     std::string defaultDeviceName =
-        std::string(alcGetString(tmpDev, ALC_ALL_DEVICES_SPECIFIER));
+        std::string(alcGetString(tmpDev, ALC_DEFAULT_DEVICE_SPECIFIER));
 
 #ifdef _DEBUG
     Ogre::LogManager::getSingletonPtr()->logMessage(
@@ -34,10 +39,15 @@ AudioManager::AudioManager()
 
     // At least one device could be opened. So now, iterate over all known
     // devices
-    if (alcIsExtensionPresent(NULL, (const ALCchar*)"ALC_ENUMERATION_EXT") ==
-        AL_TRUE) {
-      const char* devs =
-          (const char*)alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER);
+    const ALCchar* allDevices = NULL;
+    if (alcIsExtensionPresent(NULL, (const ALCchar*)"ALC_ENUMERATE_ALL_EXT")) {
+      allDevices = alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER);
+    } else if (alcIsExtensionPresent(NULL,
+                                     (const ALCchar*)"ALC_ENUMERATION_EXT")) {
+      allDevices = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+    }
+    if (allDevices != NULL) {
+      const char* devs = (const char*)allDevices;
       while (std::string(devs).size()) {
         // Get device name
         std::string deviceName = devs;
@@ -158,15 +168,23 @@ bool AudioManager::createContext() {
 
 // Sets the current/active device
 void AudioManager::setDevice(std::shared_ptr<AudioDevice> device) {
-  Ogre::LogManager::getSingletonPtr()->logMessage(
-      "*** Changing audio device ***");
+  if (this->device && device) {
+    // Check if the new device is the old device. If yes, do nothing
+    std::string currentDeviceName = std::string(alcGetString(this->device, ALC_DEFAULT_DEVICE_SPECIFIER));
+    if (currentDeviceName == device->getName()) return;
 
-  if (this->device) {
+    Ogre::LogManager::getSingletonPtr()->logMessage(
+        "*** Changing audio device ***");
+
+    // Stop all previous audio
+    stopAllAudio();
+
     // Destroy previous device
     Ogre::LogManager::getSingletonPtr()->logMessage(
         "Destroying current device");
     alcCloseDevice(this->device);
     this->device = nullptr;
+    selectedDevice = nullptr;
   }
 
   if (device) {
@@ -174,11 +192,12 @@ void AudioManager::setDevice(std::shared_ptr<AudioDevice> device) {
     Ogre::LogManager::getSingletonPtr()->logMessage(
         "Opening new audio device '" + device->getFriendlyName() + "'");
 
-    this->device =
-        alcOpenDevice((const ALCchar*)selectedDevice->getName().c_str());
+    this->device = alcOpenDevice((const ALCchar*)device->getName().c_str());
     if (this->device) {
       // Create context
-      if (!createContext()) {
+      if (createContext()) {
+        selectedDevice = device;
+      } else {
         alcCloseDevice(this->device);
         this->device = nullptr;
       }
@@ -202,14 +221,30 @@ AudioManager::getPossibleDevices() const {
 
 // Starts the loading of background music
 void AudioManager::loadBackgroundMusicAsync(filesystem::path directory) {
+  // Set last background music directory
+  lastBackgroundMusicDirectory = directory;
+
+  // Reset flags
+  backgroundMusicThreadShouldStop = false;
+  backgroundMusicThreadFinished = false;
+
   // Invoke the function `loadAndPlayBackgroundMusic` in a separate thread
-  std::thread{&AudioManager::loadAndPlayBackgroundMusic, this, directory}
-      .detach();
+  std::thread{&AudioManager::loadAndPlayBackgroundMusic,
+                                   this, directory}.detach();
 }
 
 // Loads all background audio tracks in a separate track and starts to play them
 // as soon as the first file was fully loaded
 void AudioManager::loadAndPlayBackgroundMusic(filesystem::path directory) {
+  // Check if we have to existing the thread now
+  if (backgroundMusicThreadShouldStop) {
+    backgroundMusicThreadFinished = true;
+    return;
+  }
+
+  // Set 'thread running' flag
+  backgroundMusicThreadRunning = true;
+
   // Iterate through all files in directory
   std::vector<filesystem::path> files;
   for (const auto& entry : filesystem::directory_iterator(directory)) {
@@ -237,11 +272,23 @@ void AudioManager::loadAndPlayBackgroundMusic(filesystem::path directory) {
       break;
     }
   }
+
   // Load all music files
   for (const auto& file : files) {
+    // Check if we have to existing the thread now
+    if (backgroundMusicThreadShouldStop) {
+      backgroundMusicThreadFinished = true;
+      return;
+    }
+
+    // Load the sound file
     auto soundPtr = loadSound(file);
     if (soundPtr) backgroundMusic.insert({soundPtr->getFileName(), soundPtr});
   }
+
+  // Mark thread as 'finished'
+  backgroundMusicThreadFinished = true;
+  backgroundMusicThreadRunning = false;
 }
 
 // Loads all audio effect files found in the the provided directory into memory
@@ -317,8 +364,10 @@ void AudioManager::updateStats() {
       std::shared_ptr<Sound> soundPtr = backgroundMusicIt->second;
 
       // Check sound state (if it is still playing)
-      alGetSourcei(playingBackgroundMusic, AL_SOURCE_STATE, &state);
-      backgroundMusicPlaying = state == AL_INITIAL || state == AL_PLAYING;
+      if (alIsSource(playingBackgroundMusic)) {
+        alGetSourcei(playingBackgroundMusic, AL_SOURCE_STATE, &state);
+        backgroundMusicPlaying = state == AL_INITIAL || state == AL_PLAYING;
+      }
     }
 
     const float backgroundMusicVolume = options->getMusicVolume();
@@ -352,19 +401,71 @@ void AudioManager::updateStats() {
     source = *it;
 
     // Check sound state (if it is still playing) and handle it
-    alGetSourcei(source, AL_SOURCE_STATE, &state);
-    if (state == AL_STOPPED) {
-      // Audio has stopped, so we can delete it
-      alDeleteSources(1, &source);
-      it = playing.erase(it);
-    } else {
-      // Adjust volume if required
-      alSourcef(source, AL_GAIN, effectsVolume);
+    if (alIsSource(source)) {
+      alGetSourcei(source, AL_SOURCE_STATE, &state);
+      if (state == AL_STOPPED) {
+        // Audio has stopped, so we can delete it
+        alDeleteSources(1, &source);
+        it = playing.erase(it);
+      } else {
+        // Adjust volume if required
+        alSourcef(source, AL_GAIN, effectsVolume);
 
-      // Switch to next element in list
-      it++;
+        // Switch to next element in list
+        it++;
+      }
+    } else {
+      // Drop no more existing source from list
+      it = playing.erase(it);
     }
   }
+}
+
+// Stop and remove all currently existing/playing audios
+void AudioManager::stopAllAudio() {
+  ALint state;
+
+  // Ask background music loading thread to stop
+  backgroundMusicThreadShouldStop = true;
+
+  // Check if there is some background music running. If yes, stop + delete it
+  if (backgroundMusic.size() > 0) {
+    if (backgroundMusicIt != backgroundMusic.end()) {
+      // Stop and delete source
+      alGetSourcei(playingBackgroundMusic, AL_SOURCE_STATE, &state);
+      if (state != AL_STOPPED) alSourceStop(playingBackgroundMusic);
+      alDeleteSources(1, &playingBackgroundMusic);
+      playingBackgroundMusic = 0;
+    }
+  }
+
+  // Clear all buffered background music
+  if (backgroundMusicThreadRunning) {
+    while (!backgroundMusicThreadFinished) {
+      // Oh no! Busy waiting!
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+  }
+  backgroundMusic.clear();
+  backgroundMusicIt = backgroundMusic.begin();
+  if (filesystem::is_directory(lastBackgroundMusicDirectory))
+    loadBackgroundMusicAsync(lastBackgroundMusicDirectory);
+
+  // Check for other audio effects and stop + delete them, too
+  ALuint source;
+  for (auto it = playing.begin(); it != playing.end();) {
+    // Get source from iterator
+    source = *it;
+
+    // Check sound state (if it is still playing) and handle it
+    alGetSourcei(source, AL_SOURCE_STATE, &state);
+    if (state != AL_STOPPED) alSourceStop(source);
+    alDeleteSources(1, &source);
+    it = playing.erase(it);
+  }
+
+  // Clear all buffered effects
+  effects.clear();
 }
 
 // Loads an sound and returns the sound in case the file was loaded

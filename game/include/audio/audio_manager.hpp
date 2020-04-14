@@ -4,8 +4,9 @@
 
 #include <al.h>
 #include <alc.h>
-
 #include <hoibase/file/filesystem.hpp>
+
+#include <atomic>
 #include <list>
 #include <memory>
 #include <unordered_map>
@@ -77,12 +78,19 @@ class AudioManager final {
   // successfully
   std::shared_ptr<Sound> loadSound(filesystem::path audioFile);
 
+  // Stop and remove all currently existing/playing audios
+  void stopAllAudio();
+
   std::vector<std::shared_ptr<AudioDevice>> devices;
   std::shared_ptr<AudioDevice> selectedDevice;
   SoundMap effects;
   std::list<ALuint> playing;
   SoundMap backgroundMusic;
   SoundMap::iterator backgroundMusicIt;
+  std::atomic<bool> backgroundMusicThreadRunning;
+  std::atomic<bool> backgroundMusicThreadShouldStop;
+  std::atomic<bool> backgroundMusicThreadFinished;
+  filesystem::path lastBackgroundMusicDirectory;
   ALuint playingBackgroundMusic;
   ALCdevice* device;
   ALCcontext* context;
