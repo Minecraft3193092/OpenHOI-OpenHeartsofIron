@@ -64,15 +64,16 @@ std::string UniqueID::generate() {
   std::string uuidString = std::string([uuidNsString UTF8String]);
   CFRelease(uuid);
 #else
-    NIX_UUID_TYPE uuid;
-
 #  ifndef OSSP_UUID
+    uuid_t uuid;
+
     if (uuid_generate_time_safe(uuid) < 0)
       throw "UUID could not be created";  // TODO: Proper error handling
 
     char uuidChr[37];
     uuid_unparse_lower(uuid, uuidChr);
 #  else
+    uuid uuid;
     char* uuidChr;
 
     uuid_create(&uuid);
