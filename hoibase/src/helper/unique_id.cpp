@@ -11,18 +11,25 @@
 #  include <codecvt>
 #elif defined(OPENHOI_OS_MACOS)
 #  include <CoreFoundation/CFUUID.h>
-#elif __has_include(<uuid/uuid.h>)
-#  include <uuid/uuid.h>  // libuuid, e.g. Debian/Ubuntu
-#elif __has_include(<uuid/uuid.h>)
-#  include <ossp/uuid.h>  // ossp-uuid, e.g. Fedora
-#  define OSSP_UUID
-#elif __has_include(<uuid.h>)
-#  include <uuid.h>
-#  ifdef UUID_VERSION  // Can be either libuuid or ossp-uuid
-#    define OSSP_UUID
-#  endif
 #else
-#  error Could not find external UUID library header
+#  if __has_include(<uuid/uuid.h>)
+#    include <uuid/uuid.h>  // libuuid, e.g. Debian/Ubuntu
+#  elif __has_include(<uuid/uuid.h>)
+#    include <ossp/uuid.h>  // ossp-uuid, e.g. Fedora
+#    define OSSP_UUID
+#  elif __has_include(<uuid.h>)
+#    include <uuid.h>
+#    ifdef UUID_VERSION  // Can be either libuuid or ossp-uuid
+#      define OSSP_UUID
+#    endif
+#  else
+#    error Could not find external UUID library header
+#  endif
+#  ifdef OSSP_UUID
+#    typedef uuid NIX_UUID_TYPE
+#  else
+#    typedef uuid_t NIX_UUID_TYPE
+#  endif
 #endif
 
 namespace openhoi {
@@ -57,7 +64,7 @@ std::string UniqueID::generate() {
   std::string uuidString = std::string([uuidNsString UTF8String]);
   CFRelease(uuid);
 #else
-  uuid_t uuid;
+  NIX_UUID_TYPE uuid;
 
 #  ifndef OSSP_UUID
   if (uuid_generate_time_safe(uuid) < 0)
