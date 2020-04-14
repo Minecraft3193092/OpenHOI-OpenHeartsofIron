@@ -1,15 +1,16 @@
 // Copyright 2020 the openhoi authors. See COPYING.md for legal info.
 
+#include "gui/combo_box.hpp"
+
 #include <memory>
 #include <vector>
 
-#include "gui/combo_box.hpp"
 #include "audio/audio_device.hpp"
 
 namespace openhoi {
 
 template <class KeyType>
-ComboBox<KeyType>::ComboBox(){
+ComboBox<KeyType>::ComboBox() {
   setSelectedEntry(std::nullopt);
 }
 
@@ -32,8 +33,7 @@ std::map<KeyType, std::string> const& ComboBox<KeyType>::getOptions() const {
 }
 
 template <class KeyType>
-void ComboBox<KeyType>::setOptions(
-    std::map<KeyType, std::string> options) { 
+void ComboBox<KeyType>::setOptions(std::map<KeyType, std::string> options) {
   this->options = options;
 }
 

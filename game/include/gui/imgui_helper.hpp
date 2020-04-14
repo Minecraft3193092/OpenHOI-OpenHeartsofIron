@@ -2,11 +2,12 @@
 
 #pragma once
 
-#include "gui/combo_box.hpp"
-
 #include <imgui.h>
+
 #include <map>
 #include <memory>
+
+#include "gui/combo_box.hpp"
 
 namespace openhoi {
 

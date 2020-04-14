@@ -1,7 +1,7 @@
 # Setup project details
 project(game
         VERSION "${OPENHOI_VERSION_MAJOR}.${OPENHOI_VERSION_MINOR}.${OPENHOI_VERSION_PATCH}"
-        LANGUAGES CXX
+        LANGUAGES CXX C
         DESCRIPTION "openhoi game executable")
 
 
