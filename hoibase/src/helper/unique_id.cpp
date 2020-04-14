@@ -11,6 +11,14 @@
 #  include <codecvt>
 #elif defined(OPENHOI_OS_MACOS)
 #  include <CoreFoundation/CFUUID.h>
+#elif __has_include(<ossp/uuih.h>)
+#  include <ossp/uuid.h>
+#  define OSSP_UUID
+#elif __has_include(<uuih.h>)
+#  include <uuid.h>
+#  ifdef (UUID_VERSION)
+#    define OSSP_UUID
+#  endif
 #else
 #  include <uuid/uuid.h>
 #endif
@@ -48,11 +56,22 @@ std::string UniqueID::generate() {
   CFRelease(uuid);
 #else
   uuid_t uuid;
+
+# ifndef OSSP_UUID
   if (uuid_generate_time_safe(uuid) < 0)
     throw "UUID could not be created";  // TODO: Proper error handling
 
   char uuidChr[37];
   uuid_unparse_lower(uuid, uuidChr);
+# else
+  char* uuidChr;
+
+  uuid_create(&uuid);
+  uuid_make(uuid, UUID_MAKE_V4);
+  uuid_export(uuid, UUID_FMT_STR, &uuidChr, NULL);
+  uuid_destroy(uuid);
+# endif
+
   std::string uuidString = std::string(uuidChr);
 #endif
 
