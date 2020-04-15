@@ -25,11 +25,6 @@
 #  else
 #    error Could not find external UUID library header
 #  endif
-#  ifdef OSSP_UUID
-typedef uuid NIX_UUID_TYPE
-#  else
-typedef uuid_t NIX_UUID_TYPE
-#  endif
 #endif
 
 namespace openhoi {
