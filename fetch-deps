@@ -196,14 +196,14 @@ if [ ! -f thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSIO
     rm -rf thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION;
   fi
   if [ ! -f thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION ]; then
-      git clone --recurse-submodules https://github.com/openhoi/ogre-package --branch v$OGRE_VERSION thirdparty/manual-build/lib/ogre-package
+      git clone https://github.com/openhoi/ogre-package --branch v$OGRE_VERSION thirdparty/manual-build/lib/ogre-package
   else
       git -C thirdparty/manual-build/lib/ogre-package reset --hard
       git -C thirdparty/manual-build/lib/ogre-package fetch
       git -C thirdparty/manual-build/lib/ogre-package checkout v$OGRE_VERSION
       git -C thirdparty/manual-build/lib/ogre-package pull
-      git -C thirdparty/manual-build/lib/ogre-package submodule update --init --recursive
   fi
+  git -C thirdparty/manual-build/lib/ogre-package submodule update --init -- imgui
   mkdir --parents thirdparty/manual-build/precompiled/imgui
   cp -R thirdparty/manual-build/lib/ogre-package/imgui/* thirdparty/manual-build/precompiled/imgui
   touch thirdparty/manual-build/precompiled/imgui/openhoi-branch-v$OGRE_VERSION

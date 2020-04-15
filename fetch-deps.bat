@@ -533,14 +533,14 @@ set OGRE_PACKAGE_BRANCH=v%OGRE_VERSION%
 if not exist "%CWD%\thirdparty\manual-build\precompiled\imgui\openhoi-branch-%OGRE_PACKAGE_BRANCH%" (
   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\imgui 2>nul
   if not exist thirdparty\manual-build\lib\imgui (
-      git clone --recurse-submodules https://github.com/openhoi/ogre-package --branch %OGRE_PACKAGE_BRANCH% thirdparty\manual-build\lib\ogre-package
+      git clone https://github.com/openhoi/ogre-package --branch %OGRE_PACKAGE_BRANCH% thirdparty\manual-build\lib\ogre-package
   ) else (
       git -C thirdparty\manual-build\lib\ogre-package reset --hard
       git -C thirdparty\manual-build\lib\ogre-package fetch
       git -C thirdparty\manual-build\lib\ogre-package checkout %OGRE_PACKAGE_BRANCH%
       git -C thirdparty\manual-build\lib\ogre-package pull
-      git -C thirdparty\manual-build\lib\ogre-package submodule update --init --recursive
   )
+  git -C thirdparty/manual-build/lib/ogre-package submodule update --init -- imgui
   robocopy "%CWD%\thirdparty\manual-build\lib\ogre-package\imgui" "%CWD%\thirdparty\manual-build\precompiled\imgui" /mir
   type nul >>"%CWD%\thirdparty\manual-build\precompiled\imgui\openhoi-branch-%OGRE_PACKAGE_BRANCH%"
   cd %CWD%
