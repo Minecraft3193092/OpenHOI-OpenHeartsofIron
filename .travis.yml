@@ -11,10 +11,6 @@ jobs:
       env:
         - DOCKER_DIST=ubuntu
         - DOCKER_DIST_VERSION=bionic
-    - name: Ubuntu Disco Dingo (19.04)
-      env:
-        - DOCKER_DIST=ubuntu
-        - DOCKER_DIST_VERSION=disco
     - name: Ubuntu Eoan Ermine (19.10)
       env:
         - DOCKER_DIST=ubuntu
