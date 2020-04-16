@@ -64,14 +64,16 @@ find_library(
     ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     ${OGRE_ROOT_DIR}/lib/OGRE
-    /usr/lib64
+    /lib/OGRE
+    /lib
     /usr/lib64/OGRE
-    /usr/lib
+    /usr/lib64
     /usr/lib/OGRE
-    /usr/local/lib64
+    /usr/lib
     /usr/local/lib64/OGRE
-    /usr/local/lib
+    /usr/local/lib64
     /usr/local/lib/OGRE
+    /usr/local/lib
     /sw/lib
     /opt/local/lib
     DOC "The OGRE Codec_STBI library")
@@ -84,14 +86,16 @@ find_library(
     ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     ${OGRE_ROOT_DIR}/lib/OGRE
-    /usr/lib64
+    /lib/OGRE
+    /lib
     /usr/lib64/OGRE
-    /usr/lib
+    /usr/lib64
     /usr/lib/OGRE
-    /usr/local/lib64
+    /usr/lib
     /usr/local/lib64/OGRE
-    /usr/local/lib
+    /usr/local/lib64
     /usr/local/lib/OGRE
+    /usr/local/lib
     /sw/lib
     /opt/local/lib
     DOC "The OGRE Plugin_ParticleFX library")
@@ -164,14 +168,16 @@ find_library(
     ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     ${OGRE_ROOT_DIR}/lib/OGRE
-    /usr/lib64
+    /lib/OGRE
+    /lib
     /usr/lib64/OGRE
-    /usr/lib
+    /usr/lib64
     /usr/lib/OGRE
-    /usr/local/lib64
+    /usr/lib
     /usr/local/lib64/OGRE
-    /usr/local/lib
+    /usr/local/lib64
     /usr/local/lib/OGRE
+    /usr/local/lib
     /sw/lib
     /opt/local/lib
     DOC "The OGRE RenderSystem_GL3Plus library")
@@ -184,14 +190,16 @@ find_library(
     ${OGRE_ROOT_DIR}/lib/macosx/Release
     ${OGRE_ROOT_DIR}/lib
     ${OGRE_ROOT_DIR}/lib/OGRE
-    /usr/lib64
+    /lib/OGRE
+    /lib
     /usr/lib64/OGRE
-    /usr/lib
+    /usr/lib64
     /usr/lib/OGRE
-    /usr/local/lib64
+    /usr/lib
     /usr/local/lib64/OGRE
-    /usr/local/lib
+    /usr/local/lib64
     /usr/local/lib/OGRE
+    /usr/local/lib
     /sw/lib
     /opt/local/lib
     DOC "The OGRE RenderSystem_GL library")
