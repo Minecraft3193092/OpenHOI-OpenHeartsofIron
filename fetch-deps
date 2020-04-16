@@ -77,9 +77,11 @@ if [ $OSTYPE == "linux-gnu" ]; then
         INSTALLSYSTEM=${INSTALLSYSTEMS[$PACMAN]}
         PACKAGES="base-devel git cmake ninja pkgconf boost cgal openssl zlib sdl2 clang rapidjson lua"
         DIST_IDENTIFIER="arch_latest"
-    elif [[ $DISTRO == "debian" ]] || [[ $DISTRO == "ubuntu" ]]; then
-        if [ $DISTRO == "ubuntu" ]; then
+    elif [[ $DISTRO == "debian" ]] || [[ $DISTRO == "ubuntu" ]] || [[ $DISTRO == "steamos" ]];  then
+        if [[ $DISTRO == "ubuntu" ]]; then
             printf " $CHECKMARK Ubuntu is supported. Using \e[1mapt-get\e[0m install system...\n"
+        elif [[ $DISTRO == "steamos" ]]; then
+            printf " $CHECKMARK SteamOS is supported. Using \e[1mapt-get\e[0m install system...\n"
         else
             printf " $CHECKMARK Debian is supported. Using \e[1mapt-get\e[0m install system...\n"
         fi
@@ -179,6 +181,11 @@ if [ $INSTALLSYSTEM ]; then
         sudo yum -y install $PACKAGES
         sudo yum -y localinstall /tmp/$OGRE_PACKAGE_FILENAME
         sudo package-cleanup --leaves --all
+        ls -lah /lib
+        ls -lah /lib/OGRE
+        ls -lah /usr/lib
+        ls -lag /usr/lib/OGRE
+        find / -name "*Codec*"
     fi
 
     printf " $CHECKMARK Finished! Please check the above command line output in order to verify that everything was okay.\n"
