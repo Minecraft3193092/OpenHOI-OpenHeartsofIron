@@ -305,33 +305,6 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\openssl\openhoi-version-
   cd %CWD%
 )
 
-@rem echo %LINEBEG% OpenAL...
-@rem set OPENAL_BRANCH=openal-soft-1.19.1
-@rem if not exist "%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%" (
-@rem   @rd /s /q %CWD%\thirdparty\manual-build\precompiled\openal 2>nul
-@rem   mkdir %CWD%\thirdparty\manual-build\precompiled\openal
-@rem   if not exist thirdparty\manual-build\lib\openal (
-@rem       git clone https://github.com/kcat/openal-soft --branch %OPENAL_BRANCH% thirdparty\manual-build\lib\openal
-@rem   ) else (
-@rem       git -C thirdparty\manual-build\lib\openal reset --hard
-@rem       git -C thirdparty\manual-build\lib\openal fetch --tags
-@rem       git -C thirdparty\manual-build\lib\openal checkout %OPENAL_BRANCH%
-@rem       git -C thirdparty\manual-build\lib\openal pull
-@rem   )
-@rem   cd thirdparty\manual-build\lib\openal
-@rem   @rd /s /q build 2>nul
-@rem   git reset --hard
-@rem   cd build
-@rem   cmake -DALSOFT_TESTS=OFF -DALSOFT_UTILS=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-@rem   ninja
-@rem   robocopy "%CWD%\thirdparty\manual-build\lib\openal\build" "%CWD%\thirdparty\manual-build\precompiled\openal\lib" OpenAL32.lib
-@rem   robocopy "%CWD%\thirdparty\manual-build\lib\openal\build" "%CWD%\thirdparty\manual-build\precompiled\openal\bin" OpenAL32.dll
-@rem   cd ..
-@rem   robocopy "include" "%CWD%\thirdparty\manual-build\precompiled\openal\include" /mir
-@rem   type nul >>"%CWD%\thirdparty\manual-build\precompiled\openal\openhoi-branch-%OPENAL_BRANCH%"
-@rem   cd %CWD%
-@rem )
-
 echo %LINEBEG% zlib...
 set ZLIB_VERSION=1.2.11.8900
 if not exist "%CWD%\thirdparty\manual-build\precompiled\zlib\openhoi-version-%ZLIB_VERSION%" (

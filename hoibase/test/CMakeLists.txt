@@ -5,7 +5,7 @@ project(hoibase_tests
         DESCRIPTION "openhoi base library tests")
 
 
- # Find required dependencies
+# Find required dependencies
 include(GlobalDeps)
 include(GoogleTest)
 
