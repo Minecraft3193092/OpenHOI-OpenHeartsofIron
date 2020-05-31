@@ -33,12 +33,14 @@ All 3rd-party files **must** be included in the following list as well as in the
 List of all 3rd-party files in openhoi:
 
 Source files
- - `thirdparty/imgui/*` → [MIT](/legal/mit-imgui)
+ - `thirdparty/mojoAL/*` → [zlib](/legal/zlib-mojoal)
+ *<sub><sup>(taken from [Ryan C. Gordon](https://www.icculus.org/mojoAL))</sup></sub>*
+
+ - `thirdparty/stb_vorbis/stb_vorbis.c` → [public domain](/legal/public-domain)
+ *<sub><sup>(taken from [nothings/stb](https://github.com/nothings/stb))</sup></sub>*
+
+ - `thirdparty/manual-build/lib/imgui/*` (after `fetch-deps` was executed) → [MIT](/legal/mit-imgui)
  *<sub><sup>(taken from [ocornut/imgui](https://github.com/ocornut/imgui))</sup></sub>*
- 
-openhoi source files heavily influenced by 3rd-party code:
- - `game/include/gui/gui_manager.hpp`, `game/src/gui/gui_manager.cpp`, `game/include/gui/imgui_renderable.hpp`, `game/src/gui/imgui_renderable.cpp` → [MIT](/legal/mit-ogre-imgui)
- *<sub><sup>(original code extracted from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui)))</sup></sub>*
 
 Graphic files
  - `dist/graphics/coat_of_arms/de.dds` / `dev-assets/coat_of_arms/de.svg` → free for any use but with copyright holder attribution
