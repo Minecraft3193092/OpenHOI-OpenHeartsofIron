@@ -34,7 +34,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   # Fetch docker files
-  - git clone https://github.com/openhoi/docker
+  - git clone https://github.com/openhoi/docker.git
 install:
   # Specifiy docker image name
   - DOCKER_IMAGE_NAME=openhoi-ogre:${DOCKER_DIST}-${DOCKER_DIST_VERSION}
@@ -45,5 +45,3 @@ install:
   - docker build -t $DOCKER_IMAGE_NAME .
   # Run docker image
   - docker run $DOCKER_IMAGE_NAME
-
- 

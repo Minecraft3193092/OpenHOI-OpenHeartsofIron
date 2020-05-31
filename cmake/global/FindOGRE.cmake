@@ -29,7 +29,7 @@ find_path(
     DOC "The directory where Ogre.h resides")
 
 
-set (FINDOGRE_VERSION 1.12.5)
+set (FINDOGRE_VERSION 1.12.6)
 if(${OGRE_NIX_PREBUILD})
     set(LIB_PREFIX lib)
     set(NON_PREFIX_SUFFIX .so.${FINDOGRE_VERSION}-openhoi)
