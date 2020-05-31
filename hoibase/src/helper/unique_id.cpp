@@ -60,24 +60,24 @@ std::string UniqueID::generate() {
   CFRelease(uuid);
 #else
 #  ifndef OSSP_UUID
-    uuid_t uuid;
+  uuid_t uuid;
 
-    if (uuid_generate_time_safe(uuid) < 0)
-      throw "UUID could not be created";  // TODO: Proper error handling
+  if (uuid_generate_time_safe(uuid) < 0)
+    throw "UUID could not be created";  // TODO: Proper error handling
 
-    char uuidChr[37];
-    uuid_unparse_lower(uuid, uuidChr);
+  char uuidChr[37];
+  uuid_unparse_lower(uuid, uuidChr);
 #  else
-    uuid uuid;
-    char* uuidChr;
+  uuid uuid;
+  char* uuidChr;
 
-    uuid_create(&uuid);
-    uuid_make(uuid, UUID_MAKE_V4);
-    uuid_export(uuid, UUID_FMT_STR, &uuidChr, NULL);
-    uuid_destroy(uuid);
+  uuid_create(&uuid);
+  uuid_make(uuid, UUID_MAKE_V4);
+  uuid_export(uuid, UUID_FMT_STR, &uuidChr, NULL);
+  uuid_destroy(uuid);
 #  endif
 
-    std::string uuidString = std::string(uuidChr);
+  std::string uuidString = std::string(uuidChr);
 #endif
 
   return uuidString;

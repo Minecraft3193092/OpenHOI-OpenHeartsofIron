@@ -103,16 +103,15 @@ void DebugConsole::draw() {
 
   // Command-line
   bool reclaimFocus = false;
-  if (ImGui::InputText(
-          "Input", inputBuffer, IM_ARRAYSIZE(inputBuffer),
-          ImGuiInputTextFlags_EnterReturnsTrue |
-              ImGuiInputTextFlags_CallbackCompletion |
-              ImGuiInputTextFlags_CallbackHistory,
-          [](ImGuiInputTextCallbackData* data) {
-            DebugConsole* console = (DebugConsole*)data->UserData;
-            return console->textEditCallback(data);
-          },
-          (void*)this)) {
+  if (ImGui::InputText("Input", inputBuffer, IM_ARRAYSIZE(inputBuffer),
+                       ImGuiInputTextFlags_EnterReturnsTrue |
+                           ImGuiInputTextFlags_CallbackCompletion |
+                           ImGuiInputTextFlags_CallbackHistory,
+                       [](ImGuiInputTextCallbackData* data) {
+                         DebugConsole* console = (DebugConsole*)data->UserData;
+                         return console->textEditCallback(data);
+                       },
+                       (void*)this)) {
     std::string command = inputBuffer;
     // if (!command.empty()) ExecCommand(s);
     reclaimFocus = true;
