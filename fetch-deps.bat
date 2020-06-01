@@ -38,14 +38,6 @@ if "%PROGRAMFILES%" == "C:\Program Files" (
     goto end
 )
 
-where /q MSBuild
-if %errorLevel% == 0 (
-    echo %CHECKMARK% Inside MSVC developer x64 command promt
-) else (
-    echo %CROSSMARK% You must call this batch file from a running MSVC x64 developer command prompt
-    goto end
-)
-
 
 
 @rem Then, check for required tools
@@ -109,7 +101,7 @@ if %errorLevel% == 0 (
 ) else (
     if "%CHOCOLATEY_INSTALLED%" == "y" (
         echo %LINEBEG% Installing 7-Zip...
-        choco install 7zip.install --yes
+        choco install 7zip.install --yes --force
         set SCRIPT_INSTALLED_SOMETHING=y
     ) else (
         echo %CROSSMARK% 7-Zip is not installed or not inside Windows PATH. Aborting. Please install 7-Zip from https://www.7-zip.org
@@ -151,6 +143,38 @@ if "%SCRIPT_INSTALLED_SOMETHING%" == "y" (
     echo %LINEBEG% Refreshing environmental variables...
     refreshenv
 )
+
+
+
+@rem Then, check if we are inside a MSVC developer command prompt
+where /q MSBuild
+if %errorLevel% == 0 (
+    echo %CHECKMARK% Inside MSVC developer x64 command prompt
+) else (
+    where /q vswhere
+    if %errorLevel% == 0 (
+        echo %CHECKMARK% VSWhere is installed and found.
+    ) else (
+         if "%CHOCOLATEY_INSTALLED%" == "y" (
+            echo %LINEBEG% Installing VSWhere...
+            choco install vswhere --yes
+            refreshenv
+            for /f "tokens=*" %%g in ('vswhere -latest -property installationPath') do (
+                set MSVC_DIR=%%g
+            )
+            if exist "%MSVC_DIR%\VC\Auxiliary\Build\vcvarsall.bat" (
+                call "%MSVC_DIR%\VC\Auxiliary\Build\vcvarsall.bat" amd64
+            ) else (
+                echo %CROSSMARK% You must call this batch file from a running MSVC x64 developer command prompt
+                goto end
+            )
+        ) else (
+            echo %CROSSMARK% VSWhere is not installed or not inside Windows PATH. Aborting. Please install VSWhere from https://github.com/microsoft/vswhere/releases or ensure that this script is running a MSVC developer x64 command prompt
+            goto end
+        )
+    )
+)
+
 
 
 @rem Install required libs...

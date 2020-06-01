@@ -58,7 +58,7 @@ find_library(
 
 find_library(
     OGRE_CODECSTBI_LIBRARY
-    NAMES Codec_STBI.so
+    NAMES Codec_STBI${NON_PREFIX_SUFFIX}
     PATHS
     $ENV{PROGRAMFILES}/lib
     ${OGRE_ROOT_DIR}/lib/macosx/Release

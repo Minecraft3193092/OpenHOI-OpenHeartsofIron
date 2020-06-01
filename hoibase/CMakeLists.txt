@@ -219,7 +219,6 @@ if(WIN32)
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libcrypto-1_1-x64.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openssl/bin/libssl-1_1-x64.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/zlib/bin/zlib.dll" "${WIN32_DEP_OUT_DIR}"
-                       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/thirdparty/manual-build/precompiled/openal/bin/OpenAL32.dll" "${WIN32_DEP_OUT_DIR}"
                        COMMAND "${CMAKE_SOURCE_DIR}/cmake/win64/copy-pdb.bat" "${CMAKE_SOURCE_DIR}" "${WIN32_DEP_OUT_DIR}" $<CONFIG:Debug>
                        VERBATIM)
 endif()
