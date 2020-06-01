@@ -44,164 +44,168 @@ find_library(
     OGRE_MAIN_LIBRARY
     NAMES ${LIB_PREFIX}OgreMain${NON_PREFIX_SUFFIX}
     PATHS
-    $ENV{PROGRAMFILES}/lib
-    ${OGRE_ROOT_DIR}/lib/macosx/Release
-    ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
+    /lib
     /usr/local/lib64
     /usr/local/lib
     /sw/lib
     /opt/local/lib
-    PATH_SUFFIXES .so.${FINDOGRE_VERSION}
+    $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
+    ${OGRE_ROOT_DIR}/lib
     DOC "The OGRE OgreMain library")
 
 find_library(
     OGRE_CODECSTBI_LIBRARY
     NAMES Codec_STBI${NON_PREFIX_SUFFIX}
     PATHS
-    $ENV{PROGRAMFILES}/lib
-    ${OGRE_ROOT_DIR}/lib/macosx/Release
-    ${OGRE_ROOT_DIR}/lib
-    ${OGRE_ROOT_DIR}/lib/OGRE
-    /lib/OGRE
-    /lib
     /usr/lib64/OGRE
     /usr/lib64
     /usr/lib/OGRE
     /usr/lib
+    /lib/OGRE
+    /lib
     /usr/local/lib64/OGRE
     /usr/local/lib64
     /usr/local/lib/OGRE
     /usr/local/lib
     /sw/lib
     /opt/local/lib
+    $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
+    ${OGRE_ROOT_DIR}/lib
+    ${OGRE_ROOT_DIR}/lib/OGRE
     DOC "The OGRE Codec_STBI library")
 
 find_library(
     OGRE_PARTICLEFX_LIBRARY
     NAMES Plugin_ParticleFX${NON_PREFIX_SUFFIX}
     PATHS
-    $ENV{PROGRAMFILES}/lib
-    ${OGRE_ROOT_DIR}/lib/macosx/Release
-    ${OGRE_ROOT_DIR}/lib
-    ${OGRE_ROOT_DIR}/lib/OGRE
-    /lib/OGRE
-    /lib
     /usr/lib64/OGRE
     /usr/lib64
     /usr/lib/OGRE
     /usr/lib
+    /lib/OGRE
+    /lib
     /usr/local/lib64/OGRE
     /usr/local/lib64
     /usr/local/lib/OGRE
     /usr/local/lib
     /sw/lib
     /opt/local/lib
+    $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
+    ${OGRE_ROOT_DIR}/lib
+    ${OGRE_ROOT_DIR}/lib/OGRE
     DOC "The OGRE Plugin_ParticleFX library")
 
 find_library(
     OGRE_OVERLAY_LIBRARY
     NAMES ${LIB_PREFIX}OgreOverlay${NON_PREFIX_SUFFIX}
     PATHS
-    $ENV{PROGRAMFILES}/lib
-    ${OGRE_ROOT_DIR}/lib/macosx/Release
-    ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
+    /lib
     /usr/local/lib64
     /usr/local/lib
     /sw/lib
     /opt/local/lib
+    $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
+    ${OGRE_ROOT_DIR}/lib
     DOC "The OGRE OgreOverlay library")
 
 find_library(
     OGRE_PROPERTY_LIBRARY
     NAMES ${LIB_PREFIX}OgreProperty${NON_PREFIX_SUFFIX}
     PATHS
-    $ENV{PROGRAMFILES}/lib
-    ${OGRE_ROOT_DIR}/lib/macosx/Release
-    ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
+    /lib
     /usr/local/lib64
     /usr/local/lib
     /sw/lib
     /opt/local/lib
+    $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
+    ${OGRE_ROOT_DIR}/lib
     DOC "The OGRE OgreProperty library")
 
 find_library(
     OGRE_RTSHADERSYSTEM_LIBRARY
     NAMES ${LIB_PREFIX}OgreRTShaderSystem${NON_PREFIX_SUFFIX}
     PATHS
-    $ENV{PROGRAMFILES}/lib
-    ${OGRE_ROOT_DIR}/lib/macosx/Release
-    ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
+    /lib
     /usr/local/lib64
     /usr/local/lib
     /sw/lib
     /opt/local/lib
+    $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
+    ${OGRE_ROOT_DIR}/lib
     DOC "The OGRE OgreRTShaderSystem library")
 
 find_library(
     OGRE_GLSUPPORT_LIBRARY
     NAMES ${LIB_PREFIX}OgreGLSupport${NON_PREFIX_SUFFIX_A}
     PATHS
-    $ENV{PROGRAMFILES}/lib
-    ${OGRE_ROOT_DIR}/lib/macosx/Release
-    ${OGRE_ROOT_DIR}/lib
     /usr/lib64
     /usr/lib
+    /lib
     /usr/local/lib64
     /usr/local/lib
     /sw/lib
     /opt/local/lib
+    $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
+    ${OGRE_ROOT_DIR}/lib
     DOC "The OGRE OgreGLSupport library")
 
 find_library(
     OGRE_RENDERSYSTEMGL3PLUS_LIBRARY
     NAMES RenderSystem_GL3Plus${NON_PREFIX_SUFFIX}
     PATHS
-    $ENV{PROGRAMFILES}/lib
-    ${OGRE_ROOT_DIR}/lib/macosx/Release
-    ${OGRE_ROOT_DIR}/lib
-    ${OGRE_ROOT_DIR}/lib/OGRE
-    /lib/OGRE
-    /lib
     /usr/lib64/OGRE
     /usr/lib64
     /usr/lib/OGRE
     /usr/lib
+    /lib/OGRE
+    /lib
     /usr/local/lib64/OGRE
     /usr/local/lib64
     /usr/local/lib/OGRE
     /usr/local/lib
     /sw/lib
     /opt/local/lib
+    $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
+    ${OGRE_ROOT_DIR}/lib
+    ${OGRE_ROOT_DIR}/lib/OGRE
     DOC "The OGRE RenderSystem_GL3Plus library")
 
 find_library(
     OGRE_RENDERSYSTEMGL_LIBRARY
     NAMES RenderSystem_GL${NON_PREFIX_SUFFIX}
     PATHS
-    $ENV{PROGRAMFILES}/lib
-    ${OGRE_ROOT_DIR}/lib/macosx/Release
-    ${OGRE_ROOT_DIR}/lib
-    ${OGRE_ROOT_DIR}/lib/OGRE
-    /lib/OGRE
-    /lib
     /usr/lib64/OGRE
     /usr/lib64
     /usr/lib/OGRE
     /usr/lib
+    /lib/OGRE
+    /lib
     /usr/local/lib64/OGRE
     /usr/local/lib64
     /usr/local/lib/OGRE
     /usr/local/lib
     /sw/lib
     /opt/local/lib
+    $ENV{PROGRAMFILES}/lib
+    ${OGRE_ROOT_DIR}/lib/macosx/Release
+    ${OGRE_ROOT_DIR}/lib
+    ${OGRE_ROOT_DIR}/lib/OGRE
     DOC "The OGRE RenderSystem_GL library")
 
 if (WIN32)

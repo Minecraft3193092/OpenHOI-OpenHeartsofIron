@@ -62,7 +62,7 @@ endif()
 
 # Add game base library
 add_subdirectory(hoibase)
-add_subdirectory(hoibase/test)
+#add_subdirectory(hoibase/test)
 
 
 # Add game executable
