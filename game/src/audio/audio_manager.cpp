@@ -18,10 +18,10 @@ namespace openhoi {
 
 // Initializes the audio manager
 AudioManager::AudioManager()
-    : playingBackgroundMusic(0),
-      backgroundMusicThreadFinished(false),
+    : backgroundMusicThreadRunning(false),
       backgroundMusicThreadShouldStop(false),
-      backgroundMusicThreadRunning(false),
+      backgroundMusicThreadFinished(false),
+      playingBackgroundMusic(0),
       device(0),
       context(0) {
   // Try to open the default device. Returns NULL in case no device was found
