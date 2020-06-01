@@ -351,6 +351,10 @@ if (OGRE_FOUND)
             list(APPEND OGRE_LIBRARIES ${OGRE_RENDERSYSTEMD3D11_LIBRARY})
         else()
             list(APPEND OGRE_LIBRARIES ${OGRE_CODECFREEIMAGE_LIBRARY})
+
+            #Set Linker flags for OGRE plugins
+            get_filename_component(OGRE_PLUGIN_DIR ${OGRE_CODECSTBI_LIBRARY} DIRECTORY)
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-R,${OGRE_PLUGIN_DIR} -Wl,--enable-new-dtags")
         endif()
     endif()
     

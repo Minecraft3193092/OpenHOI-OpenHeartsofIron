@@ -57,8 +57,6 @@ Audio files
 Material and shader files
  - `dist/materials/**/DualQuaternionSkinning_*`, `dist/materials/**/FFPLib_*`, `dist/materials/**/HardwareSkinningShadow*`, `dist/materials/**/SGXLib_*` → [MIT](/legal/mit-ogre)
  *<sub><sup>(taken from [OGRECave/ogre](https://github.com/OGRECave/ogre))</sup></sub>*
- - `dist/materials/**/imgui*` → [MIT](/legal/mit-ogre-imgui)
- *<sub><sup>(originally taken from [OGRECave/ogre-imgui](https://github.com/OGRECave/ogre-imgui))</sup></sub>*
 
 Font files
  - `dist/fonts/gui.ttf` → [SIL 1.1](/legal/sil-1.1)
