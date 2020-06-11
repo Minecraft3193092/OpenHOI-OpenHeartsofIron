@@ -9,18 +9,20 @@
 
 #include "game_manager.hpp"
 
-#ifndef OPENHOI_OS_WINDOWS
+#if !defined(OPENHOI_OS_WINDOWS) && defined(NIX_ENFORE_GAME_RUN_ONLY_ONCE)
 #  include <fcntl.h>
 #  include <signal.h>
 #  include <unistd.h>
 #endif
 
+#if defined(OPENHOI_OS_WINDOWS) || defined(NIX_ENFORE_GAME_RUN_ONLY_ONCE)
 // Unique handle name to prevent game to run twice
-#define OPENHOI_UNIQUE_HANDLE "openhoi-EE124BFD-D6B8-4CE9-BBB6-B2079D9747DA"
+#  define OPENHOI_UNIQUE_HANDLE "openhoi-EE124BFD-D6B8-4CE9-BBB6-B2079D9747DA"
+#endif
 
 using namespace openhoi;
 
-#ifndef OPENHOI_OS_WINDOWS
+#if !defined(OPENHOI_OS_WINDOWS) && defined(NIX_ENFORE_GAME_RUN_ONLY_ONCE)
 const char* lockFilePath;
 
 // Handle SIGINT (release lock file)
@@ -72,6 +74,7 @@ int main(int argc, const char* argv[])
     exit(exitStatus);
   }
 
+#  ifdef NIX_ENFORE_GAME_RUN_ONLY_ONCE
   // Enforce the game to run only once
   filesystem::path tempDirectory = FileAccess::getTempDirectory();
   filesystem::path lockFile = tempDirectory / OPENHOI_UNIQUE_HANDLE;
@@ -94,6 +97,7 @@ int main(int argc, const char* argv[])
   sigaction(SIGINT, &sigAction, NULL);
   sigaction(SIGTERM, &sigAction, NULL);
   sigaction(SIGSEGV, &sigAction, NULL);
+#  endif
 #endif
 
   try {
@@ -133,11 +137,11 @@ int main(int argc, const char* argv[])
   }
 
   // Release mutex / lock file
-#ifdef OPENHOI_OS_WINDOWS
+#if defined(OPENHOI_OS_WINDOWS)
   ReleaseMutex(mutexHandle);
   CloseHandle(mutexHandle);
   mutexHandle = nullptr;
-#else
+#elif defined(NIX_ENFORE_GAME_RUN_ONLY_ONCE)
   unlink(lockFilePath);
   close(mutexFd);
 #endif

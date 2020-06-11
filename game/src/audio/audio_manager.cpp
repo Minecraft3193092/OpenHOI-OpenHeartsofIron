@@ -168,11 +168,11 @@ bool AudioManager::createContext() {
 
 // Sets the current/active device
 void AudioManager::setDevice(std::shared_ptr<AudioDevice> device) {
-  if (this->device && device) {
+  if (selectedDevice && device) {
     // Check if the new device is the old device. If yes, do nothing
-    std::string currentDeviceName =
-        std::string(alcGetString(this->device, ALC_DEFAULT_DEVICE_SPECIFIER));
-    if (currentDeviceName == device->getName()) return;
+    // std::string currentDeviceName =
+    //    std::string(alcGetString(this->device, ALC_DEVICE_SPECIFIER));
+    if (selectedDevice->getName() == device->getName()) return;
 
     Ogre::LogManager::getSingletonPtr()->logMessage(
         "*** Changing audio device ***");
@@ -197,7 +197,13 @@ void AudioManager::setDevice(std::shared_ptr<AudioDevice> device) {
     if (this->device) {
       // Create context
       if (createContext()) {
+        // Set selected device
         selectedDevice = device;
+
+        // Reload effects if required
+        if (filesystem::is_directory(lastEffectsDirectory)) {
+          loadEffects(lastEffectsDirectory);
+        }
       } else {
         alcCloseDevice(this->device);
         this->device = nullptr;
@@ -295,6 +301,9 @@ void AudioManager::loadAndPlayBackgroundMusic(filesystem::path directory) {
 // Loads all audio effect files found in the the provided directory into memory
 // and thus makes them playable
 void AudioManager::loadEffects(filesystem::path directory) {
+  // Set last effects directory
+  lastEffectsDirectory = directory;
+
   // Iterate through all files in directory
   for (const auto& entry : filesystem::directory_iterator(directory)) {
     auto soundPtr = loadSound(entry.path());

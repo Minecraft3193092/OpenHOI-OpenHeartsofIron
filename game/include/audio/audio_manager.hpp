@@ -84,6 +84,7 @@ class AudioManager final {
   std::vector<std::shared_ptr<AudioDevice>> devices;
   std::shared_ptr<AudioDevice> selectedDevice;
   SoundMap effects;
+  filesystem::path lastEffectsDirectory;
   std::list<ALuint> playing;
   SoundMap backgroundMusic;
   SoundMap::iterator backgroundMusicIt;
