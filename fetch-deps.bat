@@ -379,7 +379,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\gmp\include\gmp.h" (
 )
 
 echo %LINEBEG% CGAL...
-set CGAL_VERSION=5.0.2
+set CGAL_VERSION=5.1
 if not exist "%CWD%\thirdparty\manual-build\precompiled\cgal\lib\CGAL-vc142-mt-%CGAL_VERSION%.lib" (
   rem We need to download the source ZIP because the directory structure is different to the GitHub/development version
   rem See https://www.cgal.org/download/windows.html
