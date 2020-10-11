@@ -384,7 +384,7 @@ if not exist "%CWD%\thirdparty\manual-build\precompiled\cgal\lib\CGAL-vc142-mt-%
   rem We need to download the source ZIP because the directory structure is different to the GitHub/development version
   rem See https://www.cgal.org/download/windows.html
   echo Downloading CGAL v%CGAL_VERSION%...
-  powershell -Command "$progressPreference = 'silentlyContinue'; Invoke-WebRequest https://github.com/CGAL/cgal/releases/download/releases/CGAL-%CGAL_VERSION%/CGAL-%CGAL_VERSION%.zip -OutFile %CWD%\thirdparty\manual-build\lib\cgal.zip"
+  powershell -Command "$progressPreference = 'silentlyContinue'; Invoke-WebRequest https://github.com/CGAL/cgal/releases/download/v%CGAL_VERSION%/CGAL-%CGAL_VERSION%.zip -OutFile %CWD%\thirdparty\manual-build\lib\cgal.zip"
   echo Expanding CGAL v%CGAL_VERSION% ZIP archive...
   powershell -Command "$progressPreference = 'silentlyContinue'; Expand-Archive -Force %CWD%\thirdparty\manual-build\lib\cgal.zip %CWD%\thirdparty\manual-build\lib"
   @rd /s /q %CWD%\thirdparty\manual-build\lib\cgal 2>nul
