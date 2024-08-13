@@ -45,6 +45,10 @@ Source files
 Graphic files
  - `dist/graphics/coat_of_arms/de.dds` / `dev-assets/coat_of_arms/de.svg` → free for any use but with copyright holder attribution
 *<sub><sup>(taken from [Wikipedia](https://commons.wikimedia.org/wiki/File:Wappen_Deutsches_Reich_-_Reichsadler_1889.svg); Copyright [David Liuzzo](https://commons.wikimedia.org/wiki/User:David_Liuzzo))</sup></sub>*
+ - `dist/graphics/flag/de_reich2.dds` / `dev-assets/flag/de_reich2.svg` → Copyright to this media is held by Paradox Interactive or its subsidiaries.
+*<sub><sup>(taken from [Hearts of Iron 4 Wiki](https://hoi4.paradoxwikis.com/File:German_Reich.png)); Copyright [Paradox Interactive](https://www.paradoxinteractive.com))</sup></sub>*
+ - `dist/graphics/flag/de_reich2.dds` / `dev-assets/coat_of_arms/jp_naval_ensign_1945.svg` → This file is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported license.
+*<sub><sup>(taken from [Wikipedia](https://commons.wikimedia.org/wiki/File:Naval_Ensign_of_Japan.svg); Copyright [David Newton](https://www.wikiwand.com/en/User:David_Newton))</sup></sub>*
 
 Audio files
  - `dist/audio/background/tannhaeuser.ogg` → [public domain](/legal/public-domain-audio)
